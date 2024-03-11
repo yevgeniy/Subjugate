@@ -57,7 +57,7 @@ namespace Subjugate
             var comp = CompSubjugate.GetComp(p);
             if (comp != null)
             {
-                return comp.DisciplineDealtRating;
+                return comp.PunishmentDealtRating;
             }
             return 1;
         }
@@ -67,7 +67,7 @@ namespace Subjugate
             var comp = CompSubjugate.GetComp(p);
             if (comp!=null)
             {
-                return comp.DisciplineDealtRating > 0;
+                return comp.PunishmentDealtRating > 0;
             }
             return false;
 

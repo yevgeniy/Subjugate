@@ -8,7 +8,7 @@ using Verse;
 
 namespace Subjugate.SubjucationPerks
 {
-    public class BasePerk : IPerk, INegSkillPerk, IExposable
+    public class Perk : IExposable
     {
 
         private string explain;
@@ -73,7 +73,7 @@ namespace Subjugate.SubjucationPerks
             
         }
 
-        public virtual bool IsDisabled(SkillRecord skill)
+        public virtual bool IsSkillDisabled(SkillRecord skill)
         {
             if (skill.def.defName== SkillDef.defName)
                 return Disabled;
@@ -81,7 +81,7 @@ namespace Subjugate.SubjucationPerks
             return false;
         }
 
-        public virtual bool IsEnabled(SkillRecord skill)
+        public virtual bool IsSkillEnabled(SkillRecord skill)
         {
             if (skill.def.defName == SkillDef.defName)
                 return ForceActivate;

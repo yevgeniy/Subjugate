@@ -2,7 +2,7 @@
 
 - When beating a female pawn prisoner should add to subjugating meter --done
 	- Meter is reset when the pawn is again made prisoner. -- done
-	- Meter is filled up 1:1 point of suffering -- done
+	- Meter is filled up 1:10 point of suffering -- done
 	- Meter is full at resistence rating -- done
 	- Can gain multiple ranks of subjucation -- done
 	- When resistance cap is breached add a rating of subjugation -- done
@@ -10,12 +10,12 @@
 
 
 - Subjugated ladies have these qualities
-	- can't melee
-	- can't ranged
-	- can't weark armor
+	- can't melee -- done
+	- can't ranged -- done
+	- can't weark armor -- done
 	- only tailoring
-	- can't rebel
-	- no suppression rating dropoff
+	- can't rebel -- done
+	- no suppression rating dropoff -- done
 	- gain construction and mining appathy
 		- can't raise above rank 10
 
@@ -46,3 +46,11 @@
 
 - ladies can only be slaves, else men get a daily accumulating debuf -3/day/non-slave-lady, max 30 -- done
 - if all ladies are slaves, guys get +mood 1/lady
+
+
+
+
+----------------------------------------
+
+GenDate.TicksPerYear
+

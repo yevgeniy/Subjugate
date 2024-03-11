@@ -8,13 +8,8 @@ using Verse;
 
 namespace Subjugate.SubjucationPerks
 {
-    internal class PerkNegHateArmor : BasePerk
+    internal class PerkHatesArmor : Perk
     {
-
-        public override bool CanHandle(Pawn pawn)
-        {
-            return !CompSubjugate.GetComp(pawn).Perks.Any(v => v.GetType().Name == this.GetType().Name);
-        }
 
         public override void Activate(Pawn pawn)
         {
@@ -23,7 +18,7 @@ namespace Subjugate.SubjucationPerks
 
         public static bool HatesArmor(Pawn pawn)
         {
-            return CompSubjugate.GetComp(pawn).Perks.Any(v => v.GetType().Name == typeof(PerkNegHateArmor).Name);
+            return CompSubjugate.GetComp(pawn).Perks.Any(v => v.GetType().Name == typeof(PerkHatesArmor).Name);
         }
     }
 }

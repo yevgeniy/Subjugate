@@ -8,7 +8,7 @@ using Verse;
 
 namespace Subjugate.SubjucationPerks
 {
-    internal class PerkArtistic : BasePerk
+    internal class PerkArtistic : Perk
     {
 
         public override SkillDef SkillDef => SkillDefOf.Artistic;
@@ -31,7 +31,7 @@ namespace Subjugate.SubjucationPerks
             /* activate for slave */
 
             var ex = "";
-            var newPassion = BasePerk.UtilPassionIncrease(pawn, SkillDef, ref ex);
+            var newPassion = Perk.UtilPassionIncrease(pawn, SkillDef, ref ex);
             Explain = ex; 
             ForceActivate = true;
             var skill = pawn.skills.GetSkill(SkillDef);

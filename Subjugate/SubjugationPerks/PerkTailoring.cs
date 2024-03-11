@@ -8,7 +8,7 @@ using Verse;
 
 namespace Subjugate.SubjucationPerks
 {
-    internal class PerkTailoring : BasePerk
+    internal class PerkTailoring : Perk
     {
         public override SkillDef SkillDef => SkillDefOf.Crafting;
 
@@ -28,7 +28,7 @@ namespace Subjugate.SubjucationPerks
         public override void Activate(Pawn pawn)
         {
             var ex = "";
-            var newPassion = BasePerk.UtilPassionIncrease(pawn, SkillDef, ref ex);
+            var newPassion = Perk.UtilPassionIncrease(pawn, SkillDef, ref ex);
             Explain = ex.Replace("SKILL", "tailoring");
             Explain += "\n    " + "- will not do other crafting";
             ForceActivate = true;

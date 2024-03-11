@@ -8,7 +8,7 @@ using Verse;
 
 namespace Subjugate.SubjucationPerks
 {
-    public class PerkNegSkillMining : NegSkillPerk
+    public class PerkNegSkillMining : DenySkillPerk
     {
         public override SkillDef SkillDef => SkillDefOf.Mining;
 

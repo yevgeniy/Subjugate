@@ -29,15 +29,35 @@ namespace Subjugate
             Harmony.DEBUG = true;  // Enable Harmony Debug
             Harmony harmony = new Harmony("nimm.Subjugate");
 
+            PatchAll(harmony);
+
             harmony.PatchAll();
 
             Log.Message("Subjugate PATCHED.");
         }
 
+        private static void PatchAll(Harmony harmony)
+        {
+            // Get all assemblies in the current application domain
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            // Use LINQ to select types that implement IHarmonyPatch interface
+            Type[] patchClasses = assemblies
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => typeof(IHarmonyPatch).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
+                .ToArray();
+
+            foreach ( Type patchClass in patchClasses )
+            {
+                var inst = (IHarmonyPatch) Activator.CreateInstance(patchClass);
+                Log.Message("A");
+                inst.Patch(harmony);
+            }
+        }
     }
 
     public interface IHarmonyPatch {
-        void Patch();
+        void Patch(Harmony harmony);
     }
 
 

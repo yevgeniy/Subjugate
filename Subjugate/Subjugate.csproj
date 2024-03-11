@@ -231,39 +231,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrandComp.cs" />
-    <Compile Include="BrandDialog.cs" />
     <Compile Include="PatchDamageWorker_Blunt.cs" />
-    <Compile Include="PathcBrandCard.cs" />
-    <Compile Include="ManagerBrand.cs" />
-    <Compile Include="SubjucationPerks\BasePerk.cs" />
-    <Compile Include="SubjucationPerks\INegSkillPerk.cs" />
-    <Compile Include="SubjucationPerks\IPerk.cs" />
-    <Compile Include="SubjucationPerks\NegSkillPerk.cs" />
-    <Compile Include="SubjucationPerks\PerkNegSkillMining.cs" />
-    <Compile Include="SubjucationPerks\PerkNegSkillConstruction.cs" />
-    <Compile Include="SubjucationPerks\PerkNegSkillMelee.cs" />
-    <Compile Include="SubjucationPerks\PerkNegSkillShooting.cs" />
-    <Compile Include="SubjucationPerks\PerkCooking.cs" />
-    <Compile Include="SubjucationPerks\PerkArtistic.cs" />
-    <Compile Include="SubjucationPerks\PerkNudistTrait.cs" />
-    <Compile Include="SubjucationPerks\PerkNegHateArmor.cs" />
-    <Compile Include="SubjucationPerks\PerkTailoring.cs" />
-    <Compile Include="SubjucationPerks\PerkPlant.cs" />
     <Compile Include="CompSubjugate.cs" />
     <Compile Include="Defs.cs" />
     <Compile Include="SubjugatePatch.cs" />
+    <Compile Include="SubjugationPerks\ApathyPerk.cs" />
+    <Compile Include="SubjugationPerks\Perk.cs" />
+    <Compile Include="SubjugationPerks\DenySkillPerk.cs" />
+    <Compile Include="SubjugationPerks\PerkArtistic.cs" />
+    <Compile Include="SubjugationPerks\PerkCooking.cs" />
+    <Compile Include="SubjugationPerks\PerkHatesArmor.cs" />
+    <Compile Include="SubjugationPerks\PerkNegSkillConstruction.cs" />
+    <Compile Include="SubjugationPerks\PerkDenyMelee.cs" />
+    <Compile Include="SubjugationPerks\PerkNegSkillMining.cs" />
+    <Compile Include="SubjugationPerks\PerkDenyShooting.cs" />
+    <Compile Include="SubjugationPerks\PerkNudistTrait.cs" />
+    <Compile Include="SubjugationPerks\PerkPlant.cs" />
+    <Compile Include="SubjugationPerks\PerkTailoring.cs" />
     <Compile Include="ThoughtWorkers.cs" />
-    <Compile Include="WorkGiverDefOf.cs" />
-    <Compile Include="AmmoProxy.cs" />
-    <Compile Include="Driver_ReloadInStorage.cs" />
-    <Compile Include="GunProxy.cs" />
-    <Compile Include="JobDefOf.cs" />
     <Compile Include="Subjugate.cs" />
-    <Compile Include="ManagerReloadWeapons.cs" />
-    <Compile Include="Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorkGiver_ReloadInStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -8,7 +8,7 @@ using Verse;
 
 namespace Subjugate.SubjucationPerks
 {
-    public class PerkNudistTrait:BasePerk
+    public class PerkNudistTrait:Perk
     {
         public override bool CanHandle(Pawn pawn)
         {
