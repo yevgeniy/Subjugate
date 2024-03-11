@@ -1,0 +1,7 @@
+C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\Adjustments\Adjustments\obj\Release\Adjustments.csproj.AssemblyReference.cache
+C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\Adjustments\Adjustments\obj\Release\Adjustments.csproj.CoreCompileInputs.cache
+C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\Adjustments\Assemblies\Adjustments.dll
+C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\Adjustments\Assemblies\Adjustments.pdb
+C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\Adjustments\Adjustments\obj\Release\Adjustments.csproj.CopyComplete
+C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\Adjustments\Adjustments\obj\Release\Adjustments.dll
+C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\Adjustments\Adjustments\obj\Release\Adjustments.pdb

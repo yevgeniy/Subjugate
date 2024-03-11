@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+	 <PreceptDef>
+		<defName>Females_must_be_slaves</defName>
+		<issue>Slavery</issue>
+		<label>Female Slavery</label>
+		<description>All women need to submit to men as slaves.</description>
+		<impact>High</impact>
+		<displayOrderInIssue>1</displayOrderInIssue>
+		<displayOrderInImpact>999</displayOrderInImpact>
+		<associatedMemes>
+		  <li>MaleSupremacy</li>
+		</associatedMemes>
+		<comps>
+		  <li Class="PreceptComp_SituationalThought">
+			<thought>UnsubjugatedWomen</thought>
+		  </li>
+		  <li Class="PreceptComp_SituationalThought">
+			<thought>AllWomenSlaves</thought>
+		  </li>
+		  <li Class="PreceptComp_SituationalThought">
+			<thought>DisciplinedAWomen</thought>
+		  </li>
+		  
+		</comps>
+		<approvesOfSlavery>true</approvesOfSlavery>
+	</PreceptDef>
+
+	<ThoughtDef>
+		<defName>SubjugatePutOnArmour</defName>
+		<durationDays>1</durationDays>
+		<stages>
+		  <li>
+			<label>put on armour</label>
+			<description>I was made to put on armour.  I really don't like wearing armour. </description>
+			<baseMoodEffect>-30</baseMoodEffect>
+		  </li>
+		</stages>
+	</ThoughtDef>
+	
+	<ThoughtDef>
+		<defName>UnsubjugatedWomen</defName>
+		<workerClass>Adjustments.SubjugateThoughtWorker</workerClass>
+		<stages>
+		  <li>
+			<label>has unsubjugated women</label>
+			<description>There are unsubjugated women</description>
+			<baseMoodEffect>-3</baseMoodEffect>
+		  </li>
+		</stages>
+    </ThoughtDef>
+	<ThoughtDef>
+		<defName>AllWomenSlaves</defName>
+		<workerClass>Adjustments.SubjugateAllWomenSlaves</workerClass>
+		<stages>
+		  <li>
+			<label>all women are slaves</label>
+			<description>All women subjugated</description>
+			<baseMoodEffect>1</baseMoodEffect>
+		  </li>
+		</stages>
+    </ThoughtDef>
+	<ThoughtDef>
+		<defName>DisciplinedAWomen</defName>
+		<workerClass>Adjustments.RecentlyDisciplinedAWoman</workerClass>
+		<stages>
+		  <li>
+			<label>recently disciplined a woman</label>
+			<description>Recently disciplined a woman</description>
+			<baseMoodEffect>1</baseMoodEffect>
+		  </li>
+		</stages>
+    </ThoughtDef>
+
+
+	<TraitDef>
+		<defName>Subjugated</defName>
+		<commonality>0.00</commonality>
+		<commonalityFemale>0.01</commonalityFemale>
+		<degreeDatas>
+			<li>
+				<label>Subjugated</label>
+				<description>[PAWN_nameDef] was subjugated as a result she gained .</description>
+			</li>
+		</degreeDatas>
+		<conflictingTraits>
+			<li>DislikesMen</li>
+			<li>DislikesWomen</li>
+		</conflictingTraits>
+	</TraitDef>
+
+
+	<JobDef>
+		<defName>ReloadInStorage</defName>
+		<driverClass>Adjustments.Driver_ReloadInStorage</driverClass>
+		<reportString>Reloading TargetA in storage</reportString>
+	</JobDef>
+	
+
+	<WorkGiverDef>
+		<defName>ReloadWeaponsScan</defName>
+		<label>reloading in storage</label>
+		<giverClass>Adjustments.WorkGiver_ReloadInStorage</giverClass>
+		<workType>Hauling</workType>
+		<verb>reload</verb>
+		<gerund>reloading</gerund>
+		<priorityInType>150</priorityInType>
+		<requiredCapacities>
+			<li>Manipulation</li>
+		</requiredCapacities>
+	</WorkGiverDef>
+	
+</Defs>
