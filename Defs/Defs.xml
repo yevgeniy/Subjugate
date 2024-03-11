@@ -40,7 +40,7 @@
 	
 	<ThoughtDef>
 		<defName>UnsubjugatedWomen</defName>
-		<workerClass>Adjustments.SubjugateThoughtWorker</workerClass>
+		<workerClass>Subjugate.ThoughtWorker_UnsubjugatedWomen</workerClass>
 		<stages>
 		  <li>
 			<label>has unsubjugated women</label>
@@ -51,7 +51,7 @@
     </ThoughtDef>
 	<ThoughtDef>
 		<defName>AllWomenSlaves</defName>
-		<workerClass>Adjustments.SubjugateAllWomenSlaves</workerClass>
+		<workerClass>Subjugate.ThoughtWorker_AllWomenSlaves</workerClass>
 		<stages>
 		  <li>
 			<label>all women are slaves</label>
@@ -62,7 +62,7 @@
     </ThoughtDef>
 	<ThoughtDef>
 		<defName>DisciplinedAWomen</defName>
-		<workerClass>Adjustments.RecentlyDisciplinedAWoman</workerClass>
+		<workerClass>Subjugate.ThoughtWorker_RecentlyDisciplinedAWoman</workerClass>
 		<stages>
 		  <li>
 			<label>recently disciplined a woman</label>
@@ -88,26 +88,5 @@
 			<li>DislikesWomen</li>
 		</conflictingTraits>
 	</TraitDef>
-
-
-	<JobDef>
-		<defName>ReloadInStorage</defName>
-		<driverClass>Adjustments.Driver_ReloadInStorage</driverClass>
-		<reportString>Reloading TargetA in storage</reportString>
-	</JobDef>
-	
-
-	<WorkGiverDef>
-		<defName>ReloadWeaponsScan</defName>
-		<label>reloading in storage</label>
-		<giverClass>Adjustments.WorkGiver_ReloadInStorage</giverClass>
-		<workType>Hauling</workType>
-		<verb>reload</verb>
-		<gerund>reloading</gerund>
-		<priorityInType>150</priorityInType>
-		<requiredCapacities>
-			<li>Manipulation</li>
-		</requiredCapacities>
-	</WorkGiverDef>
 	
 </Defs>

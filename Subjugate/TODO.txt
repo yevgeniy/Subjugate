@@ -1,0 +1,48 @@
+- Add subjugate comp -- done
+
+- When beating a female pawn prisoner should add to subjugating meter --done
+	- Meter is reset when the pawn is again made prisoner. -- done
+	- Meter is filled up 1:1 point of suffering -- done
+	- Meter is full at resistence rating -- done
+	- Can gain multiple ranks of subjucation -- done
+	- When resistance cap is breached add a rating of subjugation -- done
+
+
+
+- Subjugated ladies have these qualities
+	- can't melee
+	- can't ranged
+	- can't weark armor
+	- only tailoring
+	- can't rebel
+	- no suppression rating dropoff
+	- gain construction and mining appathy
+		- can't raise above rank 10
+
+- subjugated ladies get to select
+	- skill redistribution
+		- melee, ranged, and overflow for construction, mining skills experience points go to skill buffers which
+		can be assigned to either art, plant, craft, or cooking
+		- gain equal number of xp from buffer per normal xp gain.  This dubles per subjugation rank.
+	- each rank lets a lady choose upgrade (committed) (if applicable)
+		- upgrade passion (minor -> major -> burning)
+		- gain xp-buffer (equal to xp need to gain a level of average of all skills)
+		- can do art
+		- nudist trait
+		- mood +10 and sleeprate +20% when sharing a bed w/ a lady (+5 / +10% when both have it)
+			- sleep rank has to hit top
+		- mood +10 and workrate +10% for any guy who shares a bed w/ this lady
+			- sleep rank has to hit top
+		- punishing this lady acts as a focus (20 suffering/day)
+		- loving this pawn acts as a focus (only for a specific pawn)
+		- +10% workrage on a skill (art, plant, craft, cooking)
+			- can only be selected once per skill
+		- tailoring spawns 20% of recipe material after completing bill
+
+	
+
+- remove dont do plants perk when gaining plants
+- show message when subjugated -- done
+
+- ladies can only be slaves, else men get a daily accumulating debuf -3/day/non-slave-lady, max 30 -- done
+- if all ladies are slaves, guys get +mood 1/lady
