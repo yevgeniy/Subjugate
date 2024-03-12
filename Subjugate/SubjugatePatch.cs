@@ -89,20 +89,20 @@ namespace Adjustments
     }
 
     [HarmonyPatch(typeof(Pawn), "GetDisabledWorkTypes")]
-    public class check_for_disabled_crafting_work_types
+    public class subjugated_ladies_can_only_craft_tailoring
     {
+        public static string[] disswork = new string[] { "Smithing", "Crafting" };
+        public static WorkTypeDef[] dissdefs;
         [HarmonyPostfix]
         public static void patcher(Pawn __instance, ref List<WorkTypeDef> __result)
         {
-            //if (PerkTailoring.HasTailoringPerk(__instance))
-            //{
-            //    __result.AddDistinct(WorkTypeDefOf.Smithing);
+            if (PerkTailoringConstraint.HasTailoringPerk(__instance))
+            {
+                dissdefs = dissdefs ?? DefDatabase<WorkTypeDef>.AllDefs.Where(v => disswork.Contains(v.defName)).ToArray();
 
-            //    var disableDefs = DefDatabase<WorkTypeDef>.AllDefs.Where(v => new string[] { "Smithing", "Crafting" }.Contains(v.defName));
-
-            //    foreach (var i in disableDefs)
-            //        __result.AddDistinct(i);
-            //}
+                foreach (var i in dissdefs)
+                    __result.AddDistinct(i);
+            }
         }
     }
 
@@ -155,7 +155,6 @@ namespace Adjustments
                 return;
 
             var comp = CompSubjugate.GetComp(pawn);
-
 
             var explanations = comp.Perks.Select(v => v.Describe(pawn)).ToList();
             __result = __result + "\n\n" + string.Join("\n", explanations);

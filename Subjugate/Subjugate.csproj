@@ -247,7 +247,7 @@
     <Compile Include="SubjugationPerks\PerkDenyShooting.cs" />
     <Compile Include="SubjugationPerks\PerkNudistTrait.cs" />
     <Compile Include="SubjugationPerks\PerkPlant.cs" />
-    <Compile Include="SubjugationPerks\PerkTailoring.cs" />
+    <Compile Include="SubjugationPerks\PerkTailoringConstraint.cs" />
     <Compile Include="ThoughtWorkers.cs" />
     <Compile Include="Subjugate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

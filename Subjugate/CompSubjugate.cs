@@ -178,6 +178,7 @@ namespace Subjugate
                 Perks.Add(new PerkDenyMelee());
                 Perks.Add(new PerkDenyShooting());
                 Perks.Add(new PerkHatesArmor());
+                Perks.Add(new PerkTailoringConstraint());
 
                 foreach(var i in Perks)
                     i.Activate(Pawn);
