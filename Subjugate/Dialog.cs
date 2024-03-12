@@ -83,63 +83,6 @@ namespace Subjugate
             RenderXpDistribution(inRect, ref top);
             RenderPerkSelection(inRect, ref top);
             RenderSelectedPerks(inRect, ref top);
-
-
-
-            //var colorPickerRect = new Rect(inRect.x + padding, top, inRect.width - padding * 2, 30f);
-            //float h;
-            //Widgets.ColorSelector(colorPickerRect, ref SelectedColor, Colors, out h);
-
-            //top += 40f;
-
-            //var iconRect = new Rect(padding, top, inRect.width, 60f);
-            //Widgets.BeginGroup(iconRect);
-            //var row = new WidgetRow(0f, 0f, UIDirection.RightThenDown, inRect.width - padding * 2);
-            //foreach (var i in IconFiles)
-            //{
-            //    var tx = ContentFinder<Texture2D>.Get("adj/" + i);
-            //    if (row.ButtonIcon(tx, null, null, Color.gray, Color.black))
-            //        SelectedIcon = i;
-
-
-            //}
-            //Widgets.EndGroup();
-
-            //top += 70f;
-
-            //var buttonRect = new Rect(padding, top, 100f, 40f);
-            //if (Widgets.ButtonText(buttonRect, "Add"))
-            //{
-            //    //Comp.AddBrand(SelectedColor, SelectedIcon);
-            //}
-
-            //top += 60f;
-
-            //var listingRect = new Rect(5f, top, inRect.width, 400f);
-            //Listing_Standard listingStandard = new Listing_Standard()
-            //{
-            //    ColumnWidth = inRect.width
-            //};
-
-
-            ////listingStandard.Begin(listingRect);
-            ////int num = 0;
-            ////for (int i = 0; i < Comp.Brands.Count; i++)
-            ////{
-            ////    var brand = Comp.Brands[i];
-
-            ////    DoBrandRow(listingStandard.GetRect(24f, 1f), brand);
-            ////    listingStandard.Gap(6f);
-            ////    num++;
-
-            ////}
-            ////while (num < 9)
-            ////{
-            ////    listingStandard.Gap(30f);
-            ////    num++;
-            ////}
-            //listingStandard.End();
-
         }
 
         private void RenderCurrentLevel(Rect inRect, ref float top)
@@ -156,9 +99,91 @@ namespace Subjugate
             top += 10;
         }
 
+        private float SelectedPerkHeight;
+        private Vector2 CurrentScrollForPerks;
         private void RenderSelectedPerks(Rect inRect, ref float top)
         {
+            var va = Text.Anchor;
+            GUI.color = new Color(0.3098039f, 0.3098039f, 0.3098039f, 1);
+            Widgets.DrawLineHorizontal(0, top, inRect.width);
 
+            top += 15;
+
+            var scrollrect=new Rect(0, top, inRect.width, inRect.height-top);
+            var scrollview = new Rect(0, 0, inRect.width - 20, SelectedPerkHeight);
+            List<KeyValuePair<string, string>> selections = GetSelectedPerks();
+            
+            Widgets.BeginScrollView(scrollrect, ref CurrentScrollForPerks, scrollview, true);
+            Text.Font = GameFont.Small;
+
+            var lens = selections.Select(v => Text.CalcSize(v.Key).x);
+            var len = lens.Max();
+            var padding = 5f;
+            var width = scrollview.width;
+            var labelWidth = len;
+            var labelSectionWidth = labelWidth + padding * 2;
+            var descSectionWidth = width - labelSectionWidth;
+            var descWidth = descSectionWidth - padding * 2;
+
+            var t = 0f;
+
+            foreach (var entry in selections)
+            {
+                Text.Font = GameFont.Tiny;
+                var textheight = Text.CalcHeight(entry.Value, descWidth);
+                textheight = Mathf.Max(30, textheight);
+
+                /*draw box*/
+                GUI.color = new Color(0.535f, 0.535f, 0.535f, 1f);
+                var boxdiv = new Rect(0, t, width, textheight+padding*2);
+                Widgets.DrawBox(boxdiv);
+
+                /*draw label background*/
+                var labelboxdiv=new Rect(0, t, labelSectionWidth, textheight+padding*2);
+                Widgets.DrawBoxSolid(labelboxdiv, new Color(0.435f, 0.435f, 0.435f, 1f));
+
+                t += padding;
+
+                /*draw label*/
+                Text.Anchor = TextAnchor.MiddleLeft;
+                GUI.color = Color.white;
+                Text.Font = GameFont.Small;
+                var labeldiv = new Rect(padding, t, labelWidth, textheight);
+                Widgets.Label(labeldiv, entry.Key);
+
+                /*draw explain*/
+                Text.Anchor= TextAnchor.MiddleLeft;
+                Text.Font = GameFont.Tiny;
+                var descdiv = new Rect(labelSectionWidth+padding, t, descWidth, textheight);
+                Widgets.Label(descdiv, entry.Value);
+
+                t += textheight + padding + 15;
+            }
+            SelectedPerkHeight = t;
+
+            Widgets.EndScrollView();
+            Text.Anchor = va;
+
+            top += t + 10;
+        }
+
+        private List<KeyValuePair<string, string>> GetSelectedPerks()
+        {
+            var dict = new List<KeyValuePair<string,string>>();
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Shak Spear", "To be or not to be that is the question.  To fly to worlds of unknown to shake off the shackles or oppression which this lifes throughs at you and by resisting this tyranny, end it.  But what does wait beyond the veil that is the question.  Conscience makes cowards of us all."));
+            dict.Add(new KeyValuePair<string, string>("Nude", "this lady likes being naked"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
+            return dict;
+            
         }
 
         private void RenderPerkSelection(Rect inRect, ref float top)
@@ -179,6 +204,8 @@ namespace Subjugate
             {
                 DialogPerks.Show(Pawn);
             }
+
+            top += 40;
         }
 
         private string GetAvailablePerks()

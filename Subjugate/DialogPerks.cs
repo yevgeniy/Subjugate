@@ -39,6 +39,8 @@ namespace Subjugate
         }
 
         private CompSubjugate _comp;
+        private Vector2 scrollPosition;
+
         private CompSubjugate Comp
         {
             get
@@ -49,6 +51,7 @@ namespace Subjugate
             }
         }
         private Pawn Pawn { get { return _pawn; } }
+        private float HeightMod;
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -56,14 +59,21 @@ namespace Subjugate
             GUI.color = Color.white;
 
             var top = 5f;
+            var viewRect = new Rect(0, 0, inRect.width - 15, HeightMod);
+
+            Widgets.BeginScrollView(inRect, ref scrollPosition, viewRect);
 
             List<Perk> perks = GetApplicablePerks();
 
             foreach (Perk perk in perks)
             {
-                RenderPerkSelection(inRect, perk, ref top);
+                RenderPerkSelection(viewRect, perk, ref top);
                 top += 15;
             }
+
+            HeightMod = top;
+
+            Widgets.EndScrollView();
 
         }
 
@@ -90,7 +100,9 @@ namespace Subjugate
             var buttondiv = new Rect(inRect.width - 125, top, 125, 30);
             if (Widgets.ButtonText(buttondiv, "Activate", true, false, true))
             {
-
+                Comp.Perks.Add(perk);
+                perk.Activate(Pawn);
+                Close();
             }
 
             t += 40f;
@@ -126,7 +138,15 @@ namespace Subjugate
             return new List<Perk>
             {
                 new PerkArtistic(),
-                new PerkNudistTrait()
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
+                new PerkNudistTrait(),
             };
         }
 
