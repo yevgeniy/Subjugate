@@ -95,5 +95,10 @@ namespace Subjugate.SubjucationPerks
         {
             return Explain.Replace("SKILL", SkillDef.skillLabel).Replace("PAWN", pawn.Name.ToStringShort);
         }
+
+        public virtual bool HasSkillCap(SkillDef def, ref int skillcap)
+        {
+            return false;
+        }
     }
 }

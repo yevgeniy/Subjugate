@@ -10,15 +10,14 @@ namespace Subjugate.SubjucationPerks
 {
     public class ApathyPerk : Perk
     {
-
+        public int SkillCap = 10;
         public override void Activate(Pawn pawn)
         {
             var skill = pawn.skills.GetSkill(SkillDef);
             
-            Disabled = true;
             Explain = "PAWN no longer likes to do SKILL.";
 
-            if (Subjugate.HasVanillaSkillMod)
+            if (!Subjugate.HasVanillaSkillMod)
             {
                 skill.passion = Passion.None;
             } else
@@ -31,5 +30,10 @@ namespace Subjugate.SubjucationPerks
             
         }
 
+        public override bool HasSkillCap(SkillDef def, ref int skillcap)
+        {
+            skillcap = SkillCap;
+            return def.defName == SkillDef.defName;
+        }
     }
 }

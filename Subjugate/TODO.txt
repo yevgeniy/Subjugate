@@ -13,11 +13,14 @@
 	- can't melee -- done
 	- can't ranged -- done
 	- can't weark armor -- done
-	- only tailoring
+	- only tailoring -- done
 	- can't rebel -- done
-	- no suppression rating dropoff -- done
-	- gain construction and mining appathy
-		- can't raise above rank 10
+	- lady can no longer rebell but suppression need rating will impact mood thought.
+		- mood 0 at suppression 100%
+		- mood -3 at suppression of 0%
+		- after break end gain +30 suppression
+	- gain construction and mining appathy -- done
+		- can't raise above rank 10 -- done
 
 - subjugated ladies get to select
 	- skill redistribution

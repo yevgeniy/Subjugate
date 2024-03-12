@@ -12,10 +12,29 @@ using UnityEngine;
 using Verse;
 using Verse.AI;
 using Subjugate;
+using Verse.Sound;
 
 namespace Adjustments
 {
+    [HarmonyPatch(typeof(SkillRecord), "GetLevel")]
+    public class subjugated_ladies_have_a_skill_cap_on_mining_and_crafting
+    {
+        public static void Postfix(bool includeAptitudes, SkillRecord __instance, ref int __result)
+        {
+            var pawn = __instance.Pawn;
+            var comp = CompSubjugate.GetComp(pawn);
+            if (comp!=null)
+            {
+                int skillcap=-1;
+                var hasSkillCap = comp.Perks.Any(v => v.HasSkillCap(__instance.def, ref skillcap));
+                if (hasSkillCap )
+                {
+                    __result = Mathf.Min(skillcap, __result);
+                }
+            }
 
+        }
+    }
 
     [HarmonyPatch(typeof(StatExtension), "GetStatValue")]
     public class asjust_slave_suppression_rate
