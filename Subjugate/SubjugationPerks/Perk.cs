@@ -10,6 +10,11 @@ namespace Subjugate.SubjucationPerks
 {
     public class Perk : IExposable
     {
+        public virtual string Name => "N/A";
+        public virtual string NextLevelExplain(Pawn pawn)
+        {
+            return "N/A";
+        }
 
         private string explain;
         public virtual string Explain { get { return explain; } set { explain = value; } }

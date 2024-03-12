@@ -10,21 +10,19 @@ namespace Subjugate.SubjucationPerks
 {
     internal class PerkArtistic : Perk
     {
+        public override string Name => "Artistic";
+        public override string NextLevelExplain(Pawn pawn)
+        {
+            var comp = CompSubjugate.GetComp(pawn);
+            if (!comp.Perks.Any(v => v.GetType().Name == typeof(PerkArtistic).Name) )
+            {
+                return "Lady slave will engage in artistic work.";
+            }
+            
+            return null;
+        }
 
         public override SkillDef SkillDef => SkillDefOf.Artistic;
-
-        public override bool CanHandle(Pawn pawn)
-        {
-            var skill = pawn.skills.GetSkill(SkillDef);
-            if (skill.TotallyDisabled)
-                return true;
-
-            var p = (byte)skill.passion;
-            if (p == 0 || p == 1 || p == 2 || p == 3) /*none, minor, major, apathy */
-                return true;
-            return false;
-
-        }
 
         public override void Activate(Pawn pawn)
         {
