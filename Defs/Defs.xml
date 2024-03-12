@@ -39,6 +39,17 @@
 	</ThoughtDef>
 	
 	<ThoughtDef>
+		<defName>NeedAdmonishing</defName>
+		<workerClass>Subjugate.ThoughtWorker_NeedAdmonishing</workerClass>
+		<stages>
+		  <li>
+			<label>need admonishing</label>
+			<description>Subjugated lady needs adminishing</description>
+			<baseMoodEffect>-1</baseMoodEffect>
+		  </li>
+		</stages>
+    </ThoughtDef>
+	<ThoughtDef>
 		<defName>UnsubjugatedWomen</defName>
 		<workerClass>Subjugate.ThoughtWorker_UnsubjugatedWomen</workerClass>
 		<stages>

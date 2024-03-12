@@ -51,10 +51,14 @@ namespace Adjustments
                 if (comp == null)
                     return;
 
-                if (comp.Level>0)
+                if (comp.IsContent)
                 {
                     __result = 0;
+                    return;
                 }
+
+                var percentleft = 1f - comp.ContentRatio;
+                __result *= percentleft;
 
             }
         }
@@ -175,8 +179,10 @@ namespace Adjustments
 
             var comp = CompSubjugate.GetComp(pawn);
 
+            __result += "\n\n" + comp.ContentStr;
+
             var explanations = comp.Perks.Select(v => v.Describe(pawn)).ToList();
-            __result = __result + "\n\n" + string.Join("\n", explanations);
+            __result += "\n\n" + string.Join("\n", explanations);
         }
     }
 

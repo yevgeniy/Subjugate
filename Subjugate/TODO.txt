@@ -15,10 +15,10 @@
 	- can't weark armor -- done
 	- only tailoring -- done
 	- can't rebel -- done
-	- lady can no longer rebell but suppression need rating will impact mood thought.
-		- mood 0 at suppression 100%
-		- mood -3 at suppression of 0%
-		- after break end gain +30 suppression
+	- lady can no longer rebell but suppression need rating will impact mood thought. -- done
+		- mood 0 at suppression 100% --done
+		- mood -30 at suppression of 0% -- done
+		- after 1 qrt (per 20 pts of suffering dealt) suppression drop rating will set to 0. -- done
 	- gain construction and mining appathy -- done
 		- can't raise above rank 10 -- done
 

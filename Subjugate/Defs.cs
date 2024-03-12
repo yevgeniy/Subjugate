@@ -15,7 +15,7 @@ namespace Subjugate
 
         public static ThoughtDef SubjugatePutOnArmour;
         public static ThoughtDef UnsubjugatedWomen;
-        
+        public static ThoughtDef NeedAdmonishing;
     }
 }
 

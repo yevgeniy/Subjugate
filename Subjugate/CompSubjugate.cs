@@ -17,23 +17,40 @@ namespace Subjugate
     [StaticConstructorOnStartup]
     public class CompSubjugate : ThingComp
     {
-        public int Level;
+        
 
 
 
         
         public static readonly TraitDef SubjugatedTrait = DefDatabase<TraitDef>.GetNamed("Subjugated");
         public static Dictionary<Pawn, CompSubjugate> Repo = new Dictionary<Pawn, CompSubjugate>();
-        
+
+        public int Level;
         private bool IsPrimed=false;
         private float CurrentRating;
         private float RatingCap;
 
+        private double CurrentContentRating;
+        private double ContentCap;
+        private double ContentGainPerTick = Convert.ToDouble( 20) / Convert.ToDouble( GenDate.TicksPerSeason);
+
+        public float ContentRatio => (float)( CurrentContentRating / ContentCap);
+        public bool IsContent => CurrentContentRating == ContentCap;
+        public object ContentStr => IsContent
+            ? Pawn.Name.ToStringShort + " is happy being a slave"
+            : "Content: " + ContentRatio*100f + "%";
+
+
         public float PunishmentDealtRating;
 
         public List<Perk> Perks = new List<Perk>();
-        
-        private Need_Suppression SupNeed;
+
+        private Need_Suppression supneed;
+        public Need_Suppression SupNeed { get
+            {
+                supneed = supneed ?? Pawn.needs.TryGetNeed<Need_Suppression>();
+                return supneed;
+            } }
 
         private Pawn Pawn
         {
@@ -56,11 +73,11 @@ namespace Subjugate
                 thingDef.comps.Add(new CompProperties { compClass = typeof(CompSubjugate) });
             }
 
-            ///* Add thought to precept */
-            //foreach (PreceptDef preceptDef in DefDatabase<PreceptDef>.AllDefs )
-            //{
-            //    preceptDef.comps.Add(new PreceptComp_SituationalThought { thought=Defs.UnsubjugatedWomen });
-            //}
+            /* Add global thoughts to precept */
+            foreach (PreceptDef preceptDef in DefDatabase<PreceptDef>.AllDefs)
+            {
+                preceptDef.comps.Add(new PreceptComp_SituationalThought { thought = Defs.NeedAdmonishing });
+            }
 
 
         }
@@ -69,7 +86,8 @@ namespace Subjugate
             CurrentRating = 0f;
             RatingCap = 0f;
         }
-        
+
+        private double ticksInRareTick = 250;
         public override void CompTickRare()
         {
             base.CompTickRare();
@@ -79,13 +97,18 @@ namespace Subjugate
                 PunishmentDealtRating = Mathf.Max(0, PunishmentDealtRating - 1);
             }
 
-
-            if (Level>0 && Pawn.IsSlave)
+            if (Level>0 && Pawn.IsSlave && Pawn.gender==Gender.Female)
             {
-                SupNeed = SupNeed ?? Pawn.needs.TryGetNeed<Need_Suppression>();
-                SupNeed.CurLevel = 1f;
+                double toadd = Convert.ToDouble(Level) * ContentGainPerTick * ticksInRareTick;
+                CurrentContentRating += toadd;
+                if (CurrentContentRating > ContentCap)
+                    CurrentContentRating = ContentCap;
+
+                if (IsContent)
+                {
+                    SupNeed.CurLevel = 1f;
+                }
             }
-        
         }
 
         public override void PostDeSpawn(Map map)
@@ -104,6 +127,8 @@ namespace Subjugate
             Scribe_Values.Look(ref CurrentRating, "subjugate-cur-rat" );
             Scribe_Values.Look(ref RatingCap, "subjugate-rat-cap" );
             Scribe_Values.Look(ref PunishmentDealtRating, "subjugate-dic-dealt-rat");
+            Scribe_Values.Look(ref CurrentContentRating, "subjugate-cur-cont-rat");
+            Scribe_Values.Look(ref ContentCap, "subjugate-cont-cap");
 
             if (Perks == null)
                 Perks = new List<Perk>();
@@ -152,8 +177,10 @@ namespace Subjugate
             if (bypawn.IsColonist && !bypawn.IsSlave)
             {
                 CompSubjugate.GetComp(bypawn).PunishmentDealtRating += severity;
+                ContentCap += severity * .1f;
 
                 CurrentRating = Mathf.Min(RatingCap, CurrentRating + severity * .1f);
+                
 
                 /*lower resistance by the beating amount*/
                 Pawn.guest.will = Mathf.Max(.1f, Pawn.guest.will - severity * .01f);
