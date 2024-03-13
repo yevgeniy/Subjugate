@@ -16,6 +16,23 @@ using Verse.Sound;
 
 namespace Adjustments
 {
+    [HarmonyPatch(typeof(SkillRecord), "Learn")]
+    public class subjugated_ladies_distribute_depricated_skills
+    {
+        public static void Prefix(ref float xp, bool direct, SkillRecord __instance)
+        {
+            var comp = CompSubjugate.GetComp(__instance.Pawn);
+            if (comp!=null && comp.Level>0)
+            {
+                var amt = comp.xp.TryExtractXP(__instance.def.defName, xp);
+                if (amt>0)
+                    Log.Message(__instance.Pawn + " norm:" + xp + " amt:" + amt);
+                xp += amt;
+            }
+
+        }
+    }
+
     [HarmonyPatch(typeof(SkillRecord), "GetLevel")]
     public class subjugated_ladies_have_a_skill_cap_on_mining_and_crafting
     {

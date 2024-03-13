@@ -87,19 +87,24 @@ namespace Subjugate
             xp = new XPSystem(this);
         }
 
+        long ticks;
+        public override void CompTick()
+        {
+            ticks++;
+            
+        }
+
         private double ticksInRareTick = 250;
         public override void CompTickRare()
         {
             base.CompTickRare();
 
-            if (Find.TickManager.TicksGame % 2000==0) /* long tick shim */
+            if (ticks % 2000 == 0) /* long tick shim */
             {
                 PunishmentDealtRating = Mathf.Max(0, PunishmentDealtRating - 1);
             }
-            if (Find.TickManager.TicksGame % ticksInRareTick==0)
-            {
-                xp.TickRare();
-            }
+
+            xp.TickRare();
 
 
             if (Level>0 && Pawn.IsSlave && Pawn.gender==Gender.Female)
@@ -252,9 +257,13 @@ namespace Subjugate
         public float XPBuffer;
         public float XPExtractedThisCycle;
         public CompSubjugate Comp;
+        public string SelectedSkill;
 
         public void TickRare()
         {
+            if (Comp.Level == 0)
+                return;
+
             var depricatedSkills = GetDepricatedSkills();
 
             /*apply xp deprication for this cycle to a random skill. */
@@ -265,7 +274,11 @@ namespace Subjugate
                 if (skill != null)
                 {
                     float resultingxp = Mathf.Max(0, TotalXp(skill) - XPExtractedThisCycle);
+
+                    Log.Message(skill.def.defName + " extracted:" + XPExtractedThisCycle + " l:" + skill.Level + " need:" + skill.xpSinceLastLevel);
+
                     XpToLevel(skill, resultingxp);
+                    Log.Message("res lev:" + skill.Level + " need:" + skill.xpSinceLastLevel);
 
                 }
                 XPExtractedThisCycle = 0;
@@ -283,15 +296,19 @@ namespace Subjugate
 
         private void XpToLevel(SkillRecord skill, float resultingxp)
         {
-
+            var xp = 0f;
             for (var i = 0; i < skill.Level; i++)
             {
-                if (xpLvlUpData[i] <= resultingxp && resultingxp < xpLvlUpData[i+1])
+                
+                if (xp <= resultingxp && resultingxp < xp+xpLvlUpData[i])
                 {
                     skill.Level = i;
-                    skill.xpSinceLastLevel = resultingxp - xpLvlUpData[i];
+                    skill.xpSinceLastLevel = resultingxp - xp;
                     break;
                 }
+
+                xp += xpLvlUpData[i];
+
             }
         }
         private float TotalXp(SkillRecord skill)
@@ -340,20 +357,39 @@ namespace Subjugate
                 SkillDefOf.Construction.defName
             };
         }
+        public string[] GetTargetSkills()
+        {
+            return new string[] {
+                SkillDefOf.Plants.defName,
+                SkillDefOf.Cooking.defName,
+                SkillDefOf.Crafting.defName,
+                SkillDefOf.Artistic.defName,
+            };
+        }
 
         public float ExtractXP(float amnt)
         {
-            var n = Mathf.Min(XPBuffer, amnt);
+            var n = Mathf.Min(XPBuffer, amnt*Comp.Level);
             XPBuffer -= n;
             XPExtractedThisCycle += n;
 
             return n;
+        }
+        public float TryExtractXP(string skillname, float amnt)
+        {
+            if (skillname==SelectedSkill)
+            {
+                return ExtractXP(amnt);
+            }
+            return 0;
         }
 
         public void ExposeData()
         {
             Scribe_Values.Look(ref XPBuffer, "subj-xp-buffer");
             Scribe_Values.Look(ref XPExtractedThisCycle, "subj-xp-extacted");
+            Scribe_Values.Look(ref SelectedSkill, "subj-sel-skill");
+            
         }
     }
 

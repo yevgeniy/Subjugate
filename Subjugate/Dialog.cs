@@ -233,7 +233,7 @@ namespace Subjugate
             top += textheight + 10;
             var dropdownDiv = new Rect(0, top, 100, 30);
 
-            string[] options = GetDepricatedSkills();
+            string[] options = GetSkills();
             if (Widgets.ButtonText(dropdownDiv, GetSelectedSkill(), true, false, true))
             {
                 List<FloatMenuOption> list = options.Select(v => new FloatMenuOption(v, () => SetSelectedSkill(v) )).ToList();
@@ -258,25 +258,21 @@ namespace Subjugate
             return Comp.xp.XPBuffer.ToString("N");
         }
 
-        private static string SetSelectedSkill(string v)
+        private string SetSelectedSkill(string v)
         {
-            return Selected = v;
+            return Comp.xp.SelectedSkill = v;
         }
 
-        private static string GetSelectedSkill()
+        private string GetSelectedSkill()
         {
-            return Selected;
+            return Comp.xp.SelectedSkill ?? "--select--";
         }
 
-        private static string[] GetDepricatedSkills()
+        public string[] GetSkills()
         {
-            return new string[] {
-                SkillDefOf.Plants.defName,
-                SkillDefOf.Cooking.defName,
-                SkillDefOf.Crafting.defName,
-                SkillDefOf.Artistic.defName,
-            };
+            return Comp.xp.GetTargetSkills();
         }
+
 
         public static Task<List<string>> Show(Pawn pawn)
         {
