@@ -18,10 +18,6 @@ namespace Subjugate
     public class CompSubjugate : ThingComp
     {
         
-
-
-
-        
         public static readonly TraitDef SubjugatedTrait = DefDatabase<TraitDef>.GetNamed("Subjugated");
         public static Dictionary<Pawn, CompSubjugate> Repo = new Dictionary<Pawn, CompSubjugate>();
 
@@ -52,7 +48,7 @@ namespace Subjugate
                 return supneed;
             } }
 
-        private Pawn Pawn
+        public Pawn Pawn
         {
             get
             {
@@ -63,6 +59,8 @@ namespace Subjugate
                 return null;
             }
         }
+
+        public XPSystem xp;
 
         static CompSubjugate()
         {
@@ -85,6 +83,8 @@ namespace Subjugate
         {
             CurrentRating = 0f;
             RatingCap = 0f;
+
+            xp = new XPSystem(this);
         }
 
         private double ticksInRareTick = 250;
@@ -96,6 +96,11 @@ namespace Subjugate
             {
                 PunishmentDealtRating = Mathf.Max(0, PunishmentDealtRating - 1);
             }
+            if (Find.TickManager.TicksGame % ticksInRareTick==0)
+            {
+                xp.TickRare();
+            }
+
 
             if (Level>0 && Pawn.IsSlave && Pawn.gender==Gender.Female)
             {
@@ -109,6 +114,8 @@ namespace Subjugate
                     SupNeed.CurLevel = 1f;
                 }
             }
+
+
         }
 
         public override void PostDeSpawn(Map map)
@@ -129,6 +136,8 @@ namespace Subjugate
             Scribe_Values.Look(ref PunishmentDealtRating, "subjugate-dic-dealt-rat");
             Scribe_Values.Look(ref CurrentContentRating, "subjugate-cur-cont-rat");
             Scribe_Values.Look(ref ContentCap, "subjugate-cont-cap");
+
+            xp.ExposeData();
 
             if (Perks == null)
                 Perks = new List<Perk>();
@@ -230,6 +239,121 @@ namespace Subjugate
             }
             return Repo[pawn];
 
+        }
+    }
+
+    public class XPSystem : IExposable
+    {
+        public XPSystem(CompSubjugate comp)
+        {
+            Comp = comp;
+
+        }
+        public float XPBuffer;
+        public float XPExtractedThisCycle;
+        public CompSubjugate Comp;
+
+        public void TickRare()
+        {
+            var depricatedSkills = GetDepricatedSkills();
+
+            /*apply xp deprication for this cycle to a random skill. */
+            if (XPExtractedThisCycle>0)
+            {
+                var depricatingSkill = depricatedSkills.RandomElement();
+                var skill = Comp.Pawn.skills.skills.FirstOrDefault(v => v.def.defName == depricatingSkill && (v.Level > 0 || v.xpSinceLastLevel > 0));
+                if (skill != null)
+                {
+                    float resultingxp = Mathf.Max(0, TotalXp(skill) - XPExtractedThisCycle);
+                    XpToLevel(skill, resultingxp);
+
+                }
+                XPExtractedThisCycle = 0;
+            }
+
+            /*revalidate total xp buffer*/
+            var validbufferskills = Comp.Pawn.skills.skills.Where(v => depricatedSkills.Contains(v.def.defName));
+            float i = 0;
+            foreach(var skill in validbufferskills)
+            {
+                i += TotalXp(skill);
+            }
+            XPBuffer = i;
+        }
+
+        private void XpToLevel(SkillRecord skill, float resultingxp)
+        {
+
+            for (var i = 0; i < skill.Level; i++)
+            {
+                if (xpLvlUpData[i] <= resultingxp && resultingxp < xpLvlUpData[i+1])
+                {
+                    skill.Level = i;
+                    skill.xpSinceLastLevel = resultingxp - xpLvlUpData[i];
+                    break;
+                }
+            }
+        }
+        private float TotalXp(SkillRecord skill)
+        {
+            var xp = 0f;
+            for (var i = 0; i < skill.Level; i++)
+            {
+                xp += xpLvlUpData[i];
+            }
+            xp += skill.xpSinceLastLevel;
+            return xp;
+        }
+
+        private static float[] xpLvlUpData = new float[]
+        {
+            SkillRecord.XpRequiredToLevelUpFrom(0),
+            SkillRecord.XpRequiredToLevelUpFrom(1),
+            SkillRecord.XpRequiredToLevelUpFrom(2),
+            SkillRecord.XpRequiredToLevelUpFrom(3),
+            SkillRecord.XpRequiredToLevelUpFrom(4),
+            SkillRecord.XpRequiredToLevelUpFrom(5),
+            SkillRecord.XpRequiredToLevelUpFrom(6),
+            SkillRecord.XpRequiredToLevelUpFrom(7),
+            SkillRecord.XpRequiredToLevelUpFrom(8),
+            SkillRecord.XpRequiredToLevelUpFrom(9),
+            SkillRecord.XpRequiredToLevelUpFrom(10),
+            SkillRecord.XpRequiredToLevelUpFrom(11),
+            SkillRecord.XpRequiredToLevelUpFrom(12),
+            SkillRecord.XpRequiredToLevelUpFrom(13),
+            SkillRecord.XpRequiredToLevelUpFrom(14),
+            SkillRecord.XpRequiredToLevelUpFrom(15),
+            SkillRecord.XpRequiredToLevelUpFrom(16),
+            SkillRecord.XpRequiredToLevelUpFrom(17),
+            SkillRecord.XpRequiredToLevelUpFrom(18),
+            SkillRecord.XpRequiredToLevelUpFrom(19),
+        };
+    
+
+        private string[] GetDepricatedSkills()
+        {
+            return new string[]
+            {
+                SkillDefOf.Shooting.defName,
+                SkillDefOf.Melee.defName,
+                SkillDefOf.Mining.defName,
+                SkillDefOf.Construction.defName
+            };
+        }
+
+        public float ExtractXP(float amnt)
+        {
+            var n = Mathf.Min(XPBuffer, amnt);
+            XPBuffer -= n;
+            XPExtractedThisCycle += n;
+
+            return n;
+        }
+
+        public void ExposeData()
+        {
+            Scribe_Values.Look(ref XPBuffer, "subj-xp-buffer");
+            Scribe_Values.Look(ref XPExtractedThisCycle, "subj-xp-extacted");
         }
     }
 

@@ -233,7 +233,7 @@ namespace Subjugate
             top += textheight + 10;
             var dropdownDiv = new Rect(0, top, 100, 30);
 
-            string[] options = GetSkills();
+            string[] options = GetDepricatedSkills();
             if (Widgets.ButtonText(dropdownDiv, GetSelectedSkill(), true, false, true))
             {
                 List<FloatMenuOption> list = options.Select(v => new FloatMenuOption(v, () => SetSelectedSkill(v) )).ToList();
@@ -255,7 +255,7 @@ namespace Subjugate
 
         private string GetBufferXP()
         {
-            return "99999999";
+            return Comp.xp.XPBuffer.ToString("N");
         }
 
         private static string SetSelectedSkill(string v)
@@ -268,7 +268,7 @@ namespace Subjugate
             return Selected;
         }
 
-        private static string[] GetSkills()
+        private static string[] GetDepricatedSkills()
         {
             return new string[] {
                 SkillDefOf.Plants.defName,
