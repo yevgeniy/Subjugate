@@ -42,8 +42,10 @@ namespace Adjustments
             var comp = CompSubjugate.GetComp(pawn);
             if (comp!=null)
             {
+                
                 int skillcap=-1;
-                var hasSkillCap = comp.Perks.Any(v => v.HasSkillCap(__instance.def, ref skillcap));
+                var hasSkillCap = comp.HadDepricatedSkillCaps(__instance.def, ref skillcap);
+                
                 if (hasSkillCap )
                 {
                     __result = Mathf.Min(skillcap, __result);
@@ -54,7 +56,7 @@ namespace Adjustments
     }
 
     [HarmonyPatch(typeof(StatExtension), "GetStatValue")]
-    public class asjust_slave_suppression_rate
+    public class subjugated_ladies_adjust_suppression_rate_based_on_content_level
     {
         [HarmonyPostfix]
         public static void fixer(Thing thing, StatDef stat, bool applyPostProcess, int cacheStaleAfterTicks, ref float __result)
@@ -83,7 +85,7 @@ namespace Adjustments
 
 
     [HarmonyPatch(typeof(SlaveRebellionUtility), "CanParticipateInSlaveRebellion")]
-    public class cant_participate_in_rebellion
+    public class subjugated_ladies_dont_rebell
     {
         [HarmonyPrefix]
         public static bool patch(Pawn pawn, ref bool __result)
@@ -131,18 +133,21 @@ namespace Adjustments
     [HarmonyPatch(typeof(Pawn), "GetDisabledWorkTypes")]
     public class subjugated_ladies_can_only_craft_tailoring
     {
-        public static string[] disswork = new string[] { "Smithing", "Crafting" };
-        public static WorkTypeDef[] dissdefs;
         [HarmonyPostfix]
         public static void patcher(Pawn __instance, ref List<WorkTypeDef> __result)
         {
-            if (PerkTailoringConstraint.HasTailoringPerk(__instance))
+            var comp = CompSubjugate.GetComp(__instance);
+            if (comp!=null )
             {
-                dissdefs = dissdefs ?? DefDatabase<WorkTypeDef>.AllDefs.Where(v => disswork.Contains(v.defName)).ToArray();
+                
+                WorkTypeDef[] disworktypes = comp.DisabledWorkTypes();
 
-                foreach (var i in dissdefs)
-                    __result.AddDistinct(i);
+                if (disworktypes!=null)
+                    foreach (var i in disworktypes)
+                        __result.AddDistinct(i);
+                
             }
+            
         }
     }
 
@@ -152,7 +157,8 @@ namespace Adjustments
         [HarmonyPrefix]
         public static bool prepatcher(Apparel apparel, Pawn_ApparelTracker __instance)
         {
-            if (apparel.def.tradeTags.Any(v => v == "Armor") && PerkHatesArmor.HatesArmor(__instance.pawn))
+            var comp = CompSubjugate.GetComp(__instance.pawn);
+            if (comp!=null && apparel.def.tradeTags.Any(v => v == "Armor") && comp.HatesWearingArmor())
             {
                 __instance.pawn.needs.mood.thoughts.memories.TryGainMemory(Defs.SubjugatePutOnArmour);
             }
@@ -161,29 +167,29 @@ namespace Adjustments
         }
     }
 
-    [HarmonyPatch(typeof(GuestUtility), "GetDisabledWorkTypes")]
-    public class activate_artistic_for_applicable_slaves
-    {
-        private static Pawn GetPawn(Pawn_GuestTracker instance)
-        {
-            Type type = typeof(Pawn_GuestTracker);
+    //[HarmonyPatch(typeof(GuestUtility), "GetDisabledWorkTypes")]
+    //public class activate_artistic_for_applicable_slaves
+    //{
+    //    private static Pawn GetPawn(Pawn_GuestTracker instance)
+    //    {
+    //        Type type = typeof(Pawn_GuestTracker);
 
-            // Get the private field info
-            FieldInfo fieldInfo = type.GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
+    //        // Get the private field info
+    //        FieldInfo fieldInfo = type.GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            return (Pawn)fieldInfo.GetValue(instance);
+    //        return (Pawn)fieldInfo.GetValue(instance);
 
-        }
-        [HarmonyPostfix]
-        public static void postfix(Pawn_GuestTracker guest, ref List<WorkTypeDef> __result)
-        {
-            var pawn = GetPawn(guest);
+    //    }
+    //    [HarmonyPostfix]
+    //    public static void postfix(Pawn_GuestTracker guest, ref List<WorkTypeDef> __result)
+    //    {
+    //        var pawn = GetPawn(guest);
 
-            var shouldDoArt = PerkArtistic.ShouldDoArt(pawn);
-            if (shouldDoArt)
-                __result.RemoveAll(v => v.defName == WorkTypeDefOf.Art.defName);
-        }
-    }
+    //        var shouldDoArt = PerkArtistic.ShouldDoArt(pawn);
+    //        if (shouldDoArt)
+    //            __result.RemoveAll(v => v.defName == WorkTypeDefOf.Art.defName);
+    //    }
+    //}
 
     [HarmonyPatch(typeof(Trait), "TipString")]
     public class trait_should_include_perk_descriptions_and_subjugation_notes
@@ -196,10 +202,13 @@ namespace Adjustments
 
             var comp = CompSubjugate.GetComp(pawn);
 
-            __result += "\n\n" + comp.ContentStr;
+            __result += "\n\n" + "Level: " + comp.Level;
 
-            var explanations = comp.Perks.Select(v => v.Describe(pawn)).ToList();
-            __result += "\n\n" + string.Join("\n", explanations);
+            __result += "\n\n" + comp.ContentStr;
+            
+
+            //var explanations = comp.Perks.Select(v => v.Describe(pawn)).ToList();
+            //__result += "\n\n" + string.Join("\n", explanations);
         }
     }
 
@@ -222,24 +231,14 @@ namespace Adjustments
         {
             var comp = CompSubjugate.GetComp(__instance.Pawn);
 
-            if (comp != null)
+            if (comp != null )
             {
-
-                var forcedisable = comp.Perks.Any(v => v.IsSkillDisabled(__instance));
-                if (forcedisable)
+                if (comp.DisabledSkill(__instance))
                 {
-
                     __result = true;
                     return false;
                 }
 
-
-                var forceenable = comp.Perks.Any(v => v.IsSkillEnabled(__instance));
-                if (forceenable)
-                {
-                    __result = false;
-                    return false;
-                }
 
                 return true;
             }

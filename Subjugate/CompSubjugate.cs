@@ -17,24 +17,24 @@ namespace Subjugate
     [StaticConstructorOnStartup]
     public class CompSubjugate : ThingComp
     {
-        
+
         public static readonly TraitDef SubjugatedTrait = DefDatabase<TraitDef>.GetNamed("Subjugated");
         public static Dictionary<Pawn, CompSubjugate> Repo = new Dictionary<Pawn, CompSubjugate>();
 
         public int Level;
-        private bool IsPrimed=false;
+        private bool IsPrimed = false;
         private float CurrentRating;
         private float RatingCap;
 
         private double CurrentContentRating;
         private double ContentCap;
-        private double ContentGainPerTick = Convert.ToDouble( 20) / Convert.ToDouble( GenDate.TicksPerSeason);
+        private double ContentGainPerTick = Convert.ToDouble(20) / Convert.ToDouble(GenDate.TicksPerSeason);
 
-        public float ContentRatio => (float)( CurrentContentRating / ContentCap);
+        public float ContentRatio => (float)(CurrentContentRating / ContentCap);
         public bool IsContent => CurrentContentRating == ContentCap;
         public object ContentStr => IsContent
             ? Pawn.Name.ToStringShort + " is happy being a slave"
-            : "Content: " + ContentRatio*100f + "%";
+            : "Content: " + ContentRatio * 100f + "%";
 
 
         public float PunishmentDealtRating;
@@ -91,7 +91,7 @@ namespace Subjugate
         public override void CompTick()
         {
             ticks++;
-            
+
         }
 
         private double ticksInRareTick = 250;
@@ -107,7 +107,7 @@ namespace Subjugate
             xp.TickRare();
 
 
-            if (Level>0 && Pawn.IsSlave && Pawn.gender==Gender.Female)
+            if (Level > 0 && Pawn.IsSlave && Pawn.gender == Gender.Female)
             {
                 double toadd = Convert.ToDouble(Level) * ContentGainPerTick * ticksInRareTick;
                 CurrentContentRating += toadd;
@@ -128,16 +128,16 @@ namespace Subjugate
             Repo.Remove(Pawn);
             base.PostDeSpawn(map);
         }
-      
+
         public override void PostExposeData()
         {
             base.PostExposeData();
 
             Scribe_Collections.Look(ref Perks, "subjugate-perks");
-            Scribe_Values.Look(ref Level, "subjugate-lvl" );
-            Scribe_Values.Look(ref IsPrimed, "subjugate-is-hot" );
-            Scribe_Values.Look(ref CurrentRating, "subjugate-cur-rat" );
-            Scribe_Values.Look(ref RatingCap, "subjugate-rat-cap" );
+            Scribe_Values.Look(ref Level, "subjugate-lvl");
+            Scribe_Values.Look(ref IsPrimed, "subjugate-is-hot");
+            Scribe_Values.Look(ref CurrentRating, "subjugate-cur-rat");
+            Scribe_Values.Look(ref RatingCap, "subjugate-rat-cap");
             Scribe_Values.Look(ref PunishmentDealtRating, "subjugate-dic-dealt-rat");
             Scribe_Values.Look(ref CurrentContentRating, "subjugate-cur-cont-rat");
             Scribe_Values.Look(ref ContentCap, "subjugate-cont-cap");
@@ -194,7 +194,7 @@ namespace Subjugate
                 ContentCap += severity * .1f;
 
                 CurrentRating = Mathf.Min(RatingCap, CurrentRating + severity * .1f);
-                
+
 
                 /*lower resistance by the beating amount*/
                 Pawn.guest.will = Mathf.Max(.1f, Pawn.guest.will - severity * .01f);
@@ -205,7 +205,7 @@ namespace Subjugate
                     IsPrimed = false;
                 }
             }
-            
+
         }
 
         private void LevelUp()
@@ -213,23 +213,34 @@ namespace Subjugate
             Level++;
 
             var t = Pawn.story.traits.GetTrait(Defs.Subjugated);
-            if (t==null) {
+            if (t == null) {
                 Pawn.story.traits.GainTrait(new Trait(Defs.Subjugated, 0, true));
-
-                Perks.Add(new PerkDenyMelee());
-                Perks.Add(new PerkDenyShooting());
-                Perks.Add(new PerkHatesArmor());
-                Perks.Add(new PerkTailoringConstraint());
-                Perks.Add(new PerkConstructionApathy());
-                Perks.Add(new PerkMiningApathy());
-
-                foreach(var i in Perks)
-                    i.Activate(Pawn);
+                ActivateSubjugation();
             }
 
             Messages.Message(Pawn + " was subjugated x" + Level, MessageTypeDefOf.PositiveEvent);
         }
 
+        private void ActivateSubjugation()
+        {
+            /*appathy skills */
+            var appathyskills = new SkillDef[] { SkillDefOf.Construction, SkillDefOf.Mining };
+            foreach(var skilldef in appathyskills)
+            {
+                var skill = Pawn.skills.GetSkill(skilldef);
+
+                if (!Subjugate.HasVanillaSkillMod)
+                    skill.passion = Passion.None;
+                else
+                {
+                    byte p = 3;
+                    skill.passion = (Passion)p;
+                }
+
+                skill.Notify_SkillDisablesChanged();
+            }
+            
+        }
 
         public static CompSubjugate GetComp(Pawn pawn)
         {
@@ -244,6 +255,49 @@ namespace Subjugate
             }
             return Repo[pawn];
 
+        }
+
+        static string[] depricatedskills = new string[]{
+            SkillDefOf.Mining.defName,
+            SkillDefOf.Construction.defName
+        };
+        public bool HadDepricatedSkillCaps(SkillDef def, ref int skillcap)
+        {
+            if (Level>0 && depricatedskills.Contains(def.defName))
+            {
+                skillcap = 10;
+                return true;
+            }
+            return false;
+        }
+
+        public bool CanOnlyTailor()
+        {
+            return Level > 0;
+        }
+
+        public static string[] basediswork = new string[] { "Smithing", "Crafting" };
+        WorkTypeDef[] dissdefsCache;
+        public WorkTypeDef[] DisabledWorkTypes()
+        {
+            if (Level>0)
+            {
+                dissdefsCache = dissdefsCache ?? DefDatabase<WorkTypeDef>.AllDefs.Where(v => basediswork.Contains(v.defName)).ToArray();
+                return dissdefsCache;
+            }
+            return null;
+            
+        }
+
+        public bool HatesWearingArmor()
+        {
+            return Level > 0;
+        }
+
+        static string[] basedisabledskills = new string[] { SkillDefOf.Shooting.defName, SkillDefOf.Melee.defName };
+        internal bool DisabledSkill(SkillRecord instance)
+        {
+            return Level > 0 && basedisabledskills.Contains(instance.def.defName);
         }
     }
 
@@ -270,15 +324,15 @@ namespace Subjugate
             if (XPExtractedThisCycle>0)
             {
                 var depricatingSkill = depricatedSkills.RandomElement();
-                var skill = Comp.Pawn.skills.skills.FirstOrDefault(v => v.def.defName == depricatingSkill && (v.Level > 0 || v.xpSinceLastLevel > 0));
+                var skill = Comp.Pawn.skills.skills.FirstOrDefault(v => v.def.defName == depricatingSkill && (v.levelInt > 0 || v.xpSinceLastLevel > 0));
                 if (skill != null)
                 {
                     float resultingxp = Mathf.Max(0, TotalXp(skill) - XPExtractedThisCycle);
 
-                    Log.Message(skill.def.defName + " extracted:" + XPExtractedThisCycle + " l:" + skill.Level + " need:" + skill.xpSinceLastLevel);
+                    Log.Message(skill.def.defName + " extracted:" + XPExtractedThisCycle + " l:" + skill.levelInt + " need:" + skill.xpSinceLastLevel);
 
                     XpToLevel(skill, resultingxp);
-                    Log.Message("res lev:" + skill.Level + " need:" + skill.xpSinceLastLevel);
+                    Log.Message("res lev:" + skill.levelInt + " need:" + skill.xpSinceLastLevel);
 
                 }
                 XPExtractedThisCycle = 0;
@@ -297,7 +351,7 @@ namespace Subjugate
         private void XpToLevel(SkillRecord skill, float resultingxp)
         {
             var xp = 0f;
-            for (var i = 0; i < skill.Level; i++)
+            for (var i = 0; i < skill.levelInt; i++)
             {
                 
                 if (xp <= resultingxp && resultingxp < xp+xpLvlUpData[i])
@@ -314,7 +368,7 @@ namespace Subjugate
         private float TotalXp(SkillRecord skill)
         {
             var xp = 0f;
-            for (var i = 0; i < skill.Level; i++)
+            for (var i = 0; i < skill.levelInt; i++)
             {
                 xp += xpLvlUpData[i];
             }
