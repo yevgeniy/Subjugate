@@ -8,44 +8,48 @@ using Verse;
 
 namespace Subjugate.SubjucationPerks
 {
-    internal class PerkArtistic : Perk
+    internal class PerkSocial : Perk
     {
-        public override string Name => "Artistic";
+        public override string Name => "Social";
         public static Func<Pawn, SkillRecord, Action<Perk>>[] levels = new Func<Pawn, SkillRecord, Action<Perk>>[]{
-            WillDoArt,
+            WillDoSocial,
             GainMinorPassion,
             GainMajorPassion,
             GainBurningPassion
         };
-        public static Action<Perk> WillDoArt(Pawn pawn, SkillRecord skill)
+
+        public static Action<Perk> WillDoSocial(Pawn pawn, SkillRecord skill)
         {
-            if (CompSubjugate.GetComp(pawn).Perks.Any(v => v.GetType().Name == typeof(PerkArtistic).Name))
+            if (CompSubjugate.GetComp(pawn).Perks.Any(v => v.GetType().Name == typeof(PerkSocial).Name))
                 return null;
 
             return (perk) =>
             {
-                perk.Explain = $"{pawn} will now engage in artistic work";
+                perk.ForceEnable = true;
+                perk.Explain = $"{pawn} will now engage in social situations";
+
             };
-            
+
         }
+
         public override string NextLevelExplain(Pawn pawn)
         {
-            var skill = pawn.skills.skills.Find(v => v.def.defName == SkillDefOf.Artistic.defName);
+            var skill = pawn.skills.skills.Find(v => v.def.defName == SkillDefOf.Social.defName);
             if (levels[0](pawn, skill) != null)
             {
-                return pawn + " will engage in artistic work.";
+                return pawn + " will engage in social work.";
             }
             else if (levels[1](pawn, skill) != null)
             {
-                return pawn + " will gain minor passion in art.";
+                return pawn + " will gain minor passion in social cituations.";
             }
             else if (levels[2](pawn, skill) != null)
             {
-                return pawn + " will gain major passion in art.";
+                return pawn + " will gain major passion in social cituations.";
             }
             else if (levels[3](pawn, skill) != null)
             {
-                return pawn + " will gain burning passion in art.";
+                return pawn + " will gain burning passion in social cituations.";
             }
             
             return null;
@@ -55,7 +59,7 @@ namespace Subjugate.SubjucationPerks
 
         public override void Activate(Pawn pawn)
         {
-            var skill = pawn.skills.skills.Find(v => v.def.defName == SkillDefOf.Artistic.defName);
+            var skill = pawn.skills.skills.Find(v => v.def.defName == SkillDefOf.Social.defName);
             for (var x = 0; x < levels.Count(); x++)
             {
                 var activator = levels[x](pawn, skill);
@@ -69,7 +73,8 @@ namespace Subjugate.SubjucationPerks
 
         public override bool IsSkillForceEnabled(SkillRecord skill)
         {
-            return skill.def.defName == SkillDefOf.Artistic.defName && ForceEnable;
+            return skill.def.defName == SkillDefOf.Social.defName && ForceEnable;
         }
+
     }
 }

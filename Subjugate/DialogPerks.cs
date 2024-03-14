@@ -119,10 +119,13 @@ namespace Subjugate
 
         private List<Perk> GetApplicablePerks()
         {
-            return new List<Perk>
+            var skills= new List<Perk>
             {
                 new PerkArtistic(),
+                new PerkSocial()
             };
+
+            return skills.Where(v => v.NextLevelExplain(Pawn) != null).ToList();
         }
 
         public static Task<List<string>> Show(Pawn pawn)

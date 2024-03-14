@@ -26,7 +26,59 @@ namespace Subjugate.SubjucationPerks
         private bool disabled;
         public virtual bool Disabled { get { return disabled; } set { disabled = value; } }
 
+        public static Action<Perk> WillDoSkill(Pawn pawn, SkillRecord skill)
+        {
+            if (skill.PermanentlyDisabled || skill.TotallyDisabled)
+            {
+                return perk =>
+                {
+                    perk.ForceEnable = true;
+                    perk.Explain = $"{pawn} will now do {skill.def.defName} skill.";
+                };
+            }
+            return null;
+        }
+        public static Action<Perk> GainMinorPassion(Pawn pawn, SkillRecord skill)
+        {
+            byte nopassion = 0;
+            byte apathy = 3;
+            byte curpassion = (byte)skill.passion;
+            if (curpassion == nopassion || curpassion == apathy)
+            {
+                return perk =>
+                {
+                    skill.passion = Passion.Minor;
+                    perk.Explain = $"{pawn} gained minor inspiration in {skill.def.defName} skill.";
+                };
+            }
+            return null;
 
+
+        }
+        public static Action<Perk> GainMajorPassion(Pawn pawn, SkillRecord skill)
+        {
+            if (skill.passion == Passion.Minor)
+            {
+                return perk =>
+                {
+                    skill.passion = Passion.Major;
+                    perk.Explain = $"{pawn} gained major inspiration in {skill.def.defName} skill.";
+                };
+            }
+            return null;
+        }
+        public static Action<Perk> GainBurningPassion(Pawn pawn, SkillRecord skill)
+        {
+            if (Subjugate.HasVanillaSkillMod && skill.passion == Passion.Major)
+            {
+                return perk =>
+                {
+                    skill.passion = (Passion)((byte)5);
+                    perk.Explain = $"{pawn} gained burning inspiration in {skill.def.defName} skill.";
+                };
+            }
+            return null;
+        }
 
         public virtual void Activate(Pawn pawn)
         {
@@ -44,37 +96,6 @@ namespace Subjugate.SubjucationPerks
         {
             return false;
         }
-
-        public static byte UtilPassionIncrease(Pawn pawn, SkillDef skillDef, ref string explain)
-        {
-            var skill = pawn.skills.GetSkill(skillDef);
-
-            byte p = (byte)skill.passion;
-            if (p == 0 || p==3) /* none or apathy*/
-            {
-                explain = "PAWN likes SKILL";
-                return 1;
-            }
-                
-            else if (p == 1)
-            {
-                explain = "PAWN loves SKILL";
-                return 2;
-            }
-                
-            else if (p == 2)
-            {
-                explain = "PAWN is infatuated with SKILL";
-                return new byte[] { 4, 5 }.RandomElement();
-            }
-            
-            Log.Error("ERROR IN SKILL INCREASE: " + p + " " + pawn.Name.ToStringShort);
-            return p;
-        }
-
-
-   
-
 
 
     }

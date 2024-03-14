@@ -325,6 +325,21 @@ namespace Subjugate
 
             Pawn.skills.skills.ForEach(v => v.Notify_SkillDisablesChanged());
             Pawn.Notify_DisabledWorkTypesChanged();
+            /*clear learnrate factors in skills expanded*/
+            if (Subjugate.HasVanillaSkillMod)
+                ClearSkillsModCache();
+        }
+
+        MethodInfo clearCachemeth;
+        private void ClearSkillsModCache()
+        {
+            clearCachemeth = clearCachemeth 
+                ?? AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(assembly => assembly.GetTypes())
+                    .First(v => v.Name == "LearnRateFactorCache")
+                    .GetMethod("ClearCache", BindingFlags.Public | BindingFlags.Static);
+
+            clearCachemeth.Invoke(null,null);
         }
 
         public bool EnabledSkill(SkillRecord instance)

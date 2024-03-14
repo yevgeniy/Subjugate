@@ -239,6 +239,7 @@
     <Compile Include="Patches.cs" />
     <Compile Include="PatchesCard.cs" />
     <Compile Include="SubjugationPerks\Perk.cs" />
+    <Compile Include="SubjugationPerks\PerkSocial.cs" />
     <Compile Include="SubjugationPerks\PerkArtistic.cs" />
     <Compile Include="SubjugationPerks\PerkCooking.cs" />
     <Compile Include="SubjugationPerks\PerkNudistTrait.cs" />
