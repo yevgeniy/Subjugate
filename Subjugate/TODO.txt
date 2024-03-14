@@ -28,9 +28,12 @@
 		can be assigned to either art, plant, craft, or cooking -- done
 		- gain equal number of xp from buffer per normal xp gain.  This dubles per subjugation rank. -- done
 	- each rank lets a lady choose upgrade (committed) (if applicable)
-		- art upgrade passion (can do -> minor -> major -> burning)
-		- gain xp-buffer (equal to xp need to gain a level of average of all skills)
+		- art upgrade passion (can do -> minor -> major -> burning) -- done
+		- social upgrade passion (can do -> minor -> major -> burning) -- done
+		- plants upgrade passion (can do -> minor -> major -> burning) -- done
+		- cooking upgrade passion (can do -> minor -> major -> burning) -- done
 		- nudist trait
+		- gain xp-buffer (equal to xp need to gain a level of average of all skills)
 		- mood +10 and sleeprate +20% when sharing a bed w/ a lady (+5 / +10% when both have it)
 			- sleep rank has to hit top
 		- mood +10 and workrate +10% for any guy who shares a bed w/ this lady

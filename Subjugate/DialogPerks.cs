@@ -122,6 +122,8 @@ namespace Subjugate
             var skills= new List<Perk>
             {
                 new PerkArtistic(),
+                new PerkPlants(),
+                new PerkCooking(),
                 new PerkSocial()
             };
 

@@ -239,11 +239,11 @@
     <Compile Include="Patches.cs" />
     <Compile Include="PatchesCard.cs" />
     <Compile Include="SubjugationPerks\Perk.cs" />
+    <Compile Include="SubjugationPerks\PerkCooking.cs" />
+    <Compile Include="SubjugationPerks\PerkPlants.cs" />
     <Compile Include="SubjugationPerks\PerkSocial.cs" />
     <Compile Include="SubjugationPerks\PerkArtistic.cs" />
-    <Compile Include="SubjugationPerks\PerkCooking.cs" />
     <Compile Include="SubjugationPerks\PerkNudistTrait.cs" />
-    <Compile Include="SubjugationPerks\PerkPlant.cs" />
     <Compile Include="ThoughtWorkers.cs" />
     <Compile Include="Subjugate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
