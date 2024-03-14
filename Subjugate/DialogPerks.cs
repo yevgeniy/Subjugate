@@ -126,6 +126,7 @@ namespace Subjugate
                 new PerkCooking(),
                 new PerkNudistTrait(),
                 new PerkGainXPPool(),
+                new PerkSubmissive(),
                 new PerkSocial(),
                 
             };

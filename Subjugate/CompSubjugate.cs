@@ -347,7 +347,40 @@ namespace Subjugate
             return Perks.Any(v=>v.IsSkillForceEnabled(instance));
         }
 
-        
+        internal static float CalcRestMultiplier(Pawn pawn)
+        {
+            if (!pawn.InBed())
+                return 0f;
+            if (pawn.gender != Gender.Female)
+                return 0f;
+
+            var bed = pawn.CurrentBed();
+            var slots = bed.SleepingSlotsCount;
+            var numberSubmissiveOccupants = 0;
+            var hasSubmissivePartner = false;
+
+            for(var i=0; i < bed.SleepingSlotsCount;i++)
+            {
+                var occ = bed.GetCurOccupant(i);
+                if (occ == null)
+                    continue;
+                Log.Message(occ+"");
+                var occcomp = CompSubjugate.GetComp(occ);
+                if (occcomp == null)
+                    continue;
+                var occIsSubmissive = occcomp.Perks.Any(v => v is PerkSubmissive);
+                if (occIsSubmissive)
+                {
+                    numberSubmissiveOccupants++;
+                    if (occ != pawn)
+                        hasSubmissivePartner = true;
+
+                }
+            }
+            if (!hasSubmissivePartner)
+                return 0f;
+            return .2f + (numberSubmissiveOccupants - 1) * .05f;
+        }
     }
 
     public class XPSystem : IExposable

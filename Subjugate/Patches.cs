@@ -56,29 +56,43 @@ namespace Adjustments
     }
 
     [HarmonyPatch(typeof(StatExtension), "GetStatValue")]
-    public class subjugated_ladies_adjust_suppression_rate_based_on_content_level
+    public class subjugated_ladies_have_various_stat_adjustments
     {
         [HarmonyPostfix]
         public static void fixer(Thing thing, StatDef stat, bool applyPostProcess, int cacheStaleAfterTicks, ref float __result)
         {
             if (thing is Pawn pawn)
             {
-                if (stat != StatDefOf.SlaveSuppressionFallRate)
-                    return;
+                
 
-                var comp = CompSubjugate.GetComp(pawn);
-                if (comp == null)
-                    return;
 
-                if (comp.IsContent)
+                if (stat == StatDefOf.SlaveSuppressionFallRate && pawn.gender==Gender.Female && pawn.IsSlave)
                 {
-                    __result = 0;
+                    var comp = CompSubjugate.GetComp(pawn);
+                    if (comp == null)
+                        return;
+
+                    if (comp == null)
+                        return;
+
+                    if (comp.IsContent)
+                    {
+                        __result = 0;
+                        return;
+                    }
+
+                    var percentleft = 1f - comp.ContentRatio;
+                    __result *= percentleft;
+
                     return;
                 }
-
-                var percentleft = 1f - comp.ContentRatio;
-                __result *= percentleft;
-
+                else if (stat==StatDefOf.RestRateMultiplier)
+                {
+                    float res= CompSubjugate.CalcRestMultiplier(pawn);
+                    __result += res;
+                    Log.Message(pawn + " " + __result);
+                }
+                
             }
         }
     }
