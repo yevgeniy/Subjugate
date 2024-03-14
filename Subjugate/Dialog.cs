@@ -52,26 +52,7 @@ namespace Subjugate
 
         public string SelectedIcon { get; private set; }
 
-        private void DoBrandRow(Rect rect)
-        {
 
-            //Widgets.BeginGroup(rect);
-
-            //var iconRect = new Rect(0f, 0f, 30f, 30f);
-            //GUI.DrawTexture(iconRect, brand.Icon, ScaleMode.StretchToFill, true, 1f, brand.Color, 0f, 0f);
-
-            ////WidgetRow widgetRow = new WidgetRow(0f, 0f, UIDirection.RightThenUp, 99999f, 4f);
-            ////widgetRow.Icon(brand.Icon);
-            ////widgetRow.Gap(4f);
-
-            //var buttonRect = new Rect(40f, 4f, 22f, 22f);
-
-            //if (Widgets.ButtonImage(buttonRect, TexButton.DeleteX))
-            //{
-            //    Comp.RemoveBrand(brand);
-            //}
-            //Widgets.EndGroup();
-        }
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -103,6 +84,10 @@ namespace Subjugate
         private Vector2 CurrentScrollForPerks;
         private void RenderSelectedPerks(Rect inRect, ref float top)
         {
+            List<KeyValuePair<string, string>> selections = GetSelectedPerks();
+            if (selections.Count == 0)
+                return;
+
             var va = Text.Anchor;
             GUI.color = new Color(0.3098039f, 0.3098039f, 0.3098039f, 1);
             Widgets.DrawLineHorizontal(0, top, inRect.width);
@@ -111,7 +96,7 @@ namespace Subjugate
 
             var scrollrect=new Rect(0, top, inRect.width, inRect.height-top);
             var scrollview = new Rect(0, 0, inRect.width - 20, SelectedPerkHeight);
-            List<KeyValuePair<string, string>> selections = GetSelectedPerks();
+            
             
             Widgets.BeginScrollView(scrollrect, ref CurrentScrollForPerks, scrollview, true);
             Text.Font = GameFont.Small;
@@ -167,24 +152,7 @@ namespace Subjugate
             top += t + 10;
         }
 
-        private List<KeyValuePair<string, string>> GetSelectedPerks()
-        {
-            var dict = new List<KeyValuePair<string,string>>();
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Shak Spear", "To be or not to be that is the question.  To fly to worlds of unknown to shake off the shackles or oppression which this lifes throughs at you and by resisting this tyranny, end it.  But what does wait beyond the veil that is the question.  Conscience makes cowards of us all."));
-            dict.Add(new KeyValuePair<string, string>("Nude", "this lady likes being naked"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            dict.Add(new KeyValuePair<string, string>("Artistic", "this lady will now do artistic worktypes"));
-            return dict;
-            
-        }
+ 
 
         private void RenderPerkSelection(Rect inRect, ref float top)
         {
@@ -200,18 +168,16 @@ namespace Subjugate
             Widgets.Label(labeldiv, text);
 
             var levelupdiv = new Rect(inRect.width - 200, top, 200, 30);
-            if (Widgets.ButtonText(levelupdiv, "Select Perk", true, false, true))
-            {
-                DialogPerks.Show(Pawn);
-            }
+            if (Comp.AvailablePerks() != 0)
+                if (Widgets.ButtonText(levelupdiv, "Select Perk", true, false, true))
+                {
+                    DialogPerks.Show(Pawn);
+                }
 
             top += 40;
         }
 
-        private string GetAvailablePerks()
-        {
-            return "4";
-        }
+
 
         public static string Selected = "-- Select --";
         private void RenderXpDistribution(Rect inRect, ref float top)
@@ -253,6 +219,22 @@ namespace Subjugate
             top += 40;
         }
 
+        private List<KeyValuePair<string, string>> GetSelectedPerks()
+        {
+            var dict = new List<KeyValuePair<string, string>>();
+            foreach(var perk in Comp.Perks)
+            {
+                dict.Add(new KeyValuePair<string, string>(perk.Name, perk.Explain));
+            }
+            
+            return dict;
+
+        }
+
+        private string GetAvailablePerks()
+        {
+            return Comp.AvailablePerks().ToString();
+        }
         private string GetBufferXP()
         {
             return Comp.xp.XPBuffer.ToString("N");

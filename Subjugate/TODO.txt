@@ -23,14 +23,13 @@
 		- can't raise above rank 10 -- done
 
 - subjugated ladies get to select
-	- skill redistribution
+	- skill redistribution -- done
 		- melee, ranged, and overflow for construction, mining skills experience points go to skill buffers which
-		can be assigned to either art, plant, craft, or cooking
-		- gain equal number of xp from buffer per normal xp gain.  This dubles per subjugation rank.
+		can be assigned to either art, plant, craft, or cooking -- done
+		- gain equal number of xp from buffer per normal xp gain.  This dubles per subjugation rank. -- done
 	- each rank lets a lady choose upgrade (committed) (if applicable)
-		- upgrade passion (minor -> major -> burning)
+		- art upgrade passion (can do -> minor -> major -> burning)
 		- gain xp-buffer (equal to xp need to gain a level of average of all skills)
-		- can do art
 		- nudist trait
 		- mood +10 and sleeprate +20% when sharing a bed w/ a lady (+5 / +10% when both have it)
 			- sleep rank has to hit top

@@ -15,27 +15,10 @@ namespace Subjugate
 
         private Pawn _pawn;
 
-        private List<string> IconFiles = new List<string>{
-                "adj_alien", "adj_anim", "adj_blowup", "adj_build", "adj_cold", "adj_craft", "adj_evil", "adj_fight", "adj_fire", "adj_food", "adj_heart", "adj_lightning", "adj_magic", "adj_med", "adj_mine", "adj_peace", "adj_ranged", "adj_rebel", "adj_research", "adj_rocket", "adj_space", "adj_tec", "adj_virus", "Ideoligion_AnimalPrintC", "Ideoligion_AnimalPrintJ", "Ideoligion_GameI"
-        };
-
-        private readonly Action<List<string>> _onSubmit;
-        private static Color SelectedColor;
-        private static List<Color> Colors = new List<Color> {
-                 Color.cyan,
-                Color.blue,
-                 Color.gray,
-                 Color.green,
-                 Color.magenta,
-                Color.red,
-                Color.white,
-                Color.yellow
-        };
 
         public DialogPerks(Pawn pawn, Action<List<string>> onSubmit)
         {
             this._pawn = pawn;
-            this._onSubmit = onSubmit;
         }
 
         private CompSubjugate _comp;
@@ -67,7 +50,7 @@ namespace Subjugate
 
             foreach (Perk perk in perks)
             {
-                RenderPerkSelection(viewRect, perk, ref top);
+                RenderPerkCard(viewRect, perk, ref top);
                 top += 15;
             }
 
@@ -77,7 +60,7 @@ namespace Subjugate
 
         }
 
-        private void RenderPerkSelection(Rect inRect, Perk perk, ref float top)
+        private void RenderPerkCard(Rect inRect, Perk perk, ref float top)
         {
             var t = top;
             
@@ -100,8 +83,9 @@ namespace Subjugate
             var buttondiv = new Rect(inRect.width - 125, top, 125, 30);
             if (Widgets.ButtonText(buttondiv, "Activate", true, false, true))
             {
-                Comp.Perks.Add(perk);
-                perk.Activate(Pawn);
+                var type = perk.GetType();
+                var newperk = (Perk)Activator.CreateInstance(type);
+                Comp.AddPerk(newperk);
                 Close();
             }
 
@@ -138,15 +122,6 @@ namespace Subjugate
             return new List<Perk>
             {
                 new PerkArtistic(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
-                new PerkNudistTrait(),
             };
         }
 

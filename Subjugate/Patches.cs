@@ -145,7 +145,11 @@ namespace Adjustments
                 if (disworktypes!=null)
                     foreach (var i in disworktypes)
                         __result.AddDistinct(i);
-                
+
+                string[] enabledworktypes = comp.GetEnabledWorkTypes().Select(v => v.defName).ToArray();
+                __result.RemoveAll(v => enabledworktypes.Contains(v.defName));
+
+
             }
             
         }
@@ -168,7 +172,7 @@ namespace Adjustments
     }
 
     //[HarmonyPatch(typeof(GuestUtility), "GetDisabledWorkTypes")]
-    //public class activate_artistic_for_applicable_slaves
+    //public class check_if_slave_lady_can_do_art
     //{
     //    private static Pawn GetPawn(Pawn_GuestTracker instance)
     //    {
@@ -184,12 +188,25 @@ namespace Adjustments
     //    public static void postfix(Pawn_GuestTracker guest, ref List<WorkTypeDef> __result)
     //    {
     //        var pawn = GetPawn(guest);
+    //        var comp = CompSubjugate.GetComp(pawn);
+    //        if (comp!=null)
+    //        {
+    //            var shouldDoArt = comp.CanDoArt();
+                
+    //            if (shouldDoArt)
+    //            {
+    //                __result.RemoveAll(v => v.defName == WorkTypeDefOf.Art.defName);
 
-    //        var shouldDoArt = PerkArtistic.ShouldDoArt(pawn);
-    //        if (shouldDoArt)
-    //            __result.RemoveAll(v => v.defName == WorkTypeDefOf.Art.defName);
+    //            }
+                    
+    //        }
+
+            
     //    }
+
     //}
+
+
 
     [HarmonyPatch(typeof(Trait), "TipString")]
     public class trait_should_include_perk_descriptions_and_subjugation_notes
@@ -207,8 +224,6 @@ namespace Adjustments
             __result += "\n\n" + comp.ContentStr;
             
 
-            //var explanations = comp.Perks.Select(v => v.Describe(pawn)).ToList();
-            //__result += "\n\n" + string.Join("\n", explanations);
         }
     }
 
@@ -236,6 +251,12 @@ namespace Adjustments
                 if (comp.DisabledSkill(__instance))
                 {
                     __result = true;
+                    return false;
+                }
+
+                if (comp.EnabledSkill(__instance))
+                {
+                    __result = false;
                     return false;
                 }
 
@@ -272,7 +293,6 @@ namespace Adjustments
 
     }
 
-    //public void SetGuestStatus(Faction newHost, GuestStatus guestStatus = 0)
     [HarmonyPatch(typeof(Pawn_GuestTracker), "SetGuestStatus")]
     public class register_prisoner_start
     {

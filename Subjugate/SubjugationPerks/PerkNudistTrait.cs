@@ -18,10 +18,7 @@ namespace Subjugate.SubjucationPerks
 
             return null;
         }
-        public override bool CanHandle(Pawn pawn)
-        {
-            return !pawn.story.traits.HasTrait(TraitDefOf.Nudist);
-        }
+ 
 
         public override void Activate(Pawn pawn)
         {

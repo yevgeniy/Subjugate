@@ -36,9 +36,11 @@ namespace Subjugate
             ? Pawn.Name.ToStringShort + " is happy being a slave"
             : "Content: " + ContentRatio * 100f + "%";
 
-
         public float PunishmentDealtRating;
 
+        public static List<Perk> AllPerks = new List<Perk> {
+            new PerkArtistic()
+        };
         public List<Perk> Perks = new List<Perk>();
 
         private Need_Suppression supneed;
@@ -288,6 +290,15 @@ namespace Subjugate
             return null;
             
         }
+        public WorkTypeDef[] GetEnabledWorkTypes()
+        {
+            var worktypes = new List<WorkTypeDef>();
+
+            if (Perks.Any(v => v is PerkArtistic))
+                worktypes.Add(WorkTypeDefOf.Art);
+
+            return worktypes.ToArray();
+        }
 
         public bool HatesWearingArmor()
         {
@@ -295,10 +306,33 @@ namespace Subjugate
         }
 
         static string[] basedisabledskills = new string[] { SkillDefOf.Shooting.defName, SkillDefOf.Melee.defName };
-        internal bool DisabledSkill(SkillRecord instance)
+        public bool DisabledSkill(SkillRecord instance)
         {
             return Level > 0 && basedisabledskills.Contains(instance.def.defName);
         }
+
+
+        public int AvailablePerks()
+        {
+            return Mathf.Max(Level - Perks.Count, 0);
+        }
+
+        public void AddPerk(Perk newperk)
+        {
+            newperk.Activate(Pawn);
+            Perks.Add(newperk);
+            dissdefsCache = null;
+
+            Pawn.skills.skills.ForEach(v => v.Notify_SkillDisablesChanged());
+            Pawn.Notify_DisabledWorkTypesChanged();
+        }
+
+        public bool EnabledSkill(SkillRecord instance)
+        {
+            return Perks.Any(v=>v.IsSkillForceEnabled(instance));
+        }
+
+        
     }
 
     public class XPSystem : IExposable
