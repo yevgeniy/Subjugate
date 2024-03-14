@@ -244,7 +244,7 @@
     <Compile Include="SubjugationPerks\PerkGainXPLool.cs" />
     <Compile Include="SubjugationPerks\PerkPlants.cs" />
     <Compile Include="SubjugationPerks\PerkSocial.cs" />
-    <Compile Include="SubjugationPerks\PerkSubmissive.cs" />
+    <Compile Include="SubjugationPerks\PerkGentle.cs" />
     <Compile Include="SubjugationPerks\PerkNudistTrait.cs" />
     <Compile Include="ThoughtWorkers.cs" />
     <Compile Include="Subjugate.cs" />

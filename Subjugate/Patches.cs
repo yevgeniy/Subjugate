@@ -63,8 +63,6 @@ namespace Adjustments
         {
             if (thing is Pawn pawn)
             {
-                
-
 
                 if (stat == StatDefOf.SlaveSuppressionFallRate && pawn.gender==Gender.Female && pawn.IsSlave)
                 {
@@ -90,7 +88,6 @@ namespace Adjustments
                 {
                     float res= CompSubjugate.CalcRestMultiplier(pawn);
                     __result += res;
-                    Log.Message(pawn + " " + __result);
                 }
                 
             }

@@ -368,7 +368,7 @@ namespace Subjugate
                 var occcomp = CompSubjugate.GetComp(occ);
                 if (occcomp == null)
                     continue;
-                var occIsSubmissive = occcomp.Perks.Any(v => v is PerkSubmissive);
+                var occIsSubmissive = occcomp.Perks.Any(v => v is PerkGentle);
                 if (occIsSubmissive)
                 {
                     numberSubmissiveOccupants++;
