@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using Verse;
 
 namespace Subjugate.SubjucationPerks
@@ -11,6 +12,8 @@ namespace Subjugate.SubjucationPerks
     public class Perk : IExposable
     {
         public virtual string Name => "N/A";
+        private float poolxp;
+        public virtual float PoolXp { get { return poolxp; } set { poolxp = value; } }
         public virtual string NextLevelExplain(Pawn pawn)
         {
             return null;
@@ -89,12 +92,23 @@ namespace Subjugate.SubjucationPerks
         {
             Scribe_Values.Look(ref explain, "subjugate-perk-explain");
             Scribe_Values.Look(ref forceEnable, "subjugate-perk-force-act");
+            Scribe_Values.Look(ref poolxp, "subjugate-perk-poolxp");
+            
 
         }
 
         public virtual bool IsSkillForceEnabled(SkillRecord skill)
         {
             return false;
+        }
+
+        public virtual float DrainXP(Pawn pawn, float amount)
+        {
+            var drained = Mathf.Min(amount, PoolXp);
+            PoolXp -= drained;
+
+            Explain = $"{pawn} has reserve xp of {PoolXp.ToString("N")}";
+            return drained;
         }
 
 

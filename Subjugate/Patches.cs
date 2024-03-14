@@ -22,7 +22,7 @@ namespace Adjustments
         public static void Prefix(ref float xp, bool direct, SkillRecord __instance)
         {
             var comp = CompSubjugate.GetComp(__instance.Pawn);
-            if (comp!=null && comp.Level>0)
+            if (comp!=null && comp.Level>0 && !__instance.LearningSaturatedToday)
             {
                 var amt = comp.xp.TryExtractXP(__instance.def.defName, xp);
                 if (amt>0)

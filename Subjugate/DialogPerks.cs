@@ -124,7 +124,10 @@ namespace Subjugate
                 new PerkArtistic(),
                 new PerkPlants(),
                 new PerkCooking(),
-                new PerkSocial()
+                new PerkNudistTrait(),
+                new PerkGainXPPool(),
+                new PerkSocial(),
+                
             };
 
             return skills.Where(v => v.NextLevelExplain(Pawn) != null).ToList();

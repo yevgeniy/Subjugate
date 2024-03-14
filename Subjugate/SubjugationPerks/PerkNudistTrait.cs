@@ -14,7 +14,7 @@ namespace Subjugate.SubjucationPerks
         public override string NextLevelExplain(Pawn pawn)
         {
             if (pawn.story.traits.GetTrait(TraitDefOf.Nudist)==null)
-                return "Lady slave will love being naked.";
+                return $"{pawn} will love being naked.";
 
             return null;
         }
@@ -23,7 +23,7 @@ namespace Subjugate.SubjucationPerks
         public override void Activate(Pawn pawn)
         {
             pawn.story.traits.GainTrait(new Trait(TraitDefOf.Nudist, 0, true));
-            Explain = "PAWN loves being naked";
+            Explain = $"{pawn} loves being naked";
         }
     }
 }

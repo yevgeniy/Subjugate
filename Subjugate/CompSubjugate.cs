@@ -381,11 +381,22 @@ namespace Subjugate
                     Log.Message(skill.def.defName + " extracted:" + XPExtractedThisCycle + " l:" + skill.levelInt + " need:" + skill.xpSinceLastLevel);
 
                     XpToLevel(skill, resultingxp);
-                    Log.Message("res lev:" + skill.levelInt + " need:" + skill.xpSinceLastLevel);
-
+                    XPExtractedThisCycle = 0;
                 }
-                XPExtractedThisCycle = 0;
             }
+            /*if we were not able to find a skill to apply expanded xp, look at persk */
+            if (XPExtractedThisCycle > 0)
+            {
+                var skillpoolperk = Comp.Perks.FirstOrFallback(v => v.PoolXp > 0);
+                if (skillpoolperk!=null)
+                {
+                    var xp = skillpoolperk.DrainXP(Comp.Pawn, XPExtractedThisCycle);
+
+                    XPExtractedThisCycle = 0;
+                }
+            }
+            XPExtractedThisCycle = 0;
+
 
             /*revalidate total xp buffer*/
             var validbufferskills = Comp.Pawn.skills.skills.Where(v => depricatedSkills.Contains(v.def.defName));
@@ -394,10 +405,10 @@ namespace Subjugate
             {
                 i += TotalXp(skill);
             }
-            XPBuffer = i;
+            XPBuffer = i + Comp.Perks.Select(v => v.PoolXp).Sum();
         }
 
-        private void XpToLevel(SkillRecord skill, float resultingxp)
+        public static void XpToLevel(SkillRecord skill, float resultingxp)
         {
             var xp = 0f;
             for (var i = 0; i < skill.levelInt; i++)
@@ -414,7 +425,7 @@ namespace Subjugate
 
             }
         }
-        private float TotalXp(SkillRecord skill)
+        public static float TotalXp(SkillRecord skill)
         {
             var xp = 0f;
             for (var i = 0; i < skill.levelInt; i++)
@@ -425,7 +436,7 @@ namespace Subjugate
             return xp;
         }
 
-        private static float[] xpLvlUpData = new float[]
+        public static float[] xpLvlUpData = new float[]
         {
             SkillRecord.XpRequiredToLevelUpFrom(0),
             SkillRecord.XpRequiredToLevelUpFrom(1),

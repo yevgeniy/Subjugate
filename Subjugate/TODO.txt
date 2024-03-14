@@ -32,17 +32,18 @@
 		- social upgrade passion (can do -> minor -> major -> burning) -- done
 		- plants upgrade passion (can do -> minor -> major -> burning) -- done
 		- cooking upgrade passion (can do -> minor -> major -> burning) -- done
-		- nudist trait
-		- gain xp-buffer (equal to xp need to gain a level of average of all skills)
-		- mood +10 and sleeprate +20% when sharing a bed w/ a lady (+5 / +10% when both have it)
+		- nudist trait -- done
+		- gain xp-buffer (equal to xp need to gain a level of average of all skills) -- done
+		- tailoring spawns 20% of recipe material after completing bill
+		
+		- mood +10 (has to gain 50% rest need in one instance) and sleeprate +20% when sharing a bed w/ a lady   (+5 / +10% when both have it)
 			- sleep rank has to hit top
-		- mood +10 and workrate +10% for any guy who shares a bed w/ this lady
-			- sleep rank has to hit top
+		- mood +10 and workrate +10% for any guy who shares a bed w/ this lady (has to gain 50% rest need in one instance)
 		- punishing this lady acts as a focus (20 suffering/day)
 		- loving this pawn acts as a focus (only for a specific pawn)
-		- +10% workrage on a skill (art, plant, craft, cooking)
+		- +10% workrate on a skill (art, plant, craft, cooking)
 			- can only be selected once per skill
-		- tailoring spawns 20% of recipe material after completing bill
+		
 
 	
 
