@@ -68,7 +68,7 @@ namespace Subjugate
         {
             /*add subjugate comp to all defs having a race */
             foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefs.Where(thingDef =>
-                    thingDef.race != null))
+                    thingDef.race!=null && thingDef.race.Humanlike))
             {
                 thingDef.comps.Add(new CompProperties { compClass = typeof(CompSubjugate) });
             }
@@ -79,8 +79,56 @@ namespace Subjugate
                 preceptDef.comps.Add(new PreceptComp_SituationalThought { thought = Defs.NeedAdmonishing });
             }
 
+            /*replace all fat and hulking female bodytypes to normal*/
+            var femaleBodyType = DefDatabase<BodyTypeDef>.AllDefs.First(v => v.defName == "Female");
+            Log.Message("FEMALE BODY TYPE: " + femaleBodyType);
+            foreach(var i in DefDatabase<BackstoryDef>.AllDefs)
+            {
+                if (i.bodyTypeFemale!=null && (i.bodyTypeFemale.defName == "Fat" || i.bodyTypeFemale.defName == "Hulk"))
+                    i.bodyTypeFemale = femaleBodyType;
+            }
+            
+
+            posstats = posstatsnames.Select(v => DefDatabase<StatDef>.AllDefs.FirstOrDefault(vv => vv.defName == v)).Where(v=>v!=null).ToHashSet<StatDef>();
+            negstats= negstatsnames.Select(v => DefDatabase<StatDef>.AllDefs.FirstOrDefault(vv => vv.defName == v)).Where(v => v != null).ToHashSet<StatDef>();
+
 
         }
+        public static HashSet<StatDef> posstats;
+        public static HashSet<StatDef> negstats;
+        
+        public static string[] posstatsnames = new string[]
+{
+            "MaxHitPoints",
+            "MeleeDPS",
+            "MeleeHitChance",
+            "MeleeDodgeChance",
+            "MoveSpeed",
+            "GlobalLearningFactor",
+            "EatingSpeed",
+            "ImmunityGainSpeed",
+            "InjuryHealingFactor",
+            "CarryingCapacity",
+            "MeditationFocusGain",
+            "NegotiationAbility",
+            "MiningSpeed",
+            "ResearchSpeed",
+            "ConstructionSpeed",
+            "ConstructSuccessChance",
+            "SmeltingSpeed",
+            "ButcheryFleshSpeed",
+            "ConversionPower",
+            "SocialIdeoSpreadFrequencyFactor",
+            "WorkSpeedGlobal",
+};
+        public static string[] negstatsnames = new string[]
+        {
+            "Ability_CastingTime",
+            "Ability_PsyfocusCost",
+            "EquipDelay",
+            "AimingDelayFactor",
+        };
+
         public CompSubjugate()
         {
             CurrentRating = 0f;
@@ -93,13 +141,19 @@ namespace Subjugate
         public override void CompTick()
         {
             ticks++;
-
         }
 
         private double ticksInRareTick = 250;
+        Action ticker = delegate { };
         public override void CompTickRare()
         {
             base.CompTickRare();
+            ticker();
+
+            Log.Message(Pawn + " is colonist:" + Pawn.IsColonist);
+
+            if (!Pawn.IsColonist)
+                return;
 
             if (ticks % 2000 == 0) /* long tick shim */
             {
@@ -150,12 +204,6 @@ namespace Subjugate
 
             if (Perks == null)
                 Perks = new List<Perk>();
-
-            /* no need for animals */
-            if (Pawn.RaceProps.Animal)
-            {
-                Pawn.AllComps.Remove(this);
-            }
         }
 
         public void Prime()
@@ -380,6 +428,8 @@ namespace Subjugate
 
             var bed = pawn.CurrentBed();
             var slots = bed.SleepingSlotsCount;
+            if (slots <= 1)
+                return 0f;
             var numberSubmissiveOccupants = 0;
             var hasSubmissivePartner = false;
 
@@ -388,7 +438,6 @@ namespace Subjugate
                 var occ = bed.GetCurOccupant(i);
                 if (occ == null)
                     continue;
-                Log.Message(occ+"");
                 var occcomp = CompSubjugate.GetComp(occ);
                 if (occcomp == null)
                     continue;
@@ -398,7 +447,6 @@ namespace Subjugate
                     numberSubmissiveOccupants++;
                     if (occ != pawn)
                         hasSubmissivePartner = true;
-
                 }
             }
             if (!hasSubmissivePartner)
@@ -406,36 +454,7 @@ namespace Subjugate
             return .2f + (numberSubmissiveOccupants - 1) * .05f;
         }
 
-        public static string[] posstats = new string[]
-        {
-            "MaxHitPoints",
-            "MeleeDPS",
-            "MeleeHitChance",
-            "MeleeDodgeChance",
-            "MoveSpeed",
-            "GlobalLearningFactor",
-            "EatingSpeed",
-            "ImmunityGainSpeed",
-            "InjuryHealingFactor",
-            "CarryingCapacity",
-            "MeditationFocusGain",
-            "NegotiationAbility",
-            "MiningSpeed",
-            "ResearchSpeed",
-            "ConstructionSpeed",
-            "ConstructSuccessChance",
-            "SmeltingSpeed",
-            "ButcheryFleshSpeed",
-            "ConversionPower",
-            "SocialIdeoSpreadFrequencyFactor",
-        };
-        public static string[] negstats = new string[]
-        {
-            "Ability_CastingTime",
-            "Ability_PsyfocusCost",
-            "EquipDelay",
-            "AimingDelayFactor",
-        };
+
 
         public float CalcGlobalStatMult(StatDef stat, float curval)
         {
@@ -445,17 +464,18 @@ namespace Subjugate
             if (!fortheladies)
                 return curval;
 
+
+
             if (!Pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
                 return curval;
 
-            var apt = curval * (ForTheLadiesMult * .1f);
+            var apt = curval * (ForTheLadiesMult * .01f);
             var res = curval;
-            if (posstats.Contains(stat.defName))
+            if (posstats.Contains(stat))
             {
-                
                 res= curval + apt;
             }
-            else if (negstats.Contains(stat.defName))
+            else if (negstats.Contains(stat))
             {
                 res=curval - apt;
             }
@@ -479,6 +499,7 @@ namespace Subjugate
 
         public void TickRare()
         {
+
             if (Comp.Level == 0)
                 return;
 

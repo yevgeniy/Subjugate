@@ -100,7 +100,7 @@ namespace Subjugate
             var comp = CompSubjugate.GetComp(p);
             if (comp != null)
             {
-                return comp.PunishmentDealtRating;
+                return Mathf.Min(30f, comp.PunishmentDealtRating);
             }
             return 1;
         }
