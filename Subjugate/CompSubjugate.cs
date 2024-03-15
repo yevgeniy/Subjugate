@@ -296,28 +296,39 @@ namespace Subjugate
         
         public static CompSubjugate GetComp(Pawn pawn)
         {
+
             if (!Repo.ContainsKey(pawn))
             {
-                var comp = pawn.GetComp<CompSubjugate>();
-                if (comp == null)
-                    return null;
 
-                if (pawn.IsColonist && pawn.gender == Gender.Male && pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
+                var comp = pawn.GetComp<CompSubjugate>();
+                
+                if (comp == null)
                 {
+                    
+                    Repo.Add(pawn, new CompSubjugate[] { null, null, null });
+                }
+                else if (pawn.IsColonist && pawn.gender == Gender.Male && pawn.Ideo!=null && pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
+                {
+                    
                     Repo.Add(pawn, new CompSubjugate[] { null, comp, null });
+                    
                     comp.ticker = comp.masterTicker;
 
                 } else if (pawn.IsColonist && pawn.gender == Gender.Female 
                     && (    pawn.IsSlave && comp.Level>0 /*only applicable for subjugated slaves */ 
                             || pawn.IsPrisoner)) /* or those ladies in prison */
                 {
+                    
                     Repo.Add(pawn, new CompSubjugate[] { null, null, comp });
+                    
                     comp.ticker = comp.slaveTicker;
                 }
                 else
+                {
                     Repo.Add(pawn, new CompSubjugate[] { null, null, null });
+                }
+                    
             }
-
             return Repo[pawn][(byte)pawn.gender]; /*0:none, 1:male, 2:female*/
         }
         public static void ClearRepo()
@@ -329,6 +340,8 @@ namespace Subjugate
         }
         public  static void RemoveFromRepo(Pawn pawn)
         {
+            if (!Repo.ContainsKey(pawn))
+                return;
             var i = Repo[pawn];
             if (i[1] != null) i[1].ticker = delegate { };
             else if (i[2] != null) i[2].ticker = delegate { };
@@ -506,7 +519,6 @@ namespace Subjugate
             {
                 res=curval - apt;
             }
-            Log.Message(Pawn+ " stat:" + stat.defName + " orig:" + curval+ " new:" + res);
 
             return res;
         }

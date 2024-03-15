@@ -60,11 +60,9 @@ namespace Adjustments
         public static void Prefix(ref float xp, bool direct, SkillRecord __instance)
         {
             var comp = CompSubjugate.GetComp(__instance.Pawn);
-            if (comp!=null && comp.Level>0 && !__instance.LearningSaturatedToday)
+            if (comp!=null && !__instance.LearningSaturatedToday)
             {
                 var amt = comp.xp.TryExtractXP(__instance.def.defName, xp);
-                if (amt>0)
-                    Log.Message(__instance.Pawn + " norm:" + xp + " amt:" + amt);
                 xp += amt;
             }
 
@@ -80,7 +78,6 @@ namespace Adjustments
             var comp = CompSubjugate.GetComp(pawn);
             if (comp!=null)
             {
-                
                 int skillcap=-1;
                 var hasSkillCap = comp.HadDepricatedSkillCaps(__instance.def, ref skillcap);
                 
@@ -104,12 +101,9 @@ namespace Adjustments
                 if (!pawn.IsColonist)
                     return;
 
-                if (stat == StatDefOf.SlaveSuppressionFallRate && pawn.gender==Gender.Female && pawn.IsSlave)
+                if (stat == StatDefOf.SlaveSuppressionFallRate)
                 {
                     var comp = CompSubjugate.GetComp(pawn);
-                    if (comp == null)
-                        return;
-
                     if (comp == null)
                         return;
 
@@ -124,12 +118,12 @@ namespace Adjustments
 
                     return;
                 }
-                else if (stat==StatDefOf.RestRateMultiplier && pawn.gender == Gender.Female && pawn.IsSlave)
+                else if (stat==StatDefOf.RestRateMultiplier)
                 {
                     float res= CompSubjugate.CalcRestMultiplier(pawn);
                     __result += res;
                 }
-                else if (pawn.gender==Gender.Male && !pawn.IsSlave)
+                else if (pawn.gender==Gender.Male)
                 {
                     var comp = CompSubjugate.GetComp(pawn);
                     if (comp!=null)
