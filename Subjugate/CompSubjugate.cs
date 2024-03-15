@@ -318,7 +318,7 @@ namespace Subjugate
                     Repo.Add(pawn, new CompSubjugate[] { null, null, null });
             }
 
-            return Repo[pawn][(byte)pawn.gender];
+            return Repo[pawn][(byte)pawn.gender]; /*0:none, 1:male, 2:female*/
         }
         public static void ClearRepo()
         {
