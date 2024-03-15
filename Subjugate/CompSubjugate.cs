@@ -307,7 +307,9 @@ namespace Subjugate
                     Repo.Add(pawn, new CompSubjugate[] { null, comp, null });
                     comp.ticker = comp.masterTicker;
 
-                } else if (pawn.IsColonist && pawn.gender == Gender.Female && comp.Level>0 && pawn.IsSlave)
+                } else if (pawn.IsColonist && pawn.gender == Gender.Female 
+                    && (    pawn.IsSlave && comp.Level>0 /*only applicable for subjugated slaves */ 
+                            || pawn.IsPrisoner)) /* or those ladies in prison */
                 {
                     Repo.Add(pawn, new CompSubjugate[] { null, null, comp });
                     comp.ticker = comp.slaveTicker;
