@@ -19,7 +19,7 @@ namespace Subjugate
     {
 
         public static readonly TraitDef SubjugatedTrait = DefDatabase<TraitDef>.GetNamed("Subjugated");
-        public static Dictionary<Pawn, CompSubjugate> Repo = new Dictionary<Pawn, CompSubjugate>();
+        public static Dictionary<Pawn, CompSubjugate[]> Repo = new Dictionary<Pawn, CompSubjugate[]>();
 
         public int Level;
         private bool IsPrimed = false;
@@ -144,44 +144,39 @@ namespace Subjugate
         }
 
         private double ticksInRareTick = 250;
-        Action ticker = delegate { };
+        public Action<CompSubjugate> ticker = delegate { };
+        public Action<CompSubjugate> masterTicker = (comp) =>
+        {
+            if (comp.ticks % 2000 == 0) /* long tick shim */
+            {
+                comp.PunishmentDealtRating = Mathf.Max(0, comp.PunishmentDealtRating - 1);
+            }
+        };
+        public Action<CompSubjugate> slaveTicker = (comp) =>
+        {
+            comp.xp.TickRare();
+
+            if (!comp.IsContent)
+            {
+                double toadd = Convert.ToDouble(comp.Level) * comp.ContentGainPerTick * comp.ticksInRareTick;
+                comp.CurrentContentRating += toadd;
+                if (comp.CurrentContentRating > comp.ContentCap)
+                    comp.CurrentContentRating = comp.ContentCap;   
+            } else
+            {
+                comp.SupNeed.CurLevel = 1f;
+            }
+        };
         public override void CompTickRare()
         {
             base.CompTickRare();
-            ticker();
-
-            Log.Message(Pawn + " is colonist:" + Pawn.IsColonist);
-
-            if (!Pawn.IsColonist)
-                return;
-
-            if (ticks % 2000 == 0) /* long tick shim */
-            {
-                PunishmentDealtRating = Mathf.Max(0, PunishmentDealtRating - 1);
-            }
-
-            xp.TickRare();
-
-
-            if (Level > 0 && Pawn.IsSlave && Pawn.gender == Gender.Female)
-            {
-                double toadd = Convert.ToDouble(Level) * ContentGainPerTick * ticksInRareTick;
-                CurrentContentRating += toadd;
-                if (CurrentContentRating > ContentCap)
-                    CurrentContentRating = ContentCap;
-
-                if (IsContent)
-                {
-                    SupNeed.CurLevel = 1f;
-                }
-            }
-
+            ticker(this);
 
         }
 
         public override void PostDeSpawn(Map map)
         {
-            Repo.Remove(Pawn);
+            RemoveFromRepo(Pawn);
             base.PostDeSpawn(map);
         }
 
@@ -214,12 +209,15 @@ namespace Subjugate
             }
 
             IsPrimed = true;
+            RemoveFromRepo(Pawn);
 
             CurrentRating = 0f;
 
             RatingCap = GenResistance();
 
         }
+
+
         private float GenResistance()
         {
             FloatRange value = Pawn.kindDef.initialResistanceRange.Value;
@@ -262,6 +260,7 @@ namespace Subjugate
 
         private void LevelUp()
         {
+            RemoveFromRepo(Pawn);
             Level++;
 
             var t = Pawn.story.traits.GetTrait(Defs.Subjugated);
@@ -294,6 +293,7 @@ namespace Subjugate
             
         }
 
+        
         public static CompSubjugate GetComp(Pawn pawn)
         {
             if (!Repo.ContainsKey(pawn))
@@ -302,11 +302,36 @@ namespace Subjugate
                 if (comp == null)
                     return null;
 
-                Repo.Add(pawn, comp);
+                if (pawn.IsColonist && pawn.gender == Gender.Male && pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
+                {
+                    Repo.Add(pawn, new CompSubjugate[] { null, comp, null });
+                    comp.ticker = comp.masterTicker;
 
+                } else if (pawn.IsColonist && pawn.gender == Gender.Female && comp.Level>0 && pawn.IsSlave)
+                {
+                    Repo.Add(pawn, new CompSubjugate[] { null, null, comp });
+                    comp.ticker = comp.slaveTicker;
+                }
+                else
+                    Repo.Add(pawn, new CompSubjugate[] { null, null, null });
             }
-            return Repo[pawn];
 
+            return Repo[pawn][(byte)pawn.gender];
+        }
+        public static void ClearRepo()
+        {
+            foreach(var i in Repo.ToList())
+            {
+                RemoveFromRepo(i.Key);   
+            }
+        }
+        public  static void RemoveFromRepo(Pawn pawn)
+        {
+            var i = Repo[pawn];
+            if (i[1] != null) i[1].ticker = delegate { };
+            else if (i[2] != null) i[2].ticker = delegate { };
+
+            Repo.Remove(pawn);
         }
 
         static string[] depricatedskills = new string[]{

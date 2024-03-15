@@ -16,6 +16,44 @@ using Verse.Sound;
 
 namespace Adjustments
 {
+    [HarmonyPatch(typeof(Pawn_GuestTracker), "SetGuestStatus")]
+    public class slave_stat_changed
+    {
+        private static Pawn GetPawn(Pawn_GuestTracker instance)
+        {
+            Type type = typeof(Pawn_GuestTracker);
+
+            // Get the private field info
+            FieldInfo fieldInfo = type.GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            return (Pawn)fieldInfo.GetValue(instance);
+
+        }
+        public static void Prefix(Faction newHost, GuestStatus guestStatus, Pawn_GuestTracker __instance)
+        {
+            var pawn = GetPawn(__instance);
+            CompSubjugate.RemoveFromRepo(pawn);
+
+        }
+    }
+    [HarmonyPatch(typeof(Pawn), "ChangeKind")]
+    public class kind_change
+    {
+        public static void Prefix(PawnKindDef newKindDef, Pawn __instance)
+        {
+            faction_change_re_repo.Prefix(null, null, __instance);
+        }
+    }
+    [HarmonyPatch(typeof(Pawn), "SetFaction")]
+    public class faction_change_re_repo
+    {
+        public static void Prefix(Faction newFaction, Pawn recruiter, Pawn __instance)
+        {
+            CompSubjugate.RemoveFromRepo(__instance);
+        }
+        
+    }
+
     [HarmonyPatch(typeof(SkillRecord), "Learn")]
     public class subjugated_ladies_distribute_depricated_skills
     {
