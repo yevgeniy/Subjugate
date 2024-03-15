@@ -143,6 +143,8 @@ namespace Subjugate
             Scribe_Values.Look(ref PunishmentDealtRating, "subjugate-dic-dealt-rat");
             Scribe_Values.Look(ref CurrentContentRating, "subjugate-cur-cont-rat");
             Scribe_Values.Look(ref ContentCap, "subjugate-cont-cap");
+            Scribe_Values.Look(ref fortheladies, "subjugate-for-lad");
+            Scribe_Values.Look(ref ForTheLadiesMult, "subjugate-for-lad-mult");
 
             xp.ExposeData();
 
@@ -330,10 +332,32 @@ namespace Subjugate
                 ClearSkillsModCache();
         }
 
-        MethodInfo clearCachemeth;
+        
+        private bool fortheladies;
+        public bool ForTheLadies { get
+            {
+                return fortheladies;
+            }
+            set
+            {
+                if (fortheladies && !value)
+                {
+                    var t = Pawn.story.traits.GetTrait(Defs.ForTheLadies);
+                    Pawn.story.traits.RemoveTrait(t);
+                }
+                else if(!fortheladies && value)
+                {
+                    Pawn.story.traits.GainTrait(new Trait(Defs.ForTheLadies, 0, true));
+                }
+                fortheladies = value;
+            }
+        }
+        public float ForTheLadiesMult;
+        private MethodInfo clearCachemeth;
+
         private void ClearSkillsModCache()
         {
-            clearCachemeth = clearCachemeth 
+            clearCachemeth = clearCachemeth
                 ?? AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(assembly => assembly.GetTypes())
                     .First(v => v.Name == "LearnRateFactorCache")
@@ -347,7 +371,7 @@ namespace Subjugate
             return Perks.Any(v=>v.IsSkillForceEnabled(instance));
         }
 
-        internal static float CalcRestMultiplier(Pawn pawn)
+        public static float CalcRestMultiplier(Pawn pawn)
         {
             if (!pawn.InBed())
                 return 0f;
@@ -380,6 +404,62 @@ namespace Subjugate
             if (!hasSubmissivePartner)
                 return 0f;
             return .2f + (numberSubmissiveOccupants - 1) * .05f;
+        }
+
+        public static string[] posstats = new string[]
+        {
+            "MaxHitPoints",
+            "MeleeDPS",
+            "MeleeHitChance",
+            "MeleeDodgeChance",
+            "MoveSpeed",
+            "GlobalLearningFactor",
+            "EatingSpeed",
+            "ImmunityGainSpeed",
+            "InjuryHealingFactor",
+            "CarryingCapacity",
+            "MeditationFocusGain",
+            "NegotiationAbility",
+            "MiningSpeed",
+            "ResearchSpeed",
+            "ConstructionSpeed",
+            "ConstructSuccessChance",
+            "SmeltingSpeed",
+            "ButcheryFleshSpeed",
+            "ConversionPower",
+            "SocialIdeoSpreadFrequencyFactor",
+        };
+        public static string[] negstats = new string[]
+        {
+            "Ability_CastingTime",
+            "Ability_PsyfocusCost",
+            "EquipDelay",
+            "AimingDelayFactor",
+        };
+
+        public float CalcGlobalStatMult(StatDef stat, float curval)
+        {
+            if (!Pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
+                return curval;
+
+            if (Pawn.gender != Gender.Male)
+                return curval;
+
+            if (!fortheladies)
+                return curval;
+
+            var apt = curval * (ForTheLadiesMult * .1f);
+            if (posstats.Contains(stat.defName))
+            {
+                
+                return curval + apt;
+            }
+            else if (negstats.Contains(stat.defName))
+            {
+                return curval - apt;
+            }
+
+            return curval;
         }
     }
 

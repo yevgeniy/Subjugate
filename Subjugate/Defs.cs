@@ -12,10 +12,13 @@ namespace Subjugate
     public static class Defs
     {
         public static TraitDef Subjugated;
+        public static TraitDef ForTheLadies;
 
         public static ThoughtDef SubjugatePutOnArmour;
         public static ThoughtDef UnsubjugatedWomen;
         public static ThoughtDef NeedAdmonishing;
+
+        public static PreceptDef SubjugateAllWomen;
     }
 }
 

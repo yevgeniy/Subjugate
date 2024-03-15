@@ -63,6 +63,8 @@ namespace Adjustments
         {
             if (thing is Pawn pawn)
             {
+                if (!pawn.IsColonist)
+                    return;
 
                 if (stat == StatDefOf.SlaveSuppressionFallRate && pawn.gender==Gender.Female && pawn.IsSlave)
                 {
@@ -84,10 +86,21 @@ namespace Adjustments
 
                     return;
                 }
-                else if (stat==StatDefOf.RestRateMultiplier)
+                else if (stat==StatDefOf.RestRateMultiplier && pawn.gender == Gender.Female && pawn.IsSlave)
                 {
                     float res= CompSubjugate.CalcRestMultiplier(pawn);
                     __result += res;
+                }
+                else if (pawn.gender==Gender.Male && !pawn.IsSlave)
+                {
+                    var comp = CompSubjugate.GetComp(pawn);
+                    if (comp!=null)
+                    {
+                        float res = comp.CalcGlobalStatMult(stat, __result);
+                        Log.Message(pawn + " stat:" + stat.defName + " orig:" + __result + " new:" + res);
+                        __result = res;
+                    }
+                    
                 }
                 
             }

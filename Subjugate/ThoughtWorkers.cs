@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
+using static HarmonyLib.Code;
 
 namespace Subjugate
 {
@@ -74,7 +75,10 @@ namespace Subjugate
         
         public override float MoodMultiplier(Pawn p)
         {
-            return Mathf.Min(30f, colonist_buffer.NumberOfSlaveLadies);
+            
+            var ret= Mathf.Min(30f, colonist_buffer.NumberOfSlaveLadies);
+            CompSubjugate.GetComp(p).ForTheLadiesMult = ret;
+            return ret;
         }
 
         protected override ThoughtState ShouldHaveThought(Pawn p)
@@ -82,7 +86,9 @@ namespace Subjugate
             if (p.gender != Gender.Male)
                 return false;
 
-            return colonist_buffer.NumberOfFreeLadies == 0 && colonist_buffer.NumberOfSlaveLadies > 0;
+            var ret= colonist_buffer.NumberOfFreeLadies == 0 && colonist_buffer.NumberOfSlaveLadies > 0;
+            CompSubjugate.GetComp(p).ForTheLadies = ret;
+            return ret;
                 
         }
     }

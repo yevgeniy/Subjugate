@@ -1,7 +1,9 @@
+//*[apparel/wornGraphicData/north/female]
+
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
 	 <PreceptDef>
-		<defName>Females_must_be_slaves</defName>
+		<defName>SubjugateAllWomen</defName>
 		<issue>Slavery</issue>
 		<label>Female Slavery</label>
 		<description>All women need to submit to men as slaves.</description>
@@ -66,7 +68,7 @@
 		<stages>
 		  <li>
 			<label>all women are slaves</label>
-			<description>All women subjugated</description>
+			<description>All women are subjugated under our protection.  Things are as they should be!</description>
 			<baseMoodEffect>1</baseMoodEffect>
 		  </li>
 		</stages>
@@ -96,6 +98,19 @@
 		</degreeDatas>
 		<conflictingTraits>
 			<li>DislikesMen</li>
+			<li>DislikesWomen</li>
+		</conflictingTraits>
+	</TraitDef>
+	<TraitDef>
+		<defName>ForTheLadies</defName>
+		<commonality>0.00</commonality>
+		<degreeDatas>
+			<li>
+				<label>ForTheLadies</label>
+				<description>[PAWN_nameDef] All ladies are subject to us!.  We will protect our women!</description>
+			</li>
+		</degreeDatas>
+		<conflictingTraits>
 			<li>DislikesWomen</li>
 		</conflictingTraits>
 	</TraitDef>
