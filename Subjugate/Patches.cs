@@ -97,7 +97,6 @@ namespace Adjustments
                     if (comp!=null)
                     {
                         float res = comp.CalcGlobalStatMult(stat, __result);
-                        Log.Message(pawn + " stat:" + stat.defName + " orig:" + __result + " new:" + res);
                         __result = res;
                     }
                     

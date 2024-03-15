@@ -439,27 +439,29 @@ namespace Subjugate
 
         public float CalcGlobalStatMult(StatDef stat, float curval)
         {
-            if (!Pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
-                return curval;
-
             if (Pawn.gender != Gender.Male)
                 return curval;
 
             if (!fortheladies)
                 return curval;
 
+            if (!Pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
+                return curval;
+
             var apt = curval * (ForTheLadiesMult * .1f);
+            var res = curval;
             if (posstats.Contains(stat.defName))
             {
                 
-                return curval + apt;
+                res= curval + apt;
             }
             else if (negstats.Contains(stat.defName))
             {
-                return curval - apt;
+                res=curval - apt;
             }
+            Log.Message(Pawn+ " stat:" + stat.defName + " orig:" + curval+ " new:" + res);
 
-            return curval;
+            return res;
         }
     }
 

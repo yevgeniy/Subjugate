@@ -5,13 +5,15 @@
 	 <PreceptDef>
 		<defName>SubjugateAllWomen</defName>
 		<issue>Slavery</issue>
-		<label>Female Slavery</label>
-		<description>All women need to submit to men as slaves.</description>
-		<impact>High</impact>
-		<displayOrderInIssue>1</displayOrderInIssue>
-		<displayOrderInImpact>999</displayOrderInImpact>
+		<label>Female Submission</label>
+		<description>All ladies must submit.</description>
+		<impact>Low</impact>
+		<displayOrderInIssue>11</displayOrderInIssue>
+		<defaultSelectionWeight>2</defaultSelectionWeight>
+		<approvesOfSlavery>true</approvesOfSlavery>
 		<associatedMemes>
 		  <li>MaleSupremacy</li>
+		  <li>Supremacist</li>
 		</associatedMemes>
 		<comps>
 		  <li Class="PreceptComp_SituationalThought">
@@ -25,7 +27,6 @@
 		  </li>
 		  
 		</comps>
-		<approvesOfSlavery>true</approvesOfSlavery>
 	</PreceptDef>
 
 	<ThoughtDef>
@@ -93,7 +94,7 @@
 		<degreeDatas>
 			<li>
 				<label>Subjugated</label>
-				<description>[PAWN_nameDef] was subjugated as a result she gained .</description>
+				<description>[PAWN_nameDef] was subjugated as a result she gained.</description>
 			</li>
 		</degreeDatas>
 		<conflictingTraits>
@@ -101,13 +102,15 @@
 			<li>DislikesWomen</li>
 		</conflictingTraits>
 	</TraitDef>
+	
 	<TraitDef>
 		<defName>ForTheLadies</defName>
 		<commonality>0.00</commonality>
+		<commonalityFemale>0.01</commonalityFemale>
 		<degreeDatas>
 			<li>
 				<label>ForTheLadies</label>
-				<description>[PAWN_nameDef] All ladies are subject to us!.  We will protect our women!</description>
+				<description>All ladies are subject to us..</description>
 			</li>
 		</degreeDatas>
 		<conflictingTraits>
