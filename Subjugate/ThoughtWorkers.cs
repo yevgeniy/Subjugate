@@ -25,7 +25,7 @@ namespace Subjugate
                 var ladies=Find.Maps.SelectMany(v=>v.mapPawns.AllPawns).Where(v => v.gender == Gender.Female && !v.Dead);
 
                 NumberOfSlaveLadies = ladies.Where(v => v.IsSlave).Count();
-                NumberOfFreeLadies = ladies.Where(v => v.IsColonist && !v.IsSlave).Count();
+                NumberOfFreeLadies = ladies.Where(v => v.IsColonist && !v.IsSlave && !v.IsPrisoner).Count();
 
             }
             
@@ -77,7 +77,9 @@ namespace Subjugate
         {
             
             var ret= Mathf.Min(30f, colonist_buffer.NumberOfSlaveLadies);
-            CompSubjugate.GetComp(p).ForTheLadiesMult = ret;
+            var comp = CompSubjugate.GetComp(p);
+            if (comp!=null)
+                comp.ForTheLadiesMult = ret;
             return ret;
         }
 
@@ -87,7 +89,9 @@ namespace Subjugate
                 return false;
 
             var ret= colonist_buffer.NumberOfFreeLadies == 0 && colonist_buffer.NumberOfSlaveLadies > 0;
-            CompSubjugate.GetComp(p).ForTheLadies = ret;
+            var comp = CompSubjugate.GetComp(p);
+            if (comp != null)
+                comp.ForTheLadies = ret;
             return ret;
                 
         }

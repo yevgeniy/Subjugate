@@ -137,7 +137,7 @@ namespace Subjugate
             xp = new XPSystem(this);
         }
 
-        long ticks;
+        public long ticks;
         public override void CompTick()
         {
             ticks++;
@@ -156,16 +156,21 @@ namespace Subjugate
         {
             comp.xp.TickRare();
 
-            if (!comp.IsContent)
+            if (comp.Pawn.IsSlave)
             {
-                double toadd = Convert.ToDouble(comp.Level) * comp.ContentGainPerTick * comp.ticksInRareTick;
-                comp.CurrentContentRating += toadd;
-                if (comp.CurrentContentRating > comp.ContentCap)
-                    comp.CurrentContentRating = comp.ContentCap;   
-            } else
-            {
-                comp.SupNeed.CurLevel = 1f;
+                if (!comp.IsContent)
+                {
+                    double toadd = Convert.ToDouble(comp.Level) * comp.ContentGainPerTick * comp.ticksInRareTick;
+                    comp.CurrentContentRating += toadd;
+                    if (comp.CurrentContentRating > comp.ContentCap)
+                        comp.CurrentContentRating = comp.ContentCap;
+                }
+                else
+                {
+                    comp.SupNeed.CurLevel = 1f;
+                }
             }
+            
         };
         public override void CompTickRare()
         {
@@ -326,6 +331,7 @@ namespace Subjugate
                 else
                 {
                     Repo.Add(pawn, new CompSubjugate[] { null, null, null });
+                    comp.ticker = delegate { };
                 }
                     
             }
