@@ -12,6 +12,7 @@ namespace Subjugate
     public static class Defs
     {
         public static TraitDef Subjugated;
+        public static TraitDef SubjugatedPrimed;
         public static TraitDef ForTheLadies;
 
         public static ThoughtDef SubjugatePutOnArmour;

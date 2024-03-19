@@ -59,7 +59,7 @@ namespace Subjugate
             if (pawn == null || !pawn.IsSlave)
                 return;
             var comp = CompSubjugate.GetComp(pawn);
-            if (comp == null)
+            if (comp == null || comp.Level==0)
                 return;
 
             Rect rectNew = new Rect(CharacterCardUtility.BasePawnCardSize.x - 25f, CharacterCardUtility.BasePawnCardSize.y - 26f, 24f, 24f);

@@ -60,6 +60,7 @@ namespace Adjustments
         public static void Prefix(ref float xp, bool direct, SkillRecord __instance)
         {
             var comp = CompSubjugate.GetComp(__instance.Pawn);
+            
             if (comp!=null && !__instance.LearningSaturatedToday)
             {
                 var amt = comp.xp.TryExtractXP(__instance.def.defName, xp);
@@ -269,16 +270,17 @@ namespace Adjustments
         [HarmonyPostfix]
         public static void postfix(Trait __instance, ref string __result, Pawn pawn)
         {
-            if (__instance.def != Defs.Subjugated)
-                return;
-
-            var comp = CompSubjugate.GetComp(pawn);
-
-            __result += "\n\n" + "Level: " + comp.Level;
-
-            __result += "\n\n" + comp.ContentStr;
-            
-
+            if (__instance.def == Defs.Subjugated)
+            {
+                var comp = CompSubjugate.GetComp(pawn);
+                __result += "\n\n" + "Level: " + comp.Level;
+                __result += "\n\n" + comp.ContentStr;
+            } else if (__instance.def == Defs.SubjugatedPrimed)
+            {
+                var comp = CompSubjugate.GetComp(pawn);
+                __result += "\n\n" + comp.DisciplinedStr;
+            }
+                
         }
     }
 

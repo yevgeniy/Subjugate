@@ -22,7 +22,29 @@ namespace Subjugate
         public static Dictionary<Pawn, CompSubjugate[]> Repo = new Dictionary<Pawn, CompSubjugate[]>();
 
         public int Level;
-        private bool IsPrimed = false;
+        private bool isprimed;
+        private bool IsPrimed
+        {
+            get
+            {
+                return isprimed;
+            }
+            set
+            {
+                var t = Pawn.story.traits.GetTrait(Defs.SubjugatedPrimed);
+                if (value==true && t==null)
+                {
+                    Pawn.story.traits.GainTrait(new Trait(Defs.SubjugatedPrimed));
+                }
+                else if (value==false)
+                {
+                    if (t!=null)
+                        Pawn.story.traits.RemoveTrait(t);
+                }
+
+                isprimed = value;
+            }
+        }
         private float CurrentRating;
         private float RatingCap;
 
@@ -35,6 +57,8 @@ namespace Subjugate
         public object ContentStr => IsContent
             ? Pawn.Name.ToStringShort + " is happy being a slave"
             : "Content: " + ContentRatio * 100f + "%";
+
+        public object DisciplinedStr => CurrentRating / RatingCap * 100f + "%";
 
         public float PunishmentDealtRating;
 
@@ -79,14 +103,6 @@ namespace Subjugate
                 preceptDef.comps.Add(new PreceptComp_SituationalThought { thought = Defs.NeedAdmonishing });
             }
 
-            /*replace all fat and hulking female bodytypes to normal*/
-            var femaleBodyType = DefDatabase<BodyTypeDef>.AllDefs.First(v => v.defName == "Female");
-            Log.Message("FEMALE BODY TYPE: " + femaleBodyType);
-            foreach(var i in DefDatabase<BackstoryDef>.AllDefs)
-            {
-                if (i.bodyTypeFemale!=null && (i.bodyTypeFemale.defName == "Fat" || i.bodyTypeFemale.defName == "Hulk"))
-                    i.bodyTypeFemale = femaleBodyType;
-            }
             
 
             posstats = posstatsnames.Select(v => DefDatabase<StatDef>.AllDefs.FirstOrDefault(vv => vv.defName == v)).Where(v=>v!=null).ToHashSet<StatDef>();
@@ -131,9 +147,6 @@ namespace Subjugate
 
         public CompSubjugate()
         {
-            CurrentRating = 0f;
-            RatingCap = 0f;
-
             xp = new XPSystem(this);
         }
 
@@ -170,11 +183,24 @@ namespace Subjugate
                     comp.SupNeed.CurLevel = 1f;
                 }
             }
-            
+
+
+        };
+
+        Action<CompSubjugate> repoCorrectionTick = (comp) =>
+        {
+            GetComp(comp.Pawn);
+            comp.repoCorrectionTick = delegate { };
         };
         public override void CompTickRare()
         {
             base.CompTickRare();
+
+            /* correct tickers are attached only when 'getComp' sees the pawn, so on first rare tick
+             * do that once */
+            repoCorrectionTick(this);
+
+
             ticker(this);
 
         }
@@ -191,7 +217,7 @@ namespace Subjugate
 
             Scribe_Collections.Look(ref Perks, "subjugate-perks");
             Scribe_Values.Look(ref Level, "subjugate-lvl");
-            Scribe_Values.Look(ref IsPrimed, "subjugate-is-hot");
+            Scribe_Values.Look(ref isprimed, "subjugate-is-hot");
             Scribe_Values.Look(ref CurrentRating, "subjugate-cur-rat");
             Scribe_Values.Look(ref RatingCap, "subjugate-rat-cap");
             Scribe_Values.Look(ref PunishmentDealtRating, "subjugate-dic-dealt-rat");
@@ -204,6 +230,7 @@ namespace Subjugate
 
             if (Perks == null)
                 Perks = new List<Perk>();
+
         }
 
         public void Prime()
@@ -243,15 +270,30 @@ namespace Subjugate
             if (!IsPrimed)
                 return;
 
-            if (bypawn.IsColonist && !bypawn.IsSlave)
+            if (bypawn == null)
             {
-                CompSubjugate.GetComp(bypawn).PunishmentDealtRating += severity;
+                Log.Error("DOES NOT HAVE BYPAWN");
+                return;
+            }
+                
+
+            if (bypawn.IsColonist && !bypawn.IsSlave && bypawn.Ideo!=null && bypawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
+            {
+                var bypawncomp = CompSubjugate.GetComp(bypawn);
+                if (bypawncomp==null)
+                {
+                    Log.Error("NO COMP FOR BYPAWN");
+                    return;
+                }
+
+                bypawncomp.PunishmentDealtRating += severity;
                 ContentCap += severity * .1f;
 
                 CurrentRating = Mathf.Min(RatingCap, CurrentRating + severity * .1f);
 
 
                 /*lower resistance by the beating amount*/
+
                 Pawn.guest.will = Mathf.Max(.1f, Pawn.guest.will - severity * .01f);
 
                 if (CurrentRating >= RatingCap)
@@ -311,6 +353,7 @@ namespace Subjugate
                 {
                     
                     Repo.Add(pawn, new CompSubjugate[] { null, null, null });
+                    comp.ticker = delegate { };
                 }
                 else if (pawn.IsColonist && pawn.gender == Gender.Male && pawn.Ideo!=null && pawn.Ideo.HasPrecept(Defs.SubjugateAllWomen))
                 {
@@ -319,9 +362,7 @@ namespace Subjugate
                     
                     comp.ticker = comp.masterTicker;
 
-                } else if (pawn.IsColonist && pawn.gender == Gender.Female 
-                    && (    pawn.IsSlave && comp.Level>0 /*only applicable for subjugated slaves */ 
-                            || pawn.IsPrisoner)) /* or those ladies in prison */
+                } else if (pawn.gender == Gender.Female && ( pawn.IsSlave || pawn.IsPrisoner)) 
                 {
                     
                     Repo.Add(pawn, new CompSubjugate[] { null, null, comp });
@@ -559,8 +600,6 @@ namespace Subjugate
                 {
                     float resultingxp = Mathf.Max(0, TotalXp(skill) - XPExtractedThisCycle);
 
-                    Log.Message(skill.def.defName + " extracted:" + XPExtractedThisCycle + " l:" + skill.levelInt + " need:" + skill.xpSinceLastLevel);
-
                     XpToLevel(skill, resultingxp);
                     XPExtractedThisCycle = 0;
                 }
@@ -674,7 +713,8 @@ namespace Subjugate
         {
             if (skillname==SelectedSkill)
             {
-                return ExtractXP(amnt);
+                var v = ExtractXP(amnt);
+                return v;
             }
             return 0;
         }

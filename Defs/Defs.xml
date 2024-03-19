@@ -100,6 +100,21 @@
 			<li>DislikesWomen</li>
 		</conflictingTraits>
 	</TraitDef>
+		<TraitDef>
+		<defName>SubjugatedPrimed</defName>
+		<commonality>0.00</commonality>
+		<commonalityFemale>0.01</commonalityFemale>
+		<degreeDatas>
+			<li>
+				<label>Subjugated Primed</label>
+				<description>[PAWN_nameDef] is primed to be subjugated.</description>
+			</li>
+		</degreeDatas>
+		<conflictingTraits>
+			<li>DislikesMen</li>
+			<li>DislikesWomen</li>
+		</conflictingTraits>
+	</TraitDef>
 	
 	<TraitDef>
 		<defName>ForTheLadies</defName>

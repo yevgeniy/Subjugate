@@ -60,3 +60,8 @@
 
 GenDate.TicksPerYear
 
+-----------------------------------------
+
+- It looks like in some instances the repo will resgister a necessary pawn incorrectly.  We need a GetComp and TryGetComp.
+- lady slaves can do research and medicine.  depricate all other skills.  Return all the perks spent on depricated skills.  Can 
+not purchase perks for depricated skills.
