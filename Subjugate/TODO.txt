@@ -65,3 +65,13 @@ GenDate.TicksPerYear
 - It looks like in some instances the repo will resgister a necessary pawn incorrectly.  We need a GetComp and TryGetComp.
 - lady slaves can do research and medicine.  depricate all other skills.  Return all the perks spent on depricated skills.  Can 
 not purchase perks for depricated skills.
+
+----------------------
+
+- being subjugated degrades all your skills once
+- can't attack and shoot
+- lady can research
+- lady upgrades the skill to original passion if that skill gains the total xp equal to the average of all the non-combat skills
+	- this xp mark is set in the beginning or everytime one is reached.
+	- ranks are accumulated at pre-passion levels.
+  
