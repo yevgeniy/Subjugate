@@ -24,8 +24,15 @@ namespace Subjugate
             {
                 var ladies=Find.Maps.SelectMany(v=>v.mapPawns.AllPawns).Where(v => v.gender == Gender.Female && !v.Dead);
 
-                NumberOfSlaveLadies = ladies.Where(v => v.IsSlave).Count();
-                NumberOfFreeLadies = ladies.Where(v => v.IsColonist && !v.IsSlave && !v.IsPrisoner).Count();
+                NumberOfSlaveLadies = ladies.Where(v =>
+                {
+                    return v.IsSlave || v.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet");
+                }).Count();
+                NumberOfFreeLadies = ladies.Where(v =>
+                {
+                    return v.IsColonist && !v.IsSlave && !v.IsPrisoner
+                        && !v.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet");
+                }).Count();
 
             }
             
@@ -55,11 +62,7 @@ namespace Subjugate
                 multRat = 0f;
                 return false;
             }
-            if (comp.IsContent)
-            {
-                multRat = 0;
-                return false;
-            }
+
             
             /* 0 is -30 and full is 0 */
             var max = comp.SupNeed.MaxLevel;

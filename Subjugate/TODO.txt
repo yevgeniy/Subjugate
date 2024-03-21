@@ -70,7 +70,7 @@ not purchase perks for depricated skills.
 
 - being subjugated degrades all your skills once
 - can't attack and shoot
-- lady can research
+- lady can research and do art
 - lady upgrades the skill to original passion if that skill gains the total xp equal to the average of all the non-combat skills
 	- this xp mark is set in the beginning or everytime one is reached.
 	- ranks are accumulated at pre-passion levels.

@@ -231,21 +231,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DialogPerks.cs" />
-    <Compile Include="Dialog.cs" />
     <Compile Include="PatchDamageWorker_Blunt.cs" />
     <Compile Include="CompSubjugate.cs" />
     <Compile Include="Defs.cs" />
     <Compile Include="Patches.cs" />
-    <Compile Include="PatchesCard.cs" />
-    <Compile Include="SubjugationPerks\Perk.cs" />
-    <Compile Include="SubjugationPerks\PerkArtistic.cs" />
-    <Compile Include="SubjugationPerks\PerkCooking.cs" />
-    <Compile Include="SubjugationPerks\PerkGainXPLool.cs" />
-    <Compile Include="SubjugationPerks\PerkPlants.cs" />
-    <Compile Include="SubjugationPerks\PerkSocial.cs" />
-    <Compile Include="SubjugationPerks\PerkGentle.cs" />
-    <Compile Include="SubjugationPerks\PerkNudistTrait.cs" />
     <Compile Include="ThoughtWorkers.cs" />
     <Compile Include="Subjugate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

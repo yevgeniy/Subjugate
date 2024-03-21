@@ -237,7 +237,7 @@ namespace Subjugate
         }
         private string GetBufferXP()
         {
-            return Comp.xp.XPBuffer.ToString("N");
+            return Comp.xp.XPGoal.ToString("N");
         }
 
         private string SetSelectedSkill(string v)

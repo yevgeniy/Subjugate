@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using Subjugate.SubjucationPerks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +84,7 @@ namespace Subjugate
             {
                 var type = perk.GetType();
                 var newperk = (Perk)Activator.CreateInstance(type);
-                Comp.AddPerk(newperk);
+                //Comp.AddPerk(newperk);
                 Close();
             }
 

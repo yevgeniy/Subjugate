@@ -56,6 +56,8 @@ namespace Subjugate
 
         public static void DesigCardToggle(Rect rect, Pawn pawn, Rect creationRect)
         {
+            return;
+
             if (pawn == null || !pawn.IsSlave)
                 return;
             var comp = CompSubjugate.GetComp(pawn);
