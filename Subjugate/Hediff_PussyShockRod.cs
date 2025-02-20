@@ -44,7 +44,7 @@ namespace Subjugate
         }
         private int ticksInserted = 0;
         private bool isShocking=false;
-        public bool IsShocking => this.IsShocking;
+        public bool IsShocking => this.isShocking;
 
         public int TicksInserted { get { return ticksInserted; } }
 
