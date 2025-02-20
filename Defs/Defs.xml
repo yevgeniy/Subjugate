@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
 	 <PreceptDef>
-		<defName>SubjugateAllWomen</defName>
+		<defName>Subj_SubjugateAllWomen_Precept</defName>
 		<issue>Slavery</issue>
+		<category>Issue_Slavery</category>
 		<label>Female Submission</label>
 		<description>All ladies must submit.</description>
 		<impact>Low</impact>
@@ -15,43 +16,18 @@
 		</associatedMemes>
 		<comps>
 		  <li Class="PreceptComp_SituationalThought">
-			<thought>UnsubjugatedWomen</thought>
+			<thought>Subj_UnsubjugatedWomen_Thought</thought>
 		  </li>
 		  <li Class="PreceptComp_SituationalThought">
-			<thought>AllWomenSlaves</thought>
+			<thought>Subj_AllWomenSlaves_Thought</thought>
 		  </li>
-		  <li Class="PreceptComp_SituationalThought">
-			<thought>DisciplinedAWomen</thought>
-		  </li>
-		  
+
 		</comps>
 	</PreceptDef>
+	
 
 	<ThoughtDef>
-		<defName>SubjugatePutOnArmour</defName>
-		<durationDays>1</durationDays>
-		<stages>
-		  <li>
-			<label>put on armour</label>
-			<description>I was made to put on armour.  I really don't like wearing armour. </description>
-			<baseMoodEffect>-30</baseMoodEffect>
-		  </li>
-		</stages>
-	</ThoughtDef>
-	
-	<ThoughtDef>
-		<defName>NeedAdmonishing</defName>
-		<workerClass>Subjugate.ThoughtWorker_NeedAdmonishing</workerClass>
-		<stages>
-		  <li>
-			<label>need admonishing</label>
-			<description>Subjugated lady needs adminishing</description>
-			<baseMoodEffect>-1</baseMoodEffect>
-		  </li>
-		</stages>
-    </ThoughtDef>
-	<ThoughtDef>
-		<defName>UnsubjugatedWomen</defName>
+		<defName>Subj_UnsubjugatedWomen_Thought</defName>
 		<workerClass>Subjugate.ThoughtWorker_UnsubjugatedWomen</workerClass>
 		<stages>
 		  <li>
@@ -62,7 +38,7 @@
 		</stages>
     </ThoughtDef>
 	<ThoughtDef>
-		<defName>AllWomenSlaves</defName>
+		<defName>Subj_AllWomenSlaves_Thought</defName>
 		<workerClass>Subjugate.ThoughtWorker_AllWomenSlaves</workerClass>
 		<stages>
 		  <li>
@@ -72,52 +48,9 @@
 		  </li>
 		</stages>
     </ThoughtDef>
-	<ThoughtDef>
-		<defName>DisciplinedAWomen</defName>
-		<workerClass>Subjugate.ThoughtWorker_RecentlyDisciplinedAWoman</workerClass>
-		<stages>
-		  <li>
-			<label>recently disciplined a woman</label>
-			<description>Recently disciplined a woman</description>
-			<baseMoodEffect>1</baseMoodEffect>
-		  </li>
-		</stages>
-    </ThoughtDef>
-
 
 	<TraitDef>
-		<defName>Subjugated</defName>
-		<commonality>0.00</commonality>
-		<commonalityFemale>0.01</commonalityFemale>
-		<degreeDatas>
-			<li>
-				<label>Subjugated</label>
-				<description>[PAWN_nameDef] was subjugated as a result she gained.</description>
-			</li>
-		</degreeDatas>
-		<conflictingTraits>
-			<li>DislikesMen</li>
-			<li>DislikesWomen</li>
-		</conflictingTraits>
-	</TraitDef>
-		<TraitDef>
-		<defName>SubjugatedPrimed</defName>
-		<commonality>0.00</commonality>
-		<commonalityFemale>0.01</commonalityFemale>
-		<degreeDatas>
-			<li>
-				<label>Subjugated Primed</label>
-				<description>[PAWN_nameDef] is primed to be subjugated.</description>
-			</li>
-		</degreeDatas>
-		<conflictingTraits>
-			<li>DislikesMen</li>
-			<li>DislikesWomen</li>
-		</conflictingTraits>
-	</TraitDef>
-	
-	<TraitDef>
-		<defName>ForTheLadies</defName>
+		<defName>Subj_ForTheLadies_Trait</defName>
 		<commonality>0.00</commonality>
 		<degreeDatas>
 			<li>
@@ -129,5 +62,183 @@
 			<li>DislikesWomen</li>
 		</conflictingTraits>
 	</TraitDef>
+	
+	<WorkGiverDef>
+        <defName>Subj_PussyShockRod_WorkGiver</defName>
+		<label>insert pussy shock rod into girl</label>
+        <giverClass>Subjugate.WorkGiver_PussyShockRod</giverClass>
+        <priorityInType>99</priorityInType>
+		<workType>Warden</workType>
+		<verb>insert pussy shock rod</verb>
+		<gerund>insert pussy shock rod into</gerund>
+		<requiredCapacities>
+			<li>Manipulation</li>
+		</requiredCapacities>
+    </WorkGiverDef>
+
+	
+	<ThingDef>
+        <defName>Subj_PussyShockRod_Item</defName>
+        <label>Pussy shock rod</label>
+        <description>Insert in girl's pussy.  When remotely activated will cause shock damage.</description>
+        <graphicData>
+            <texPath>CavityShocker</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <stackLimit>1</stackLimit> 
+		<tickerType>Normal</tickerType>
+        <category>Item</category>
+		<thingCategories>
+			<li>Manufactured</li>
+		</thingCategories>
+        <thingClass>ThingWithComps</thingClass>
+        <comps>
+			<li Class="CompProperties_Forbiddable" />
+        </comps>
+		<useHitPoints>true</useHitPoints>
+		<selectable>true</selectable>
+		<generateCommonality>0.0</generateCommonality>
+		<statBases>
+			<MaxHitPoints>500</MaxHitPoints>
+			<Flammability>0.0</Flammability>
+			<DeteriorationRate>0.1</DeteriorationRate>
+			<Beauty>-6</Beauty>
+			<MarketValue>100</MarketValue>
+			<Mass>0.5</Mass>
+		</statBases>
+		<altitudeLayer>Item</altitudeLayer>
+		<tickerType>Never</tickerType>
+		<alwaysHaulable>true</alwaysHaulable>
+		<tradeTags>
+			<li>RJW_NoBuy</li>
+			<li>Exotic</li>
+		</tradeTags>
+		<pathCost>1</pathCost>
+    </ThingDef>
+	
+	<ThingDef>
+        <defName>Subj_PussyShockRodRemote_Item</defName>
+        <label>Pussy shock rod remote</label>
+        <description>Activate a pussy shock rod.</description>
+        <graphicData>
+            <texPath>shockerRemote</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <stackLimit>1</stackLimit> 
+		<tickerType>Normal</tickerType>
+        <category>Item</category>
+		<thingCategories>
+			<li>Manufactured</li>
+		</thingCategories>
+        <thingClass>ThingWithComps</thingClass>
+        <comps>
+			<li Class="CompProperties_Forbiddable" />
+        </comps>
+		<useHitPoints>true</useHitPoints>
+		<selectable>true</selectable>
+		<generateCommonality>0.0</generateCommonality>
+		<statBases>
+			<MaxHitPoints>500</MaxHitPoints>
+			<Flammability>0.0</Flammability>
+			<DeteriorationRate>0.1</DeteriorationRate>
+			<Beauty>-6</Beauty>
+			<MarketValue>100</MarketValue>
+			<Mass>0.5</Mass>
+		</statBases>
+		<altitudeLayer>Item</altitudeLayer>
+		<tickerType>Never</tickerType>
+		<alwaysHaulable>true</alwaysHaulable>
+		<tradeTags>
+			<li>RJW_NoBuy</li>
+			<li>Exotic</li>
+		</tradeTags>
+		<pathCost>1</pathCost>
+    </ThingDef>	
+	
+	
+	
+
+	
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Subj_NoHeart_Fleck</defName>
+		<graphicData>
+			<texPath>butthurt</texPath>
+		</graphicData>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<fadeInTime>0.08</fadeInTime>
+		<solidTime>1.4</solidTime>
+		<fadeOutTime>1.5</fadeOutTime>
+	</FleckDef>
+	
+	<HediffDef>
+		<defName>Subj_PussyShockRod_Hediff</defName>
+		<label>Pussy shock rod</label>
+		<description>Shock rod inserted into her pussy.</description>
+		<hediffClass>Subjugate.Hediff_PussyShockRod</hediffClass>
+	</HediffDef>
+	
+	<ThoughtDef>
+        <defName>Subj_PussyShockRodInMyPussy_Thought</defName>
+		<thoughtClass>Subjugate.Thought_PussyShockRodInMyPussy</thoughtClass>
+        <stages>
+            <li>
+                <label>Pussy shock rod.</label>
+				<description>Pussy shock rod is jaI mmed up my pussy.</description>
+                <baseMoodEffect>-1</baseMoodEffect>
+            </li>
+        </stages>
+        <stackLimit>1</stackLimit>
+    </ThoughtDef>
+	
+	<ThingDef ParentName="StorageShelfBase">
+		<defName>Subj_PussyShockRodCharger_Furniture</defName>
+		<label>Pussy shock rod charger</label>
+		<description>Pussy shock rod charge spot.</description>
+		<graphicData>
+		  <texPath>Things/Building/Furniture/ShelfSmall</texPath>
+		  <graphicClass>Graphic_Multi</graphicClass>
+		  <drawSize>(2,2)</drawSize>
+		</graphicData>
+		<uiIconScale>0.5</uiIconScale>
+		<costStuffCount>10</costStuffCount>
+		<statBases>
+		  <MaxHitPoints>50</MaxHitPoints> 
+		  <Mass>4</Mass>
+		  <WorkToBuild>250</WorkToBuild>
+		  <StyleDominance MayRequire="Ludeon.RimWorld.Ideology">2.5</StyleDominance>
+		</statBases>
+		<size>(1,1)</size>		
+		
+		<building>		  
+			<buildingTags>
+				<li>ChargeStation</li>
+			</buildingTags>
+			
+			<relatedBuildCommands>
+				<li>Shelf</li>
+			</relatedBuildCommands>
+		</building>
+		
+		<comps>
+			<li Class="CompProperties_Power">
+				<compClass>CompPowerTrader</compClass>
+				<basePowerConsumption>5</basePowerConsumption>
+			</li>
+		</comps>
+
+	</ThingDef>
+	
+	<HediffDef ParentName="ElectricalBurn">
+		<defName>Subj_ShockTheGirl_Hediff</defName>
+		<label>shock</label>
+		<labelNoun>pussy shock rod shock</labelNoun>
+		<initialSeverity>5</initialSeverity>
+		<comps>
+			<li Class="CombatExtended.HediffCompProperties_Beanbag" />
+		</comps>
+		<injuryProps>
+			<canMerge>false</canMerge>
+		</injuryProps>
+	</HediffDef>
 	
 </Defs>

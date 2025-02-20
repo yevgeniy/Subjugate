@@ -231,13 +231,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompInsertPussyShockRod.cs" />
+    <Compile Include="Hediff_PussyShockRod.cs" />
     <Compile Include="PatchDamageWorker_Blunt.cs" />
     <Compile Include="CompSubjugate.cs" />
     <Compile Include="Defs.cs" />
     <Compile Include="Patches.cs" />
+    <Compile Include="InMapTargeter.cs" />
+    <Compile Include="PussyRodUtils.cs" />
     <Compile Include="ThoughtWorkers.cs" />
     <Compile Include="Subjugate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Thought_PussyShockRodInMyPussy.cs" />
+    <Compile Include="WorkGiver_PussyShockRod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

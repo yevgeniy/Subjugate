@@ -11,21 +11,17 @@ using Verse;
 using Verse.AI;
 using Subjugate;
 using Verse.Sound;
+using static UnityEngine.Random;
 
-namespace Adjustments
+namespace Subjugate
 {
     [HarmonyPatch(typeof(Pawn_GuestTracker), "SetGuestStatus")]
     public class slave_stat_changed
     {
+        static FieldInfo PawnFieldInfo = typeof(Pawn_GuestTracker).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
         private static Pawn GetPawn(Pawn_GuestTracker instance)
         {
-            Type type = typeof(Pawn_GuestTracker);
-
-            // Get the private field info
-            FieldInfo fieldInfo = type.GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            return (Pawn)fieldInfo.GetValue(instance);
-
+            return (Pawn)PawnFieldInfo.GetValue(instance);
         }
         public static void Prefix(Faction newHost, GuestStatus guestStatus, Pawn_GuestTracker __instance)
         {
@@ -52,59 +48,53 @@ namespace Adjustments
         
     }
 
-    [HarmonyPatch(typeof(SkillRecord), "Learn")]
-    public class subjugated_ladies_distribute_depricated_skills
-    {
-        public static void Prefix(ref float xp, bool direct, SkillRecord __instance)
-        {
-            var comp = CompSubjugate.GetComp(__instance.Pawn);
-            if (comp!=null)
-                comp.RegisterXP(__instance.def.defName, xp);
-        }
-    }
 
-    [HarmonyPatch(typeof(StatExtension), "GetStatValue")]
-    public class stat_adjustments_for_masters_and_ladies
+    [HarmonyPatch(typeof(PawnCapacityUtility), "CalculateCapacityLevel")]
+    public class calc_mindmerge_capacity
     {
+        static string[] caps = new string[] { "Consciousness", "Moving" };
         [HarmonyPostfix]
-        public static void fixer(Thing thing, StatDef stat, bool applyPostProcess, int cacheStaleAfterTicks, ref float __result)
+        public static void postfix(ref float __result, HediffSet diffSet, PawnCapacityDef capacity, List<PawnCapacityUtility.CapacityImpactor> impactors, bool forTradePrice)
         {
-            if (thing is Pawn pawn)
-            {
-                if (!pawn.IsColonist)
-                    return;
+            var pawn = diffSet.pawn;
+            if (!pawn.IsColonist)
+                return;
 
-                if (pawn.gender==Gender.Female && stat==StatDefOf.RestRateMultiplier)
+            if (pawn.gender == Gender.Male && caps.Contains(capacity.defName))
+            {
+                var comp = CompSubjugate.GetComp(pawn);
+                
+                if (comp != null)
                 {
-                    float res= CompSubjugate.CalcRestMultiplier(pawn);
+                    float res = comp.CalcForTheLadies();
                     __result += res;
                 }
-                else if (pawn.gender==Gender.Male)
-                {
-                    var comp = CompSubjugate.GetComp(pawn);
-                    if (comp!=null)
-                    {
-                        float res = comp.CalcGlobalStatMult(stat, __result);
-                        __result = res;
-                    }
-                    
-                }
-                
             }
+
+            if (capacity.defName== "Moving" && pawn.gender==Gender.Female)
+            {
+                if (diffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+                {
+                    var hh = h as Hediff_PussyShockRod;
+                    if (__result>.7f && hh.HasPussyRod)
+                    {
+                        __result -= .3f;
+                    }
+                }
+            }
+            
+            __result = GenMath.RoundedHundredth(__result);
         }
     }
 
-
     [HarmonyPatch(typeof(SlaveRebellionUtility), "CanParticipateInSlaveRebellion")]
-    public class subjugated_ladies_dont_rebell
+    public class subjugated_ppl_dont_rebell
     {
         [HarmonyPrefix]
         public static bool patch(Pawn pawn, ref bool __result)
         {
-            var comp = CompSubjugate.GetComp(pawn);
 
-
-            if (comp != null && comp.Level>0)
+            if (pawn.health.hediffSet.HasHediff(Subjugate.VPEP_Puppet))
             {
                 __result = false;
                 return false;
@@ -114,194 +104,74 @@ namespace Adjustments
         }
     }
 
-    [HarmonyPatch(typeof(GenRecipe), "MakeRecipeProducts")]
-    public class check_thigs_produced_for_tailoring
-    {
-        [HarmonyPrefix]
-        public static bool patch(RecipeDef recipeDef, Pawn worker, List<Thing> ingredients, Thing dominantIngredient, IBillGiver billGiver, Precept_ThingStyle precept, ThingStyleDef style, int? overrideGraphicIndex)
-        {
+    //[HarmonyPatch(typeof(StoreUtility), "TryFindBestBetterNonSlotGroupStorageFor")]
+    //public class pussy_rod_charger
+    //{
 
-            //if (worker.CurJob.workGiverDef.workType.defName == "Tailoring")
-            //{
-            //    var hasTailoringTrait = PerkTailoring.HasTailoringPerk(worker);
+        
+    //    [HarmonyPrefix]
+    //    private static bool TryFindBestBetterNonSlotGroupStorageFor(ref bool __result, Thing t, Pawn carrier, Map map, StoragePriority currentPriority, Faction faction, out IHaulDestination haulDestination, bool acceptSamePriority = false, bool requiresDestReservation = true)
+    //    {
+    //        haulDestination = null;
+    //        if (t.def.defName== "Subj_PussyShockRod_Item")
+    //        {
+    //            var building = PussyRodUtils.FindNearestChargeStation(t.Position, t.Map);
+    //            haulDestination = building;
+    //            if (building!=null)
+    //            {
+    //                return false;
+    //            }
+    //            return false;                
+    //        }
 
-            //    if (ingredients != null && hasTailoringTrait)
-            //        foreach (var i in ingredients)
-            //        {
-            //            var stackcount = Mathf.Floor(i.stackCount * .2f);
-            //            if (stackcount > 0)
-            //            {
-            //                var thing = ThingMaker.MakeThing(i.def, i.Stuff);
-            //                thing.stackCount = (int)stackcount;
-            //                GenPlace.TryPlaceThing(thing, worker.Position, worker.Map, ThingPlaceMode.Near);
-            //            }
-            //        }
-            //}
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(Pawn_ApparelTracker), "Notify_ApparelAdded")]
-    public class subjugated_ladies_hate_wearing_armor
-    {
-        [HarmonyPrefix]
-        public static bool prepatcher(Apparel apparel, Pawn_ApparelTracker __instance)
-        {
-            var comp = CompSubjugate.GetComp(__instance.pawn);
-            if (comp!=null && apparel.def.tradeTags.Any(v => v == "Armor") && comp.HatesWearingArmor())
-            {
-                __instance.pawn.needs.mood.thoughts.memories.TryGainMemory(Defs.SubjugatePutOnArmour);
-            }
-
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(GuestUtility), "GetDisabledWorkTypes")]
-    public class ladies_can_do_art_and_research
-    {
-        private static Pawn GetPawn(Pawn_GuestTracker instance)
-        {
-            Type type = typeof(Pawn_GuestTracker);
-
-            // Get the private field info
-            FieldInfo fieldInfo = type.GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            return (Pawn)fieldInfo.GetValue(instance);
-
-        }
-        [HarmonyPostfix]
-        public static void postfix(Pawn_GuestTracker guest, ref List<WorkTypeDef> __result)
-        {
-            var pawn = GetPawn(guest);
-            var comp = CompSubjugate.GetComp(pawn);
-            if (comp != null && comp.Level>0)
-            {
-                var works = comp.GetEnabledWorkTypes().Select(v => v.defName);
-                __result.RemoveAll(v => works.Contains(v.defName));
-            }
+    //        return true;
+    //    }
 
 
-        }
+    //}
 
-    }
+    //[HarmonyPatch(typeof(ThingOwnerUtility), "TryGetInnerInteractableThingOwner")]
+    //public class pussy_rod_charger_inner_container
+    //{
 
-    [HarmonyPatch(typeof(Trait), "TipString")]
-    public class trait_should_include_perk_descriptions_and_subjugation_notes
-    {
-        [HarmonyPostfix]
-        public static void postfix(Trait __instance, ref string __result, Pawn pawn)
-        {
-            if (__instance.def == Defs.Subjugated)
-            {
-                var comp = CompSubjugate.GetComp(pawn);
-                __result += "\n\n" + comp.SkillGloalStr;
-            } else if (__instance.def == Defs.SubjugatedPrimed)
-            {
-                var comp = CompSubjugate.GetComp(pawn);
-                __result += "\n\n" + comp.DisciplinedStr;
-            }
-                
-        }
-    }
+    //    [HarmonyPrefix]
+    //    private static bool TryGetInnerInteractableThingOwner(ref ThingOwner __result, Thing thing)
+    //    {
+    //        if (thing.def.defName=="Subj_PussyShockRodCharger_Item")
+    //        {
+    //            __result = new CriticalHaulThingOwner(thing, __result);
+    //            return false;
+    //        }
+    //        return true;
+            
+    //    }
 
-    [HarmonyPatch(typeof(SkillRecord), "CalculatePermanentlyDisabled")]
-    public class disabling_skill_based_on_perks_for_perm
-    {
-        [HarmonyPrefix]
-        public static bool prefixer(SkillRecord __instance, ref bool __result)
-        {
-            return disabled_or_enable_skills.prefixer(__instance, ref __result);
-        }
 
-    }
+    //}
 
-    [HarmonyPatch(typeof(SkillRecord), "CalculateTotallyDisabled")]
-    public class disabled_or_enable_skills
-    {
-        [HarmonyPrefix]
-        public static bool prefixer(SkillRecord __instance, ref bool __result)
-        {
-            var comp = CompSubjugate.GetComp(__instance.Pawn);
 
-            if (comp != null )
-            {
-                if (comp.GetIsSkillDisabled(__instance))
-                {
-                    __result = true;
-                    return false;
-                }
+    //[HarmonyPatch(typeof(GuestUtility), "GetDisabledWorkTypes")]
+    //public class subjugated_ppl_can_do_art_and_research
+    //{
+    //    private static Pawn GetPawn(Pawn_GuestTracker instance)
+    //    {
+    //        Type type = typeof(Pawn_GuestTracker);
 
-                if (comp.GetIsSkillEnabled(__instance))
-                {
-                    __result = false;
-                    return false;
-                }
+    //        // Get the private field info
+    //        FieldInfo fieldInfo = type.GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                return true;
-            }
+    //        return (Pawn)fieldInfo.GetValue(instance);
 
-            return true;
-        }
-    }
+    //    }
+    //    [HarmonyPostfix]
+    //    public static void postfix(Pawn_GuestTracker guest, ref List<WorkTypeDef> __result)
+    //    {
+    //        var pawn = GetPawn(guest);
 
-    [HarmonyPatch(typeof(HediffSet), "AddDirect")]
-    public class register_severity_for_beating
-    {
-        [HarmonyPrefix]
-        public static bool Patch(Hediff hediff, DamageInfo dinfo, DamageWorker.DamageResult damageResult, HediffSet __instance)
-        {
-            if (hediff != null)
-            {
-                var pawn = __instance.pawn;
-                if (pawn.gender == Gender.Female && dinfo.Instigator is Pawn bypawn)
-                {
-                    var comp = CompSubjugate.GetComp(pawn);
-                    if (comp != null)
-                    {
-                        comp.RegisterSeverity(hediff.Severity, bypawn);
-                    }
-                }
-
-            }
-
-            return true;
-        }
-
-    }
-
-    [HarmonyPatch(typeof(Pawn_GuestTracker), "SetGuestStatus")]
-    public class register_prisoner_start
-    {
-        [HarmonyPrefix]
-        public static bool Patch(Faction newHost, GuestStatus guestStatus, Pawn_GuestTracker __instance)
-        {
-            if (!__instance.IsPrisoner && guestStatus == GuestStatus.Prisoner)
-            {
-                var pawn = GetPawn(__instance);
-                if (pawn.gender == Gender.Female /*&& pawn.guilt.IsGuilty*/)
-                {
-                    var comp = pawn.GetComp<CompSubjugate>();
-                    if (comp != null)
-                    {
-                        comp.Prime();
-                    }
-                }
-
-            }
-
-            return true;
-        }
-
-        private static Pawn GetPawn(Pawn_GuestTracker instance)
-        {
-            Type type = typeof(Pawn_GuestTracker);
-
-            // Get the private field info
-            FieldInfo fieldInfo = type.GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            return (Pawn)fieldInfo.GetValue(instance);
-
-        }
-    }
+    //        if (pawn.health.hediffSet.HasHediff(Subjugate.VPEP_Puppet))
+    //        {
+    //            __result.RemoveAll(v => v == WorkTypeDefOf.Research || v.defName == "Art");
+    //        }
+    //    }
+    //}
 }

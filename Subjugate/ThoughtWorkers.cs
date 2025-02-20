@@ -20,6 +20,7 @@ namespace Subjugate
         }
         public override void MapComponentTick()
         {
+
             if (Find.TickManager.TicksGame % 2000==0)
             {
                 var ladies=Find.Maps.SelectMany(v=>v.mapPawns.AllPawns).Where(v => v.gender == Gender.Female && !v.Dead);
@@ -31,6 +32,7 @@ namespace Subjugate
                 NumberOfFreeLadies = ladies.Where(v =>
                 {
                     return v.IsColonist && !v.IsSlave && !v.IsPrisoner
+                        && v.ageTracker.Adult
                         && !v.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet");
                 }).Count();
 
@@ -40,39 +42,6 @@ namespace Subjugate
 
     }
 
-    public class ThoughtWorker_NeedAdmonishing : ThoughtWorker_Precept
-    {
-
-        public float multRat;
-
-
-        public override float MoodMultiplier(Pawn p)
-        {
-            return multRat;
-        }
-
-        protected override ThoughtState ShouldHaveThought(Pawn p)
-        {
-            if (!p.IsSlave || p.gender!=Gender.Female)
-                return false;
-
-            var comp = CompSubjugate.GetComp(p);
-            if (comp==null)
-            {
-                multRat = 0f;
-                return false;
-            }
-
-            
-            /* 0 is -30 and full is 0 */
-            var max = comp.SupNeed.MaxLevel;
-            var curlvl = comp.SupNeed.CurLevel;
-            var rat = 1 - curlvl / max;
-            multRat = 30f * rat;
-
-            return true;
-        }
-    }
     public class ThoughtWorker_AllWomenSlaves:ThoughtWorker_Precept
     {
         
@@ -99,31 +68,7 @@ namespace Subjugate
                 
         }
     }
-    public class ThoughtWorker_RecentlyDisciplinedAWoman : ThoughtWorker_Precept
-    {
 
-        public override float MoodMultiplier(Pawn p)
-        {
-            var comp = CompSubjugate.GetComp(p);
-            if (comp != null)
-            {
-                return Mathf.Min(30f, comp.PunishmentDealtRating);
-            }
-            return 1;
-        }
-
-        protected override ThoughtState ShouldHaveThought(Pawn p)
-        {
-            var comp = CompSubjugate.GetComp(p);
-            if (comp!=null)
-            {
-                return comp.PunishmentDealtRating > 0;
-            }
-            return false;
-
-        }
-
-    }
     public class ThoughtWorker_UnsubjugatedWomen : ThoughtWorker_Precept
     {
         public override float MoodMultiplier(Pawn p)

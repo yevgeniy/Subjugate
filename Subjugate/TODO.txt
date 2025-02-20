@@ -1,77 +1,10 @@
-- Add subjugate comp -- done
+-ladies can only be slaves or pawns
 
-- When beating a female pawn prisoner should add to subjugating meter --done
-	- Meter is reset when the pawn is again made prisoner. -- done
-	- Meter is filled up 1:10 point of suffering -- done
-	- Meter is full at resistence rating -- done
-	- Can gain multiple ranks of subjucation -- done
-	- When resistance cap is breached add a rating of subjugation -- done
+-slave and prisoner ladies can be spanked.
+	- enslave
+		- Less likely to participate in prison breaks.
+		- For every 10pts of consc. will add add .1 effectiveness in enslaving.
 
+	- acts as suppression
+	- spanked ladies take 1 day to recover consc.
 
-
-- Subjugated ladies have these qualities
-	- can't melee -- done
-	- can't ranged -- done
-	- can't weark armor -- done
-	- only tailoring -- done
-	- can't rebel -- done
-	- lady can no longer rebell but suppression need rating will impact mood thought. -- done
-		- mood 0 at suppression 100% --done
-		- mood -30 at suppression of 0% -- done
-		- after 1 qrt (per 20 pts of suffering dealt) suppression drop rating will set to 0. -- done
-	- gain construction and mining appathy -- done
-		- can't raise above rank 10 -- done
-
-- subjugated ladies get to select
-	- skill redistribution -- done
-		- melee, ranged, and overflow for construction, mining skills experience points go to skill buffers which
-		can be assigned to either art, plant, craft, or cooking -- done
-		- gain equal number of xp from buffer per normal xp gain.  This dubles per subjugation rank. -- done
-	- each rank lets a lady choose upgrade (committed) (if applicable)
-		- art upgrade passion (can do -> minor -> major -> burning) -- done
-		- social upgrade passion (can do -> minor -> major -> burning) -- done
-		- plants upgrade passion (can do -> minor -> major -> burning) -- done
-		- cooking upgrade passion (can do -> minor -> major -> burning) -- done
-		- nudist trait -- done
-		- gain xp-buffer (equal to xp need to gain a level of average of all skills) -- done
-		- tailoring spawns 20% of recipe material after completing bill
-		
-		- mood +10 (has to gain 50% rest need in one instance) and sleeprate +20% when sharing a bed w/ a lady   (+5 / +10% when both have it)
-			- sleep rank has to hit top
-		- mood +10 and workrate +10% for any guy who shares a bed w/ this lady (has to gain 50% rest need in one instance)
-		- punishing this lady acts as a focus (20 suffering/day)
-		- loving this pawn acts as a focus (only for a specific pawn)
-		- +10% workrate on a skill (art, plant, craft, cooking)
-			- can only be selected once per skill
-		
-
-	
-
-- remove dont do plants perk when gaining plants
-- show message when subjugated -- done
-
-- ladies can only be slaves, else men get a daily accumulating debuf -3/day/non-slave-lady, max 30 -- done
-- if all ladies are slaves, guys get +mood 1/lady
-
-
-
-
-----------------------------------------
-
-GenDate.TicksPerYear
-
------------------------------------------
-
-- It looks like in some instances the repo will resgister a necessary pawn incorrectly.  We need a GetComp and TryGetComp.
-- lady slaves can do research and medicine.  depricate all other skills.  Return all the perks spent on depricated skills.  Can 
-not purchase perks for depricated skills.
-
-----------------------
-
-- being subjugated degrades all your skills once
-- can't attack and shoot
-- lady can research and do art
-- lady upgrades the skill to original passion if that skill gains the total xp equal to the average of all the non-combat skills
-	- this xp mark is set in the beginning or everytime one is reached.
-	- ranks are accumulated at pre-passion levels.
-  

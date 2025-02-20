@@ -11,15 +11,34 @@ namespace Subjugate
     [DefOf]
     public static class Defs
     {
-        public static TraitDef Subjugated;
-        public static TraitDef SubjugatedPrimed;
-        public static TraitDef ForTheLadies;
+        public static TraitDef Subj_ForTheLadies_Trait;
 
-        public static ThoughtDef SubjugatePutOnArmour;
-        public static ThoughtDef UnsubjugatedWomen;
-        public static ThoughtDef NeedAdmonishing;
+        public static ThoughtDef Subj_UnsubjugatedWomen_Thought;
+        public static ThoughtDef Subj_AllWomenSlaves_Thought;
+        public static ThoughtDef Subj_PussyShockRodInMyPussy_Thought;
 
-        public static PreceptDef SubjugateAllWomen;
+
+        public static PreceptDef Subj_SubjugateAllWomen_Precept;
+
+        public static ThingDef Subj_PussyShockRod_Item;
+
+        public static HediffDef Subj_PussyShockRod_Hediff;
+        public static HediffDef Subj_ShockTheGirl_Hediff;
+
+        public static FleckDef Subj_NoHeart_Fleck;
+
+        /*imported*/
+        public static DamageDef VWE_ConditionalStun;
+
+    }
+
+    [StaticConstructorOnStartup]
+    public static class find_defs
+    {
+        static find_defs()
+        {
+            Defs.VWE_ConditionalStun = DefDatabase<DamageDef>.AllDefs.FirstOrDefault(v => v.defName == "VWE_ConditionalStun");
+        }
     }
 }
 

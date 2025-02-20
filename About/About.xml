@@ -5,8 +5,15 @@
     <packageId>nimm.subjgate</packageId>
     <description>Male supremacy subjugate ladies precept.</description>
     <supportedVersions>
-        <li>1.4</li>
+        <li>1.5</li>
     </supportedVersions>
+	
+	<modDependencies>
+		<li>
+			<packageId>CETeam.CombatExtended</packageId>
+			<displayName>Combat Extended</displayName>
+		</li>
+	</modDependencies>
 </ModMetaData>
 <!--
 When adding a preview photo
@@ -18,3 +25,6 @@ Should be
 
 Must Not Be Larger then 1MB in size
  -->
+
+ 
+ 

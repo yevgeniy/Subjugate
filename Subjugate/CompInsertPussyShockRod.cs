@@ -1,0 +1,177 @@
+﻿using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+using Verse;
+using Verse.Sound;
+
+namespace Subjugate
+{
+
+
+    [StaticConstructorOnStartup]
+    public class CompInsertPussyShockRod : ThingComp
+    {
+
+        static CompInsertPussyShockRod()
+        {
+            var def = DefDatabase<ThingDef>.AllDefs.FirstOrDefault(v => v.defName == "Subj_PussyShockRod_Item");
+            if (def != null)
+            {
+                def.comps.Add(new CompProperties
+                {
+                    compClass = typeof(CompInsertPussyShockRod)
+                });
+                def.tickerType = TickerType.Normal;
+            }
+
+        }
+        public CompInsertPussyShockRod()
+        {
+            this.proxy = new ShockRodProxy();
+        }
+
+        public ShockRodProxy proxy;
+
+        public CompProperties Props => (CompProperties)props;
+
+        public override IEnumerable<Gizmo> CompGetGizmosExtra()
+        {
+
+            yield return new Command_Action
+            {
+                defaultLabel = "Insert",
+                defaultDesc = "Insert Pussy Shock Rod into a girl.",
+                icon = ContentFinder<Texture2D>.Get("CavityShocker"),
+                action = delegate
+                {
+
+                    SoundDefOf.Click.PlayOneShotOnCamera();
+                    InMapTargeter.BeginTargeting(new TargetingParameters()
+                    {
+                        canTargetPawns = true,
+                        canTargetBuildings = false,
+                        neverTargetHostileFaction = true,
+                        canTargetItems = false,
+                        thingCategory = ThingCategory.Pawn,
+                        validator = delegate (TargetInfo target)
+                        {
+                            if (!target.HasThing)
+                            {
+                                return false;
+                            }
+                            if (target.Thing is Pawn pawn)
+                            {
+                                if (pawn.gender == Gender.Female && (pawn.IsColonist || pawn.IsSlaveOfColony || pawn.IsPrisoner))
+                                {
+                                    return true;
+                                }
+                                return false;
+                            }
+                            return false;
+                        }
+                    }, delegate (LocalTargetInfo target)
+                    {
+                        Subjugate.ShouldHaveShockRod.Add(target.Pawn);
+                        Log.Message($"target {target.Pawn}");
+                    }, this.parent);
+                }
+            };
+
+            var gizs = base.CompGetGizmosExtra();
+            foreach (var i in gizs)
+            {
+                yield return i;
+            }
+        }
+
+        
+        public float Charge { get { return this.proxy.charge; } }
+        public override string CompInspectStringExtra()
+        {
+            var s = base.CompInspectStringExtra() + "Charged: " + (this.proxy.charge * 100f) + "%";
+
+            return s;
+        }
+
+        
+
+        public override void CompTick()
+        {
+            base.CompTick();
+
+            this.proxy.Tick(this.parent);
+        }
+
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+
+            Scribe_Deep.Look(ref this.proxy, "comp-ins-puss-shock-rod-proxy");
+
+        }
+
+        
+    }
+
+    public class ShockRodProxy : IExposable
+    {
+        public float charge = .1f;
+
+        public void ExposeData()
+        {
+            Scribe_Values.Look(ref this.charge, "pussrodcomp-charge");
+        }
+
+        private static float TicksToFullCharge = GenDate.TicksPerHour * 3;
+        private static float TicksToFullDischarge = GenDate.TicksPerDay * 2;
+        private static float ChargePerTick = 1f / TicksToFullCharge;
+        private static float DischargePerTick = 1f / TicksToFullDischarge;
+
+        public void Tick(ThingWithComps shockRod=null)
+        {
+            var shelf = shockRod?.StoringThing();
+
+
+            if (shelf != null && shelf.TryGetComp<CompPowerTrader>(out var powerComp) && powerComp.PowerOn)
+            {
+                this.charge = Mathf.Min(1f, this.charge + ChargePerTick);
+            }
+            else
+            {
+                this.charge = Mathf.Max(0f, this.charge - DischargePerTick);
+            }
+
+            if (shockRod!=null)
+            {
+                if (this.charge > .3f)
+                {
+                    if (!Subjugate.ReadyPussyShockRods.Contains(shockRod))
+                        Subjugate.ReadyPussyShockRods.Add(shockRod);
+                }
+                else
+                {
+                    if (Subjugate.ReadyPussyShockRods.Contains(shockRod))
+                        Subjugate.ReadyPussyShockRods.Remove(shockRod);
+                }
+            }
+            
+        }
+        public bool TryShock()
+        {
+            if (this.charge > .0f)
+            {
+                this.charge -= .05f;
+                return true;
+            }
+
+            this.charge = 0f;
+            return false;
+        }
+    }
+
+}
