@@ -18,6 +18,8 @@ namespace Subjugate
         [HarmonyPostfix]
         public static void NonLethalBluntDamage(ref BodyPartRecord __result, DamageWorker_Blunt __instance, DamageInfo dinfo, Pawn pawn)
         {
+
+
             //"Brain", "Head", "Heart", "Jaw", "Neck", "Nose", "Right ear", "Right eye", "Left ear", "Left eye", "Skull", "Tongue", "Torso"
 
             if (dinfo.Instigator is Pawn srcPawn && IsPlayerPawn(srcPawn) && IsPlayerPawn(pawn))

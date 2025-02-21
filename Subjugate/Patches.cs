@@ -15,37 +15,89 @@ using static UnityEngine.Random;
 
 namespace Subjugate
 {
-    [HarmonyPatch(typeof(Pawn_GuestTracker), "SetGuestStatus")]
-    public class slave_stat_changed
-    {
-        static FieldInfo PawnFieldInfo = typeof(Pawn_GuestTracker).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static Pawn GetPawn(Pawn_GuestTracker instance)
-        {
-            return (Pawn)PawnFieldInfo.GetValue(instance);
-        }
-        public static void Prefix(Faction newHost, GuestStatus guestStatus, Pawn_GuestTracker __instance)
-        {
-            var pawn = GetPawn(__instance);
-            CompSubjugate.RemoveFromRepo(pawn);
+    //[HarmonyPatch(typeof(PawnRenderer), "GetDrawParms")]
+    //public static class lay_down
+    //{
+    //    [HarmonyPostfix]
+    //    public static void postfix(ref PawnDrawParms __result, Vector3 rootLoc, float angle, Rot4 bodyFacing, RotDrawMode bodyDrawType, PawnRenderFlags flags)
+    //    {
+    //        if (__result.pawn.gender==Gender.Female)
+    //        {
+    //            var girl = __result.pawn;
+    //            if (girl.health.hediffSet.TryGetHediff(Defs.Subj_ShockTheGirl_Hediff, out var _))
+    //            {
+    //                Log.Message($"CRAWLING {girl}");
+    //                __result.crawling = true;
+    //            }
+    //        }
+    //    }
+    //}
 
-        }
-    }
-    [HarmonyPatch(typeof(Pawn), "ChangeKind")]
-    public class kind_change
+    //[HarmonyPatch(typeof(Pawn_GuestTracker), "SetGuestStatus")]
+    //public class slave_stat_changed
+    //{
+    //    static FieldInfo PawnFieldInfo = typeof(Pawn_GuestTracker).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
+    //    private static Pawn GetPawn(Pawn_GuestTracker instance)
+    //    {
+    //        return (Pawn)PawnFieldInfo.GetValue(instance);
+    //    }
+    //    public static void Prefix(Faction newHost, GuestStatus guestStatus, Pawn_GuestTracker __instance)
+    //    {
+    //        var pawn = GetPawn(__instance);
+    //        CompSubjugate.RemoveFromRepo(pawn);
+
+    //    }
+    //}
+    //[HarmonyPatch(typeof(Pawn), "ChangeKind")]
+    //public class kind_change
+    //{
+    //    public static void Prefix(PawnKindDef newKindDef, Pawn __instance)
+    //    {
+    //        faction_change_re_repo.Prefix(null, null, __instance);
+    //    }
+    //}
+    //[HarmonyPatch(typeof(Pawn), "SetFaction")]
+    //public class faction_change_re_repo
+    //{
+    //    public static void Prefix(Faction newFaction, Pawn recruiter, Pawn __instance)
+    //    {
+    //        CompSubjugate.RemoveFromRepo(__instance);
+    //    }
+
+    //}
+
+    [HarmonyPatch(typeof(PrisonBreakUtility), "InitiatePrisonBreakMtbDays")]
+    public class prison_break_adjust
     {
-        public static void Prefix(PawnKindDef newKindDef, Pawn __instance)
+        [HarmonyPostfix]
+        public static void Postfix(ref float __result, Pawn pawn, StringBuilder sb, bool ignoreAsleep)
         {
-            faction_change_re_repo.Prefix(null, null, __instance);
+            if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+            {
+                var hediff = h as Hediff_PussyShockRod;
+                var reg = __result;
+                __result *= hediff.MTBEventDaysMultiplyer();
+                Log.Message($"prison: {pawn} reg: {reg} adj: {__result}");
+            }
         }
+
     }
-    [HarmonyPatch(typeof(Pawn), "SetFaction")]
-    public class faction_change_re_repo
+
+    [HarmonyPatch(typeof(SlaveRebellionUtility), "InitiateSlaveRebellionMtbDays")]
+    public class slave_break_adjust
     {
-        public static void Prefix(Faction newFaction, Pawn recruiter, Pawn __instance)
+        [HarmonyPostfix]
+        public static void Postfix(ref float __result, Pawn pawn)
         {
-            CompSubjugate.RemoveFromRepo(__instance);
+            if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+            {
+                var hediff = h as Hediff_PussyShockRod;
+                var reg = __result;
+                __result *= hediff.MTBEventDaysMultiplyer();
+                Log.Message($"slave: {pawn} reg: {reg} adj: {__result}");
+            }
         }
-        
+
     }
 
 

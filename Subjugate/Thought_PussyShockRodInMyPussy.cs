@@ -17,7 +17,12 @@ namespace Subjugate
         {
             get
             {
-                return !pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var _);
+                if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+                {
+                    var hediff = h as Hediff_PussyShockRod;
+                    return !hediff.HasPussyRod;
+                }
+                return true;           
             }
         }
 

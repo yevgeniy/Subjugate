@@ -53,11 +53,24 @@ namespace Subjugate
             }
         }
 
+
         public CompSubjugate()
         {
         }
 
         public long ticks;
+        private bool shouldHaveShockrod;
+        public bool ShouldHaveShockrod
+        {
+            get
+            {
+                return this.shouldHaveShockrod;
+            }
+            set
+            {
+                this.shouldHaveShockrod = value;
+            }
+        }
 
 
         public override void PostDeSpawn(Map map)
@@ -73,7 +86,8 @@ namespace Subjugate
 
             Scribe_Values.Look(ref fortheladies, "subjugate-for-lad");
             Scribe_Values.Look(ref ForTheLadiesMult, "subjugate-for-lad-mult");
-
+            Scribe_Values.Look(ref shouldHaveShockrod, "subjugate-should-have-rod");
+            Scribe_Values.Look(ref guiltyTicksLeft, "subjugate-guilty-ticks");
         }
 
 
@@ -162,28 +176,44 @@ namespace Subjugate
             return ForTheLadiesMult * .01f;
         }
 
+        
 
         public override void CompTick()
         {
             base.CompTick();
+            guiltyTicksLeft--;
 
             if (Find.TickManager.TicksGame % GenDate.TicksPerHour == 0)
             {
 
-                Log.Message("girl should have pussy insert " + this.parent);
                 if (PussyRodUtils.GirlNeedsAttention(this.parent as Pawn, out bool needInsert, out bool needRemoval))
                 {
-                    Log.Message($"girl needs attention {this.parent} {needInsert} {needRemoval}");
-
                     if (needInsert && !Subjugate.GirlsNeedingInsert.Contains(this.parent))
                         Subjugate.GirlsNeedingInsert.Add(this.parent as Pawn);
                     else if (needRemoval && !Subjugate.GirlsNeedingRemoval.Contains(this.parent))
                         Subjugate.GirlsNeedingRemoval.Add(this.parent as Pawn);
                 }
+                else
+                {
+                    Subjugate.GirlsNeedingInsert.Remove(this.parent as Pawn);
+                    Subjugate.GirlsNeedingRemoval.Remove(this.parent as Pawn);
+                }
+
+
+                if (PussyRodUtils.GirlNeedsPunishing(this.parent as Pawn))
+                {
+                    guiltyTicksLeft = GenDate.TicksPerDay;
+                }
 
             }
 
         }
+        public override string CompInspectStringExtra()
+        {
+            return NeedsPunishment ? "NEEDS PUNISHING!" : "";
+        }
+        private int guiltyTicksLeft = 0;
+        public bool NeedsPunishment => guiltyTicksLeft > 0;
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
@@ -208,12 +238,20 @@ namespace Subjugate
                             thingCategory = ThingCategory.Pawn,
                             validator = delegate (TargetInfo target)
                             {
+                                
+                                
                                 if (!target.HasThing)
                                 {
                                     return false;
                                 }
                                 if (target.Thing is Pawn p)
                                 {
+                                    Log.Message($"distance: {this.parent.Position.DistanceTo(target.Thing.Position)}");
+                                    if (this.parent.Position.DistanceTo(target.Thing.Position)>12f)
+                                    {
+                                        return false;
+                                    }
+
                                     if (p.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
                                     {
                                         var hediff = h as Hediff_PussyShockRod;
@@ -253,7 +291,7 @@ namespace Subjugate
 
             }
 
-            if (Subjugate.ShouldHaveShockRod.Contains(this.parent))
+            if ( pawn.GetComp<CompSubjugate>().ShouldHaveShockrod)
             {
                 yield return new Command_Action
                 {
@@ -272,7 +310,7 @@ namespace Subjugate
 
         private void RemovePussyRody()
         {
-            Subjugate.ShouldHaveShockRod.Remove(this.parent as Pawn);
+            (this.parent as Pawn).GetComp<CompSubjugate>().ShouldHaveShockrod = false;
         }
 
     }

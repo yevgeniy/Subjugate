@@ -76,7 +76,7 @@ namespace Subjugate
                         }
                     }, delegate (LocalTargetInfo target)
                     {
-                        Subjugate.ShouldHaveShockRod.Add(target.Pawn);
+                        target.Pawn.GetComp<CompSubjugate>().ShouldHaveShockrod = true;
                         Log.Message($"target {target.Pawn}");
                     }, this.parent);
                 }
@@ -111,7 +111,7 @@ namespace Subjugate
         {
             base.PostExposeData();
 
-            Scribe_Deep.Look(ref this.proxy, "comp-ins-puss-shock-rod-proxy");
+            Scribe_Deep.Look(ref this.proxy, "comp-ins-puss-shock-rod-proxy", new object[] { });
 
         }
 

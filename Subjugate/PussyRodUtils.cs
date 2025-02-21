@@ -8,6 +8,7 @@ using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
 using Verse;
 using Verse.AI;
+using Verse.AI.Group;
 
 namespace Subjugate
 {
@@ -42,7 +43,7 @@ namespace Subjugate
             //{
             //    initAction = () =>
             //    {
-                    
+
             //        var warden = this.job.targetA.Pawn;
 
             //        Log.Message($"turn correctly {warden.Rotation} {this.pawn.Rotation}");
@@ -57,7 +58,7 @@ namespace Subjugate
             {
                 initAction = () =>
                 {
-                    ThrowMetaIconF(pawn.Position, pawn.Map, Defs.Subj_NoHeart_Fleck);
+                    PussyRodUtils.ThrowMetaIconF(pawn.Position, pawn.Map, Defs.Subj_NoHeart_Fleck);
                 }
             };
 
@@ -67,10 +68,7 @@ namespace Subjugate
             yield return Toils_Jump.Jump(sayouch);
         }
 
-        public void ThrowMetaIconF(IntVec3 pos, Map map, FleckDef icon)
-        {
-            FleckMaker.ThrowMetaIcon(pos, map, icon);
-        }
+
     }
 
     public class AttendToGirl : JobDriver
@@ -173,7 +171,7 @@ namespace Subjugate
 
             if (job.needInsert)
             {
- 
+
                 yield return Toils_General.Wait(500, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
                 yield return new Toil
                 {
@@ -223,6 +221,10 @@ namespace Subjugate
 
     public static class PussyRodUtils
     {
+        public static void ThrowMetaIconF(IntVec3 pos, Map map, FleckDef icon)
+        {
+            FleckMaker.ThrowMetaIcon(pos, map, icon);
+        }
         public static IEnumerable<Toil> StripNaked(Job job, Pawn pawn, TargetIndex girlTarget, Toil next, out List<Apparel> droppedClothing)
         {
             var droppedclothing = new List<Apparel>() { };
@@ -325,8 +327,8 @@ namespace Subjugate
                         {
                             driverClass = typeof(Girl_BendOver)
                         },
-                        targetA=warden,
-                        targetB=job.GetTarget(girlTarget),
+                        targetA = warden,
+                        targetB = job.GetTarget(girlTarget),
                         count = 0
                     };
                     girl.jobs.StartJob(bendOver);
@@ -339,21 +341,50 @@ namespace Subjugate
             needInsert = false;
             needRemoval = false;
 
-            if (!Subjugate.ShouldHaveShockRod.Contains(girl))
+            if (girl.IsColonistPlayerControlled || girl.IsColonyMech || girl.IsColonyMutantPlayerControlled || girl.IsPrisonerInPrisonCell())
             {
-                if (girl.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+                AcceptanceReport allowsDrafting = girl.GetLord()?.AllowsDrafting(girl) ?? ((AcceptanceReport)true);
+                if (allowsDrafting)
                 {
-                    needRemoval = true;
-                    return true;
+                    if (!girl.GetComp<CompSubjugate>().ShouldHaveShockrod && !girl.Dead)
+                    {
+                        if (girl.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+                        {
+                            needRemoval = true;
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    var hediff = girl.health.hediffSet.GetFirstHediffOfDef(Defs.Subj_PussyShockRod_Hediff) as Hediff_PussyShockRod;
+                    if (hediff == null || !hediff.HasPussyRod || hediff.pussyRodProxy.charge < .3f)
+                    {
+                        needInsert = true;
+                        return true;
+                    }
                 }
-                return false;
             }
 
-            var hediff = girl.health.hediffSet.GetFirstHediffOfDef(Defs.Subj_PussyShockRod_Hediff) as Hediff_PussyShockRod;
-            if (hediff == null || !hediff.HasPussyRod || hediff.pussyRodProxy.charge < .3f)
+            return false;
+        }
+        public static MentalStateDef[] NeedPunishmentStates = new MentalStateDef[] {
+                MentalStateDefOf.Manhunter,
+                MentalStateDefOf.Berserk,
+                MentalStateDefOf.HumanityBreak,
+                MentalStateDefOf.PanicFlee,
+                MentalStateDefOf.Rebellion,
+                MentalStateDefOf.Roaming,
+                MentalStateDefOf.SocialFighting,
+                MentalStateDefOf.Wander_OwnRoom,
+                MentalStateDefOf.Wander_Psychotic,
+                MentalStateDefOf.Wander_Sad
+        };
+
+        public static bool GirlNeedsPunishing(Pawn pawn)
+        {
+            if (pawn.gender==Gender.Female)
             {
-                needInsert = true;
-                return true;
+                return pawn.guilt.IsGuilty || NeedPunishmentStates.Contains(pawn.MentalStateDef);
             }
 
             return false;

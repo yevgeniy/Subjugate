@@ -18,18 +18,10 @@ namespace Subjugate
 
         public static HediffDef VPEP_Puppet;
 
-         HashSet<Pawn> shouldHaveShockRod = new HashSet<Pawn>();
-         HashSet<Pawn> girlsNeedingInsert = new HashSet<Pawn>();
-         HashSet<Pawn> girlsNeedingRemoval = new HashSet<Pawn>();
-         HashSet<Thing> readyPussyShockRods = new HashSet<Thing>();
+        HashSet<Pawn> girlsNeedingInsert = new HashSet<Pawn>();
+        HashSet<Pawn> girlsNeedingRemoval = new HashSet<Pawn>();
+        HashSet<Thing> readyPussyShockRods = new HashSet<Thing>();
 
-        public static HashSet<Pawn> ShouldHaveShockRod
-        {
-            get
-            {
-                return Find.CurrentMap.GetComponent<Subjugate>().shouldHaveShockRod;
-            }
-        }
         public static HashSet<Pawn> GirlsNeedingInsert
         {
             get
@@ -94,22 +86,22 @@ namespace Subjugate
 
         private static void DrawTargeters()
         {
-            
+
             Targeters.OnGUITargeters();
         }
         private static void ProcessTargeterInputEvents()
         {
-            
+
             Targeters.ProcessTargeterInputEvents();
         }
         private static void TargeterUpdate()
         {
-            
+
             Targeters.UpdateTargeters();
         }
         private static void TargeterStop()
         {
-            
+
             Targeters.StopAllTargeters();
         }
 
@@ -117,27 +109,6 @@ namespace Subjugate
         {
             base.ExposeData();
 
-            Scribe_Collections.Look(ref shouldHaveShockRod, "pussrodcomp-girls", LookMode.Reference);
-            Scribe_Collections.Look(ref girlsNeedingInsert, "pussrodcomp-girls-need-insert", LookMode.Reference);
-            Scribe_Collections.Look(ref girlsNeedingRemoval, "pussrodcomp-need-rem", LookMode.Reference);
-            
-
-            if (girlsNeedingRemoval == null)
-            {
-                girlsNeedingRemoval = new HashSet<Pawn>();
-            }
-            if (girlsNeedingInsert == null)
-            {
-                girlsNeedingInsert = new HashSet<Pawn>();
-            }
-            if (readyPussyShockRods == null)
-            {
-                readyPussyShockRods = new HashSet<Thing>();
-            }
-            if (shouldHaveShockRod == null)
-            {
-                shouldHaveShockRod = new HashSet<Pawn>();
-            }
         }
 
 

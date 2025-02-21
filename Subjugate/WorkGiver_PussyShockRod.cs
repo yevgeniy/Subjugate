@@ -44,14 +44,14 @@ namespace Subjugate
 
             if (!pawn.CanReserve(girl))
                 return false;
-            if (!pawn.CanReach(girl, PathEndMode.ClosestTouch, Danger.None))
+            if (!pawn.CanReach(girl, PathEndMode.Touch, Danger.None))
                 return false;
 
 
             if (needInsert)
             {
                 
-                goodPussyRod = GetPussyRod(pawn);
+                goodPussyRod = GetClosestPussyRod(pawn);
                 Log.Message($"pussy rod {goodPussyRod}");
                 return goodPussyRod!=null;
             }
@@ -93,28 +93,19 @@ namespace Subjugate
             return job;
         }
 
-        private Thing GetPussyRod(Pawn pawn)
+        private Thing GetClosestPussyRod(Pawn pawn)
         {
-            var pussyrod= Subjugate.ReadyPussyShockRods
-                    .FirstOrDefault(v => v.Spawned
-                        && !v.IsForbidden(pawn)
-                        && pawn.CanReserve(v)
-                        && pawn.CanReach(v, PathEndMode.ClosestTouch, Danger.None));
+            var pussyrod = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map,
+                ThingRequest.ForGroup(ThingRequestGroup.HaulableEver),
+                PathEndMode.Touch, TraverseParms.For(pawn),
+                9999f, possibleItem => possibleItem.def.defName == "Subj_PussyShockRod_Item"
+                            && pawn.CanReserve(possibleItem)
+                            && HaulAIUtility.PawnCanAutomaticallyHaulFast(pawn, possibleItem, false)
+                            && Subjugate.ReadyPussyShockRods.Contains(possibleItem)
+                            && !possibleItem.IsForbidden(pawn));
 
             return pussyrod;
         }
-
-        //private Thing GetClosestPussyRod(Pawn pawn, Func<Thing, bool> validator)
-        //{
-        //    var pussyrod = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map,
-        //        ThingRequest.ForGroup(ThingRequestGroup.HaulableEver),
-        //        PathEndMode.Touch, TraverseParms.For(pawn),
-        //        9999f, possibleItem => possibleItem.def.defName == "Subj_PussyShockRod_Item"
-        //                    && validator(possibleItem)
-        //                    && !possibleItem.IsForbidden(pawn));
-
-        //    return pussyrod;
-        //}
     }
 
 
