@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <HediffDef ParentName="Subj_ApparelBase_Hediff">
+    <defName>S16DressIIIHed</defName>
+    <label>nipple stickers</label>
+    <description>Nipple stickers on</description>
+    <isBad>false</isBad>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0.10</severityPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+	    <minSeverity>0.01</minSeverity>
+        <label>just put on</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+	   <li>
+	    <minSeverity>0.40</minSeverity>
+        <label>acceptance</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+	  <li>
+	    <minSeverity>0.80</minSeverity>
+        <label>getting used to wear</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!-- <SexFrequency>0.05</SexFrequency> -->
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+  
+  <HediffDef ParentName="Subj_ApparelBase_Hediff">
+    <defName>S16DressIVHed</defName>
+    <label>nipple stickers</label>
+    <description>Nipple stickers on</description>
+    <isBad>false</isBad>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0.10</severityPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+	    <minSeverity>0.01</minSeverity>
+        <label>just put on</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+	   <li>
+	    <minSeverity>0.40</minSeverity>
+        <label>acceptance</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+	  <li>
+	    <minSeverity>0.80</minSeverity>
+        <label>getting used to wear</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!-- <SexFrequency>0.05</SexFrequency> -->
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+  
+  <HediffDef ParentName="Subj_ApparelBase_Hediff">
+    <defName>S16DressVHed</defName>
+    <label>nipple stickers</label>
+    <description>Nipple stickers on</description>
+    <isBad>false</isBad>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0.10</severityPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+	    <minSeverity>0.01</minSeverity>
+        <label>just put on</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+	   <li>
+	    <minSeverity>0.40</minSeverity>
+        <label>acceptance</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+	  <li>
+	    <minSeverity>0.80</minSeverity>
+        <label>getting used to wear</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+	     <!-- <SexFrequency>0.05</SexFrequency> -->
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+</Defs>

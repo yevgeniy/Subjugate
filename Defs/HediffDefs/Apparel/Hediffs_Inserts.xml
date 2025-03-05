@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+   <HediffDef ParentName="Subj_ApparelBase_Hediff">
+      <defName>Subj_PussyShockRod_Hediff</defName>
+      <label>pussy shock rod</label>
+      <description>Pussy shock rod</description>
+      <hediffClass>Subjugate.Hediff_PussyShockRod</hediffClass>
+      <isBad>false</isBad>
+      <initialSeverity>.01</initialSeverity>
+      <maxSeverity>1</maxSeverity>
+
+      <stages>
+         <li>
+            <minSeverity>.01</minSeverity>
+            <label>That thing is huge</label>
+            <capMods>
+               <li>
+                  <capacity>Moving</capacity>
+                  <offset>-0.1</offset>
+               </li>
+            </capMods>
+            <statOffsets>
+               <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">-0.5</SlaveSuppressionOffset>
+            </statOffsets>
+         </li>
+         <li>
+            <minSeverity>1</minSeverity>
+            <label>Ouch!</label>
+            <capMods>
+               <li>
+                  <capacity>Moving</capacity>
+                  <offset>-0.7</offset>
+               </li>
+            </capMods>
+            <statOffsets>
+               <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">-0.5</SlaveSuppressionOffset>
+            </statOffsets>
+         </li>
+      </stages>
+
+   </HediffDef>
+
+</Defs>

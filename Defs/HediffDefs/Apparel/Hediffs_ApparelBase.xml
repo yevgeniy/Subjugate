@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <HediffDef Name="Subj_ApparelBase_Hediff" Abstract="True">
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(221, 160, 221)</defaultLabelColor>
+	<makesSickThought>false</makesSickThought>
+	<tendable>false</tendable>
+	<scenarioCanAdd>false</scenarioCanAdd>
+  </HediffDef>
+</Defs>

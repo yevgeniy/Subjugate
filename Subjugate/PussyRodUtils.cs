@@ -12,10 +12,275 @@ using Verse.AI.Group;
 
 namespace Subjugate
 {
+
+    public static class PussyRodUtils
+    {
+        public static bool TryGet_PussyShockRod_Hediff(this Pawn girl, out Hediff_PussyShockRod hediff )
+        {
+            return girl.health.hediffSet.TryGetHediff<Hediff_PussyShockRod>(out hediff);
+            
+        }
+        public static Hediff_Subjugation Subjugate_Hediff(this Pawn girl)
+        {
+            if (!girl.health.hediffSet.TryGetHediff<Hediff_Subjugation>(out var hediff))
+            {
+                hediff = HediffMaker.MakeHediff(Defs.Subj_Subjugation_Hediff, girl,
+                                girl.health.hediffSet.GetBodyPartRecord(BodyPartDefOf.Head)) as Hediff_Subjugation;
+
+                girl.health.AddHediff(hediff, girl.health.hediffSet.GetBodyPartRecord(BodyPartDefOf.Head));
+            }
+            return hediff;
+        }
+
+        public static bool TryGet_Subjugate_Comp(this Pawn pawn, out CompSubjugate comp)
+        {
+            return pawn.TryGetComp<CompSubjugate>(out comp);
+        }
+
+        public static void NeedPussyRodInsert(this Pawn girl, bool f=true)
+        {
+            if (f)
+                Find.CurrentMap.GetComponent<Subjugate>().girlNeed[girl] = NeedType.Insert;
+            else
+                Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Remove(girl);
+        }
+        public static void NeedPussyRodRemoval(this Pawn girl, bool f = true)
+        {
+            if (f)
+                Find.CurrentMap.GetComponent<Subjugate>().girlNeed[girl] = NeedType.Remove;
+            else
+                Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Remove(girl);
+        }
+
+        public static void ThrowMetaIconF(IntVec3 pos, Map map, FleckDef icon)
+        {
+            FleckMaker.ThrowMetaIcon(pos, map, icon);
+        }
+        public static IEnumerable<Toil> StripNaked(Job job, Pawn pawn, TargetIndex girlTarget, Toil next, out List<Apparel> droppedClothing)
+        {
+            var droppedclothing = new List<Apparel>() { };
+            droppedClothing = droppedclothing;
+
+            var girl = job.GetTarget(girlTarget).Pawn;
+
+            /* make girl turn around */
+            var faceCorrectly = new Toil
+            {
+                initAction = () =>
+                {
+                    pawn.rotationTracker.Face(girl.DrawPos);
+
+                    girl.Rotation = pawn.Rotation;
+                }
+            };
+
+            var checkForClothing = Toils_Jump.JumpIf(next, () => girl.apparel.WornApparel.Where(v => v.def != Defs.Subj_PussyShockRod_Item).Count() == 0);
+            var takeIfOffWait = Toils_General.Wait(50, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
+            var takeItOff = new Toil
+            {
+                initAction = () =>
+                {
+                    Apparel apparel = girl.apparel.WornApparel.FirstOrDefault(v => v.def != Defs.Subj_PussyShockRod_Item);
+                    
+                    // Try to remove the apparel
+                    girl.apparel.TryDrop(apparel, out Apparel resultingApparel, girl.Position);
+                    droppedclothing.Add(resultingApparel);
+                }
+            };
+
+            return new List<Toil>()
+            {
+                faceCorrectly,
+                checkForClothing,
+                takeIfOffWait,
+                takeItOff,
+                Toils_Jump.Jump(faceCorrectly)
+            };
+
+        }
+
+        public static IEnumerable<Toil> GetDressed(Job job, Pawn pawn, TargetIndex girlTarget, List<Apparel> droppedClothing, Toil next)
+        {
+            var checkWhatToPutOn = Toils_Jump.JumpIf(next, () => droppedClothing.Count == 0);
+            var putOnProgBar = Toils_General.Wait(50, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
+            var putOn = new Toil
+            {
+                initAction = () =>
+                {
+                    var girl = job.GetTarget(girlTarget).Pawn;
+                    Apparel apparel = droppedClothing[0];
+                    droppedClothing.Remove(apparel);
+
+                    // Try to remove the apparel
+                    girl.apparel.Wear(apparel);
+                }
+            };
+
+            return new List<Toil>()
+            {
+                checkWhatToPutOn,
+                putOnProgBar,
+                putOn,
+                Toils_Jump.Jump(checkWhatToPutOn)
+            };
+
+        }
+
+        public static Toil LetGirlGo(Job job, TargetIndex girlTarget)
+        {
+            return new Toil
+            {
+                initAction = () =>
+                {
+                    Log.Message($"reset jobs");
+                    var girl = job.GetTarget(girlTarget).Pawn;
+                    if (girl.pather.Destination != null)
+                    {
+                        girl.jobs.StopAll();
+                    }
+                }
+            };
+        }
+
+        public static Toil MakeGirlSquirm(Job job, Pawn warden, TargetIndex girlTarget)
+        {
+            return new Toil
+            {
+                initAction = () =>
+                {
+                    Log.Message($"make mote");
+                    var girl = job.GetTarget(girlTarget).Pawn;
+                    var bendOver = new Job
+                    {
+                        def = new JobDef
+                        {
+                            driverClass = typeof(Girl_BendOver)
+                        },
+                        targetA = warden,
+                        targetB = job.GetTarget(girlTarget),
+                        count = 0
+                    };
+                    girl.jobs.StartJob(bendOver);
+                }
+            };
+        }
+
+        public static bool TryGet_GirlNeeds(this Pawn girl, out bool needInsert, out bool needRemoval)
+        {
+            needInsert = false;
+            needRemoval = false;
+
+            if (girl.IsColonistPlayerControlled || girl.IsColonyMech || girl.IsColonyMutantPlayerControlled || girl.IsPrisonerInPrisonCell())
+            {
+                AcceptanceReport allowsDrafting = girl.GetLord()?.AllowsDrafting(girl) ?? ((AcceptanceReport)true);
+                if (allowsDrafting)
+                {
+                    if (girl.Dead)
+                    {
+                        return false;
+                    }
+                    if (false==girl.GetComp<CompSubjugate>().ShouldHaveShockrod)
+                    {
+                        if (girl.TryGet_PussyShockRod(out var _))
+                        {
+                            needRemoval = true;
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    if (false==girl.TryGet_PussyShockRod(out var _))
+                    {
+                        needInsert = true;
+                        return true;
+                    }
+
+                    if (girl.TryGet_PussyShockRod(out var item) && item.TryGet_PussyShockRod_Comp(out var comp)
+                        && comp.Charge < .3f)
+                    {
+                        needInsert = true;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+        public static MentalStateDef[] NeedPunishmentStates = new MentalStateDef[] {
+                MentalStateDefOf.Manhunter,
+                MentalStateDefOf.Berserk,
+                MentalStateDefOf.HumanityBreak,
+                MentalStateDefOf.PanicFlee,
+                MentalStateDefOf.Rebellion,
+                MentalStateDefOf.SocialFighting,
+                MentalStateDefOf.Wander_OwnRoom,
+                MentalStateDefOf.Wander_Psychotic,
+                MentalStateDefOf.Wander_Sad
+        };
+
+        public static bool GirlNeedsPunishing(this Pawn pawn)
+        {
+            if (pawn.gender==Gender.Female)
+            {
+                return pawn.guilt.IsGuilty || NeedPunishmentStates.Contains(pawn.MentalStateDef);
+            }
+
+            return false;
+        }
+
+        public static bool TryGet_PussyShockRodRemote(this Pawn pawn, out Thing item)
+        {
+            item = pawn.inventory.innerContainer.FirstOrDefault(v => v.def.defName == "Subj_PussyShockRodRemote_Item");
+            return item != null;
+        }
+        public static bool TryGet_PussyShockRod(this Pawn pawn, out Apparel item)
+        {
+            item = pawn.apparel.WornApparel.FirstOrDefault(v => v.def.defName == "Subj_PussyShockRod_Item") as Apparel;
+            return item != null;
+        }
+        public static bool TryGet_PussyShockRod(this Pawn pawn, out Apparel item, out CompInsertPussyShockRod comp )
+        {
+            comp = null;
+            if (pawn.TryGet_PussyShockRod(out item))
+            {
+                return item.TryGet_PussyShockRod_Comp(out comp);
+            }
+            return false;
+        }
+        public static bool TryGet_PussyShockRod_Comp(this Thing item, out CompInsertPussyShockRod comp)
+        {
+            if (item.TryGetComp<CompInsertPussyShockRod>(out comp))
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
     public class AttendToGirlJob : Job
     {
         public bool needRemoval;
         public bool needInsert;
+    }
+
+    public class EmptyJob : JobDriver
+    {
+        public override bool TryMakePreToilReservations(bool errorOnFailed)
+        {
+            return true;
+        }
+
+        protected override IEnumerable<Toil> MakeNewToils()
+        {
+            yield return Toils_General.Do(() =>
+            {
+                this.pawn.mindState.nextApparelOptimizeTick = Find.TickManager.TicksGame + Rand.Range(6000, 9000);
+            });
+
+            yield return Toils_General.Wait(2);
+        }
+
+
     }
 
     public class Girl_Stop : JobDriver
@@ -143,13 +408,12 @@ namespace Subjugate
             var checkedForOldRod = Toils_General.Wait(2);
             yield return Toils_Jump.JumpIf(checkedForOldRod, () =>
             {
-                if (!job.GetTarget(girlTarget).Pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
-                    return true;
-
-                if (h is Hediff_PussyShockRod rodHediff && !rodHediff.HasPussyRod)
-                    return true;
-
-                return false;
+                var girl = job.GetTarget(girlTarget).Pawn;
+                if (girl.TryGet_PussyShockRod(out var _))
+                {
+                    return false;
+                }
+                return true;
             });
 
             yield return Toils_General.Wait(500, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
@@ -159,9 +423,14 @@ namespace Subjugate
                 initAction = () =>
                 {
                     var girl = job.GetTarget(girlTarget).Pawn;
-                    var hediff = girl.health.hediffSet.GetFirstHediffOfDef(Defs.Subj_PussyShockRod_Hediff) as Hediff_PussyShockRod;
-                    var pussyShockRod = hediff.ExtractPussyShockRod();
-                    Subjugate.GirlsNeedingRemoval.Remove(girl);
+                    if (!girl.TryGet_PussyShockRod(out var pussyShockRod))
+                    {
+                        Log.Error($"COULD NOT FIND PUSSY SHOCK ROD ON GIRL {this.pawn}");
+                        this.pawn.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
+                        return;
+                    }
+                    girl.apparel.Remove(pussyShockRod);
+                    girl.NeedPussyRodRemoval(false);
 
                     GenPlace.TryPlaceThing(pussyShockRod, pawn.Position, pawn.Map, ThingPlaceMode.Near);
                 }
@@ -181,28 +450,13 @@ namespace Subjugate
                         pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out var newThing);
 
                         var girl = job.GetTarget(girlTarget).Pawn;
-                        var hediff = girl.health.hediffSet.GetFirstHediffOfDef(Defs.Subj_PussyShockRod_Hediff) as Hediff_PussyShockRod;
-                        if (hediff == null)
-                        {
-                            hediff = HediffMaker.MakeHediff(Defs.Subj_PussyShockRod_Hediff, girl,
-                                girl.health.hediffSet.GetBodyPartRecord(BodyPartDefOf.Torso)) as Hediff_PussyShockRod;
-
-                            girl.health.AddHediff(hediff, girl.health.hediffSet.GetBodyPartRecord(BodyPartDefOf.Torso));
-                        }
-                        hediff.InsertPussyShockRod(newThing as ThingWithComps);
-                        Subjugate.GirlsNeedingInsert.Remove(girl);
+                        girl.apparel.Wear(newThing as Apparel, true, true);
+                        girl.NeedPussyRodInsert(false);
 
                         job.SetTarget(pussyRodTarget, newThing);
                     }
                 };
-                yield return new Toil
-                {
-                    initAction = () =>
-                    {
-                        var pussyRod = job.GetTarget(pussyRodTarget).Thing;
-                        pussyRod.DeSpawn();
-                    }
-                };
+
             }
 
             var letGirlGo = PussyRodUtils.LetGirlGo(job, girlTarget);
@@ -219,177 +473,6 @@ namespace Subjugate
         }
     }
 
-    public static class PussyRodUtils
-    {
-        public static void ThrowMetaIconF(IntVec3 pos, Map map, FleckDef icon)
-        {
-            FleckMaker.ThrowMetaIcon(pos, map, icon);
-        }
-        public static IEnumerable<Toil> StripNaked(Job job, Pawn pawn, TargetIndex girlTarget, Toil next, out List<Apparel> droppedClothing)
-        {
-            var droppedclothing = new List<Apparel>() { };
-            droppedClothing = droppedclothing;
-
-            /* make girl turn around */
-            var faceCorrectly = new Toil
-            {
-                initAction = () =>
-                {
-                    var girl = job.GetTarget(girlTarget).Pawn;
-                    pawn.rotationTracker.Face(girl.DrawPos);
-
-                    girl.Rotation = pawn.Rotation;
-                }
-            };
-
-
-            var checkForClothing = Toils_Jump.JumpIf(next, () => job.GetTarget(girlTarget).Pawn.apparel.WornApparelCount == 0);
-            var takeIfOffWait = Toils_General.Wait(50, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
-            var takeItOff = new Toil
-            {
-                initAction = () =>
-                {
-                    var girl = job.GetTarget(girlTarget).Pawn;
-                    Apparel apparel = girl.apparel.WornApparel[0];
-                    // Try to remove the apparel
-                    girl.apparel.TryDrop(apparel, out Apparel resultingApparel, girl.Position);
-                    droppedclothing.Add(resultingApparel);
-                }
-            };
-
-
-
-            return new List<Toil>()
-            {
-                faceCorrectly,
-                checkForClothing,
-                takeIfOffWait,
-                takeItOff,
-                Toils_Jump.Jump(faceCorrectly)
-            };
-
-        }
-
-        public static IEnumerable<Toil> GetDressed(Job job, Pawn pawn, TargetIndex girlTarget, List<Apparel> droppedClothing, Toil next)
-        {
-            var checkWhatToPutOn = Toils_Jump.JumpIf(next, () => droppedClothing.Count == 0);
-            var putOnProgBar = Toils_General.Wait(50, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
-            var putOn = new Toil
-            {
-                initAction = () =>
-                {
-                    var girl = job.GetTarget(girlTarget).Pawn;
-                    Apparel apparel = droppedClothing[0];
-                    droppedClothing.Remove(apparel);
-
-                    // Try to remove the apparel
-                    girl.apparel.Wear(apparel);
-                }
-            };
-
-            return new List<Toil>()
-            {
-                checkWhatToPutOn,
-                putOnProgBar,
-                putOn,
-                Toils_Jump.Jump(checkWhatToPutOn)
-            };
-
-        }
-
-        public static Toil LetGirlGo(Job job, TargetIndex girlTarget)
-        {
-            return new Toil
-            {
-                initAction = () =>
-                {
-                    Log.Message($"reset jobs");
-                    var girl = job.GetTarget(girlTarget).Pawn;
-                    if (girl.pather.Destination != null)
-                    {
-                        girl.jobs.StopAll();
-                    }
-                }
-            };
-        }
-
-        public static Toil MakeGirlSquirm(Job job, Pawn warden, TargetIndex girlTarget)
-        {
-            return new Toil
-            {
-                initAction = () =>
-                {
-                    Log.Message($"make mote");
-                    var girl = job.GetTarget(girlTarget).Pawn;
-                    var bendOver = new Job
-                    {
-                        def = new JobDef
-                        {
-                            driverClass = typeof(Girl_BendOver)
-                        },
-                        targetA = warden,
-                        targetB = job.GetTarget(girlTarget),
-                        count = 0
-                    };
-                    girl.jobs.StartJob(bendOver);
-                }
-            };
-        }
-
-        public static bool GirlNeedsAttention(Pawn girl, out bool needInsert, out bool needRemoval)
-        {
-            needInsert = false;
-            needRemoval = false;
-
-            if (girl.IsColonistPlayerControlled || girl.IsColonyMech || girl.IsColonyMutantPlayerControlled || girl.IsPrisonerInPrisonCell())
-            {
-                AcceptanceReport allowsDrafting = girl.GetLord()?.AllowsDrafting(girl) ?? ((AcceptanceReport)true);
-                if (allowsDrafting)
-                {
-                    if (!girl.GetComp<CompSubjugate>().ShouldHaveShockrod && !girl.Dead)
-                    {
-                        if (girl.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
-                        {
-                            needRemoval = true;
-                            return true;
-                        }
-                        return false;
-                    }
-
-                    var hediff = girl.health.hediffSet.GetFirstHediffOfDef(Defs.Subj_PussyShockRod_Hediff) as Hediff_PussyShockRod;
-                    if (hediff == null || !hediff.HasPussyRod || hediff.pussyRodProxy.charge < .3f)
-                    {
-                        needInsert = true;
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-        public static MentalStateDef[] NeedPunishmentStates = new MentalStateDef[] {
-                MentalStateDefOf.Manhunter,
-                MentalStateDefOf.Berserk,
-                MentalStateDefOf.HumanityBreak,
-                MentalStateDefOf.PanicFlee,
-                MentalStateDefOf.Rebellion,
-                MentalStateDefOf.Roaming,
-                MentalStateDefOf.SocialFighting,
-                MentalStateDefOf.Wander_OwnRoom,
-                MentalStateDefOf.Wander_Psychotic,
-                MentalStateDefOf.Wander_Sad
-        };
-
-        public static bool GirlNeedsPunishing(Pawn pawn)
-        {
-            if (pawn.gender==Gender.Female)
-            {
-                return pawn.guilt.IsGuilty || NeedPunishmentStates.Contains(pawn.MentalStateDef);
-            }
-
-            return false;
-        }
-    }
 
 
     //public class CriticalThingHaulDestination : IHaulDestination

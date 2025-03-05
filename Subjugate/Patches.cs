@@ -12,6 +12,8 @@ using Verse.AI;
 using Subjugate;
 using Verse.Sound;
 using static UnityEngine.Random;
+using static UnityEngine.GraphicsBuffer;
+using System.Security.Cryptography;
 
 namespace Subjugate
 {
@@ -66,43 +68,43 @@ namespace Subjugate
 
     //}
 
-    [HarmonyPatch(typeof(PrisonBreakUtility), "InitiatePrisonBreakMtbDays")]
-    public class prison_break_adjust
-    {
-        [HarmonyPostfix]
-        public static void Postfix(ref float __result, Pawn pawn, StringBuilder sb, bool ignoreAsleep)
-        {
-            if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
-            {
-                var hediff = h as Hediff_PussyShockRod;
-                var reg = __result;
-                __result *= hediff.MTBEventDaysMultiplyer();
-                Log.Message($"prison: {pawn} reg: {reg} adj: {__result}");
-            }
-        }
+    //[HarmonyPatch(typeof(PrisonBreakUtility), "InitiatePrisonBreakMtbDays")]
+    //public class prison_break_adjust
+    //{
+    //    [HarmonyPostfix]
+    //    public static void Postfix(ref float __result, Pawn pawn, StringBuilder sb, bool ignoreAsleep)
+    //    {
+    //        if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+    //        {
+    //            var hediff = h as Hediff_PussyShockRod;
+    //            var reg = __result;
+    //            __result *= hediff.MTBEventDaysMultiplyer();
+    //            Log.Message($"prison: {pawn} reg: {reg} adj: {__result}");
+    //        }
+    //    }
 
-    }
+    //}
 
-    [HarmonyPatch(typeof(SlaveRebellionUtility), "InitiateSlaveRebellionMtbDays")]
-    public class slave_break_adjust
-    {
-        [HarmonyPostfix]
-        public static void Postfix(ref float __result, Pawn pawn)
-        {
-            if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
-            {
-                var hediff = h as Hediff_PussyShockRod;
-                var reg = __result;
-                __result *= hediff.MTBEventDaysMultiplyer();
-                Log.Message($"slave: {pawn} reg: {reg} adj: {__result}");
-            }
-        }
+    //[HarmonyPatch(typeof(SlaveRebellionUtility), "InitiateSlaveRebellionMtbDays")]
+    //public class slave_break_adjust
+    //{
+    //    [HarmonyPostfix]
+    //    public static void Postfix(ref float __result, Pawn pawn)
+    //    {
+    //        if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+    //        {
+    //            var hediff = h as Hediff_PussyShockRod;
+    //            var reg = __result;
+    //            __result *= hediff.MTBEventDaysMultiplyer();
+    //            Log.Message($"slave: {pawn} reg: {reg} adj: {__result}");
+    //        }
+    //    }
 
-    }
+    //}
 
 
     [HarmonyPatch(typeof(PawnCapacityUtility), "CalculateCapacityLevel")]
-    public class calc_mindmerge_capacity
+    public class cal_capability
     {
         static string[] caps = new string[] { "Consciousness", "Moving" };
         [HarmonyPostfix]
@@ -114,24 +116,10 @@ namespace Subjugate
 
             if (pawn.gender == Gender.Male && caps.Contains(capacity.defName))
             {
-                var comp = CompSubjugate.GetComp(pawn);
-                
-                if (comp != null)
+                if (pawn.TryGet_Subjugate_Comp(out var comp))
                 {
                     float res = comp.CalcForTheLadies();
                     __result += res;
-                }
-            }
-
-            if (capacity.defName== "Moving" && pawn.gender==Gender.Female)
-            {
-                if (diffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
-                {
-                    var hh = h as Hediff_PussyShockRod;
-                    if (__result>.7f && hh.HasPussyRod)
-                    {
-                        __result -= .3f;
-                    }
                 }
             }
             
@@ -151,7 +139,29 @@ namespace Subjugate
                 __result = false;
                 return false;
             }
+            return true;
+        }
+    }
 
+    [HarmonyPatch(typeof(JobMaker), "MakeJob", new Type[] {typeof( JobDef ), typeof( LocalTargetInfo )})]
+    public static class detect_wear
+    {
+        public static ThingDef[] restricted = new ThingDef[] {
+            Defs.S16_CarbonA
+        };
+        public static bool Prefix(ref Job __result, JobDef def, LocalTargetInfo targetA)
+        {
+            if (targetA.HasThing && restricted.Contains( targetA.Thing.def))
+            {
+                __result = new Job
+                {
+                    def=new JobDef
+                    {
+                        driverClass=typeof(EmptyJob)
+                    }
+                };
+                return false;
+            }
             return true;
         }
     }
@@ -160,7 +170,7 @@ namespace Subjugate
     //public class pussy_rod_charger
     //{
 
-        
+
     //    [HarmonyPrefix]
     //    private static bool TryFindBestBetterNonSlotGroupStorageFor(ref bool __result, Thing t, Pawn carrier, Map map, StoragePriority currentPriority, Faction faction, out IHaulDestination haulDestination, bool acceptSamePriority = false, bool requiresDestReservation = true)
     //    {
@@ -195,7 +205,7 @@ namespace Subjugate
     //            return false;
     //        }
     //        return true;
-            
+
     //    }
 
 

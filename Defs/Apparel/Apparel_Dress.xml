@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef Name="S16_ServantGirlDress" ParentName="S16_Base">
+    <defName>S16_ServantGirlDress</defName>
+    <label>servant girl dress</label>
+    <description>Revealing dress usually seen on low rank sex-slaves.</description>
+    <graphicData>
+      <texPath>Things/Apparel/Dress/ServantA/S16Dress1</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <tradeability>All</tradeability>
+	<costStuffCount>100</costStuffCount>
+    <stuffCategories>
+      <li>Fabric</li>
+    </stuffCategories>
+    <statBases>                                                   
+      <WorkToMake>10000</WorkToMake>
+      <Mass>0.5</Mass>
+      <EquipDelay>3</EquipDelay>
+    </statBases>
+    <thingCategories>
+      <li>S16_Dress</li>
+    </thingCategories>
+    <equippedStatOffsets>
+      <!-- <SexSatisfaction>0.2</SexSatisfaction> -->
+      <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.2</SlaveSuppressionOffset>
+    </equippedStatOffsets>
+    <apparel>
+      <bodyPartGroups>
+        <li>Legs</li>
+		<li>Torso</li>
+      </bodyPartGroups>
+      <wornGraphicPath>Things/Apparel/Dress/ServantA/S16Dress1</wornGraphicPath>
+      <layers>
+        <li>OnSkin</li>
+	    <li>Middle</li>
+        <li>Shell</li>
+      </layers>
+      <tags>
+        <li>S16_Dress</li>
+		<li>Subj_Tier1</li>
+      </tags>
+	  <gender>Female</gender>
+    </apparel>
+	<comps>	
+		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
+			<hediffDef>S16DressIHed</hediffDef>
+			<partsToAffect>
+					<li>Torso</li>
+			</partsToAffect>
+		</li>
+    <li>
+    <compClass>CompColorable</compClass>
+    </li>
+    </comps>
+	<recipeMaker>
+	<researchPrerequisites>
+      <li>S16_Apparel</li>
+    </researchPrerequisites>
+    </recipeMaker>
+  </ThingDef>
+  
+  <ThingDef Name="S16_ZDress" ParentName="S16_Base">
+    <defName>S16_ZDress</defName>
+    <label>Z dress</label>
+    <description>A skimpy black dress</description>
+    <graphicData>
+      <texPath>Things/Apparel/Dress/Z/S16DressZ</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <tradeability>All</tradeability>
+	<costStuffCount>100</costStuffCount>
+    <stuffCategories>
+      <li>Fabric</li>
+    </stuffCategories>
+    <statBases>
+	  <WorkToMake>10000</WorkToMake>
+      <Mass>0.3</Mass>
+      <EquipDelay>4</EquipDelay>
+    </statBases>
+    <equippedStatOffsets>
+      <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.05</SlaveSuppressionOffset>
+      <!-- <SexSatisfaction>0.2</SexSatisfaction> -->
+    </equippedStatOffsets>
+    <thingCategories>
+      <li>S16_Dress</li>
+    </thingCategories>
+    <apparel>
+      <bodyPartGroups>
+		<li>Torso</li>
+        <li>Legs</li>
+      </bodyPartGroups>
+      <wornGraphicPath>Things/Apparel/Dress/Z/S16DressZ</wornGraphicPath>
+      <layers>
+        <li>OnSkin</li>
+      </layers>
+      <tags>
+        <li>S16_Dress</li>
+		<li>Subj_Tier2</li>
+      </tags>
+	  <gender>Female</gender>
+    </apparel>
+	<comps>
+		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
+			<hediffDef>S16DressZHed</hediffDef>
+			<partsToAffect>
+					<li>Torso</li>
+			</partsToAffect>
+		</li>
+    <li>
+    <compClass>CompColorable</compClass>
+    </li>
+    </comps>
+	<recipeMaker>
+	<researchPrerequisites>
+      <li>S16_ComplexApparel</li>
+    </researchPrerequisites>
+    </recipeMaker>
+  </ThingDef>
+  
+ <ThingDef Name="S16_MaidA" ParentName="S16_Base">
+    <defName>S16_MaidA</defName>
+    <label>maid dress</label>
+    <description>A skimpy maid dress</description>
+    <graphicData>
+      <texPath>Things/Apparel/Dress/MaidA/S16_MaidA</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <tradeability>All</tradeability>
+	<costStuffCount>100</costStuffCount>
+    <stuffCategories>
+      <li>Fabric</li>
+    </stuffCategories>
+    <statBases>
+	  <WorkToMake>8000</WorkToMake>
+      <Mass>0.2</Mass>
+      <EquipDelay>5</EquipDelay>
+    </statBases>
+    <equippedStatOffsets>
+      <!-- <SexSatisfaction>0.2</SexSatisfaction> -->
+      <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.2</SlaveSuppressionOffset>
+    </equippedStatOffsets>
+    <thingCategories>
+      <li>S16_Dress</li>
+    </thingCategories>
+    <apparel>
+      <bodyPartGroups>
+		<li>Torso</li>
+		<li>Legs</li>
+      </bodyPartGroups>
+      <wornGraphicPath>Things/Apparel/Dress/MaidA/S16_MaidA</wornGraphicPath>
+      <layers>
+        <li>OnSkin</li>
+      </layers>
+      <tags>
+        <li>S16_Dress</li>
+		<li>Subj_Tier2</li>
+      </tags>
+	  <gender>Female</gender>
+    </apparel>
+	<comps>
+		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
+			<hediffDef>S16_MaidA_Hed</hediffDef>
+			<partsToAffect>
+					<li>Torso</li>
+			</partsToAffect>
+		</li>
+    </comps>
+	<recipeMaker>
+	<researchPrerequisites>
+      <li>S16_ComplexApparel</li>
+    </researchPrerequisites>
+    </recipeMaker>
+  </ThingDef>
+</Defs>

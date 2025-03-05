@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs> 
+  <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>Subj_Inserts</defName>
+    <label>Simple vibrators</label>
+    <description>Learn how to make simple wired vibrators.</description>
+    <baseCost>500</baseCost>
+    <techLevel>Industrial</techLevel>
+    <prerequisites>
+      <li>Machining</li>
+    </prerequisites>
+    <researchViewX>0</researchViewX>
+    <researchViewY>0.75</researchViewY>
+  </ResearchProjectDef>
+  
+  <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_Piercing</defName>
+    <label>Simple piercing</label>
+    <description>Learn how to make piercings.</description>
+    <baseCost>150</baseCost>
+    <techLevel>Neolithic</techLevel>
+	<tags>
+      <li>TribalStart</li>
+    </tags>
+    <researchViewX>0</researchViewX>
+    <researchViewY>1.5</researchViewY>
+  </ResearchProjectDef>
+  
+  <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_Apparel</defName>
+    <label>Simple lewd apparel</label>
+    <description>Learn how to make simple lewd apparel.</description>
+    <baseCost>250</baseCost>
+    <techLevel>Neolithic</techLevel>
+    <researchViewX>0</researchViewX>
+    <researchViewY>2.25</researchViewY>
+  </ResearchProjectDef>
+  
+   <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_ComplexApparel</defName>
+    <label>Complex lewd apparel</label>
+    <description>Learn how to make complex lewd apparel.</description>
+    <baseCost>500</baseCost>
+	<prerequisites>
+    <li>S16_Apparel</li>
+    </prerequisites>
+    <techLevel>Industrial</techLevel>
+    <researchViewX>1</researchViewX>
+    <researchViewY>2.25</researchViewY>
+  </ResearchProjectDef>
+  
+  <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_Armor</defName>
+    <label>Lewd power armor</label>
+    <description>Learn how to make lewd power armor.</description>
+    <baseCost>100</baseCost>
+	<prerequisites>
+    <li>S16_ComplexApparel</li>
+	<li>PoweredArmor</li>
+    </prerequisites>
+    <techLevel>Spacer</techLevel>
+    <researchViewX>2</researchViewX>
+    <researchViewY>2.25</researchViewY>
+  </ResearchProjectDef>
+  
+  <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_CumCooking</defName>
+    <label>Special cooking recipes</label>
+    <description>Learn how to cook special meals.</description>
+    <baseCost>500</baseCost>
+    <techLevel>Industrial</techLevel>
+    <researchViewX>0</researchViewX>
+    <researchViewY>2.75</researchViewY>
+  </ResearchProjectDef>
+  
+  <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_BasicBondage</defName>
+    <label>Basic bondage</label>
+    <description>Learn how to make simple bondage gear.</description>
+    <baseCost>100</baseCost>
+    <techLevel>Neolithic</techLevel>
+    <researchViewX>0</researchViewX>
+    <researchViewY>4.25</researchViewY>
+  </ResearchProjectDef>
+  
+   <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_IndustrialBondage</defName>
+    <label>Advanced bondage</label>
+    <description>Learn how to make advanced bondage gear.</description>
+    <baseCost>500</baseCost>
+	<prerequisites>
+    <li>S16_BasicBondage</li>
+	<li>Machining</li>
+    </prerequisites>
+    <techLevel>Industrial</techLevel>
+    <researchViewX>1</researchViewX>
+    <researchViewY>4.25</researchViewY>
+  </ResearchProjectDef>
+  
+   <ResearchProjectDef>
+    <tab>S16_LewdStudies</tab>
+    <defName>S16_SpacerBondage</defName>
+    <label>Spacertech bondage</label>
+    <description>Learn how to make spacertech bondage gear.</description>
+    <baseCost>2000</baseCost>
+	<prerequisites>
+    <li>S16_IndustrialBondage</li>
+	<li>Fabrication</li>
+	</prerequisites>
+    <techLevel>Spacer</techLevel>
+    <researchViewX>2</researchViewX>
+    <researchViewY>4.25</researchViewY>
+  </ResearchProjectDef>
+</Defs>

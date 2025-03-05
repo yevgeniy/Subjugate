@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef Name="S16_CarbonA" ParentName="S16_Custom">
+    <defName>S16_CarbonA</defName>
+    <label>carbon armor suit</label>
+    <description>Armor made in the shape of a seductive suit.</description>
+    <graphicData>
+      <texPath>Things/Apparel/Armor/Carbon/CarbonA/S16_CarbonA</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <tradeability>All</tradeability>
+    <statBases>
+	  <WorkToMake>80000</WorkToMake>
+      <MaxHitPoints>300</MaxHitPoints>
+      <Mass>4</Mass>
+      <Flammability>0.4</Flammability>
+      <ArmorRating_Sharp>0.9</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.4</ArmorRating_Blunt>
+      <ArmorRating_Heat>1.5</ArmorRating_Heat>
+      <Insulation_Cold>20</Insulation_Cold>
+      <Insulation_Heat>20</Insulation_Heat>
+      <EquipDelay>8</EquipDelay>
+    </statBases>
+    <!-- <equippedStatOffsets>
+      <SexSatisfaction>0.2</SexSatisfaction>
+    </equippedStatOffsets> -->
+    <thingCategories>
+      <li>S16_Armor</li>
+    </thingCategories>
+	<tradeTags>
+      <li>HiTechArmor</li>
+    </tradeTags>
+    <apparel>
+      <bodyPartGroups>
+        <li>Torso</li>
+        <li>Neck</li>
+        <li>Shoulders</li>
+        <li>Arms</li>
+        <li>Legs</li>
+      </bodyPartGroups>
+      <wornGraphicPath>Things/Apparel/Armor/Carbon/CarbonA/S16_CarbonA</wornGraphicPath>
+      <layers>
+        <li>OnSkin</li>
+	    <li>Middle</li>
+	    <li>Shell</li>
+      </layers>
+      <tags>
+        <li>S16_PowerArmor</li>
+      </tags>
+	  <gender>Female</gender>
+    </apparel>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16_ArmorIHed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+    </comps>
+	<recipeMaker>
+      <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
+      <researchPrerequisite>S16_Armor</researchPrerequisite>
+	  <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+      <workSkill>Crafting</workSkill>
+      <effectWorking>Tailor</effectWorking>
+      <soundWorking>Recipe_Tailor</soundWorking>
+      <skillRequirements>
+        <Crafting>7</Crafting>
+      </skillRequirements>
+      <recipeUsers Inherit="False">
+        <li>S16_CraftingSpot</li>
+      </recipeUsers>
+    </recipeMaker>
+    <costList>
+      <ComponentSpacer>5</ComponentSpacer>
+	  <ComponentIndustrial>5</ComponentIndustrial>
+      <Cloth>100</Cloth>
+      <Plasteel>100</Plasteel>
+    </costList>
+  </ThingDef>
+</Defs>

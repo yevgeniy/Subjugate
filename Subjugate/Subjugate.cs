@@ -11,6 +11,13 @@ using Verse.AI;
 
 namespace Subjugate
 {
+    public enum NeedType:byte
+    {
+        Insert=0,
+        Remove=1,
+    }
+
+
     [StaticConstructorOnStartup]
     public class Subjugate : MapComponent
     {
@@ -18,24 +25,14 @@ namespace Subjugate
 
         public static HediffDef VPEP_Puppet;
 
-        HashSet<Pawn> girlsNeedingInsert = new HashSet<Pawn>();
-        HashSet<Pawn> girlsNeedingRemoval = new HashSet<Pawn>();
+        public Dictionary<Pawn, NeedType> girlNeed = new Dictionary<Pawn, NeedType>();
+
+        
         HashSet<Thing> readyPussyShockRods = new HashSet<Thing>();
 
-        public static HashSet<Pawn> GirlsNeedingInsert
-        {
-            get
-            {
-                return Find.CurrentMap.GetComponent<Subjugate>().girlsNeedingInsert;
-            }
-        }
-        public static HashSet<Pawn> GirlsNeedingRemoval
-        {
-            get
-            {
-                return Find.CurrentMap.GetComponent<Subjugate>().girlsNeedingRemoval;
-            }
-        }
+        public static List<Pawn> GirlsNeedingInsert=> Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Where(v=>v.Value==NeedType.Insert).Select(v=>v.Key).ToList();
+        public static List<Pawn> GirlsNeedingRemoval=> Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Where(v => v.Value == NeedType.Remove).Select(v => v.Key).ToList();
+
         public static HashSet<Thing> ReadyPussyShockRods
         {
             get

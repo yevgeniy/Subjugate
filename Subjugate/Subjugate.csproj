@@ -232,7 +232,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompInsertPussyShockRod.cs" />
+    <Compile Include="Comp\CompHediffApparel.cs" />
+    <Compile Include="Comp\CompProperties_HediffApparel.cs" />
+    <Compile Include="Comp\FilterMode.cs" />
+    <Compile Include="Comp\SeverityMode.cs" />
     <Compile Include="Hediff_PussyShockRod.cs" />
+    <Compile Include="Hediff_Subjugation.cs" />
     <Compile Include="PatchDamageWorker_Blunt.cs" />
     <Compile Include="CompSubjugate.cs" />
     <Compile Include="Defs.cs" />

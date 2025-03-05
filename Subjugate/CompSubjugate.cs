@@ -20,6 +20,17 @@ namespace Subjugate
     public class CompSubjugate : ThingComp
     {
 
+        static CompSubjugate()
+        {
+            /*add subjugate comp to all defs having a race */
+            foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefs.Where(thingDef =>
+                    thingDef.race != null && thingDef.race.Humanlike))
+            {
+                thingDef.comps.Add(new CompProperties { compClass = typeof(CompSubjugate) });
+            }
+        }
+
+
         public static Dictionary<Pawn, CompSubjugate[]> Repo = new Dictionary<Pawn, CompSubjugate[]>();
         public Pawn Pawn
         {
@@ -43,21 +54,6 @@ namespace Subjugate
             }
         }
 
-        static CompSubjugate()
-        {
-            /*add subjugate comp to all defs having a race */
-            foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefs.Where(thingDef =>
-                    thingDef.race != null && thingDef.race.Humanlike))
-            {
-                thingDef.comps.Add(new CompProperties { compClass = typeof(CompSubjugate) });
-            }
-        }
-
-
-        public CompSubjugate()
-        {
-        }
-
         public long ticks;
         private bool shouldHaveShockrod;
         public bool ShouldHaveShockrod
@@ -75,7 +71,6 @@ namespace Subjugate
 
         public override void PostDeSpawn(Map map)
         {
-            RemoveFromRepo(this);
             base.PostDeSpawn(map);
         }
 
@@ -88,53 +83,8 @@ namespace Subjugate
             Scribe_Values.Look(ref ForTheLadiesMult, "subjugate-for-lad-mult");
             Scribe_Values.Look(ref shouldHaveShockrod, "subjugate-should-have-rod");
             Scribe_Values.Look(ref guiltyTicksLeft, "subjugate-guilty-ticks");
+            Scribe_Values.Look(ref totalPussyRodTicksInserted, "subjugate-pussyrod-ticksins");
         }
-
-
-
-        public static CompSubjugate GetComp(Pawn pawn)
-        {
-
-            if (!Repo.ContainsKey(pawn))
-            {
-                var comp = pawn.GetComp<CompSubjugate>();
-
-                if (comp == null)
-                {
-                    Repo.Add(pawn, new CompSubjugate[] { null, null, null });
-                }
-                else if (pawn.gender == Gender.Male && pawn.Ideo != null && pawn.Ideo.HasPrecept(Defs.Subj_SubjugateAllWomen_Precept))
-                {
-                    Repo.Add(pawn, new CompSubjugate[] { null, comp, null });
-                }
-                else if (pawn.gender == Gender.Female)
-                {
-                    Repo.Add(pawn, new CompSubjugate[] { null, null, comp });
-                }
-                else
-                {
-                    Repo.Add(pawn, new CompSubjugate[] { null, null, null });
-                }
-
-            }
-            return Repo[pawn][(byte)pawn.gender]; /*0:none, 1:male, 2:female*/
-        }
-
-        public static void RemoveFromRepo(Pawn pawn)
-        {
-            if (!Repo.ContainsKey(pawn))
-                return;
-
-            Repo.Remove(pawn);
-        }
-        public static void RemoveFromRepo(CompSubjugate comp)
-        {
-            Repo.RemoveAll(keyval =>
-            {
-                return keyval.Value.Contains(comp);
-            });
-        }
-
 
 
         private bool fortheladies;
@@ -159,7 +109,6 @@ namespace Subjugate
             }
         }
 
-
         public float ForTheLadiesMult;
 
         public float CalcForTheLadies()
@@ -176,7 +125,9 @@ namespace Subjugate
             return ForTheLadiesMult * .01f;
         }
 
-        
+
+        private int totalPussyRodTicksInserted = 0;
+        public int TotalPussyRodTicksInserted { get { return totalPussyRodTicksInserted; } }
 
         public override void CompTick()
         {
@@ -185,25 +136,32 @@ namespace Subjugate
 
             if (Find.TickManager.TicksGame % GenDate.TicksPerHour == 0)
             {
-
-                if (PussyRodUtils.GirlNeedsAttention(this.parent as Pawn, out bool needInsert, out bool needRemoval))
+                if (Pawn.TryGet_GirlNeeds(out bool needInsert, out bool needRemoval))
                 {
-                    if (needInsert && !Subjugate.GirlsNeedingInsert.Contains(this.parent))
-                        Subjugate.GirlsNeedingInsert.Add(this.parent as Pawn);
-                    else if (needRemoval && !Subjugate.GirlsNeedingRemoval.Contains(this.parent))
-                        Subjugate.GirlsNeedingRemoval.Add(this.parent as Pawn);
+                    if (needInsert)
+                        Pawn.NeedPussyRodInsert();
+                    else if (needRemoval)
+                        Pawn.NeedPussyRodRemoval();
                 }
                 else
                 {
-                    Subjugate.GirlsNeedingInsert.Remove(this.parent as Pawn);
-                    Subjugate.GirlsNeedingRemoval.Remove(this.parent as Pawn);
+                    Pawn.NeedPussyRodInsert(false);
+                    Pawn.NeedPussyRodRemoval(false);
                 }
 
 
-                if (PussyRodUtils.GirlNeedsPunishing(this.parent as Pawn))
+                if (Pawn.GirlNeedsPunishing())
                 {
                     guiltyTicksLeft = GenDate.TicksPerDay;
                 }
+
+                if (Pawn.TryGet_PussyShockRod(out var item))
+                {
+                    totalPussyRodTicksInserted += GenDate.TicksPerHour;
+                }
+
+                if (Pawn.IsSlaveOfColony && Pawn.gender==Gender.Female)
+                    Pawn.Subjugate_Hediff().AddSeverity(.01f / 12f);
 
             }
 
@@ -217,8 +175,7 @@ namespace Subjugate
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            var pawn = this.parent as Pawn;
-            if (pawn.inventory.innerContainer.ContainsAny(v=>v.def.defName== "Subj_PussyShockRodRemote_Item"))
+            if (Pawn.TryGet_PussyShockRodRemote(out var _))
             {
                 yield return new Command_Action
                 {
@@ -246,20 +203,15 @@ namespace Subjugate
                                 }
                                 if (target.Thing is Pawn p)
                                 {
-                                    Log.Message($"distance: {this.parent.Position.DistanceTo(target.Thing.Position)}");
-                                    if (this.parent.Position.DistanceTo(target.Thing.Position)>12f)
+                                    Log.Message($"distance: {Pawn.Position.DistanceTo(target.Thing.Position)}");
+                                    if (Pawn.Position.DistanceTo(target.Thing.Position)>12f)
                                     {
                                         return false;
                                     }
 
-                                    if (p.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+                                    if (p.TryGet_PussyShockRod(out var _))
                                     {
-                                        var hediff = h as Hediff_PussyShockRod;
-                                        if (hediff.HasPussyRod)
-                                        {
-                                            return true;
-                                        }
-                                        return false;
+                                        return true;
                                     }
                                     return false;
                                 }
@@ -268,22 +220,16 @@ namespace Subjugate
                         }, delegate (LocalTargetInfo target)
                         {
                             var girl = target.Pawn;
-                            if (girl.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
+                            if (girl.TryGet_PussyShockRod(out var _, out var pussyShockComp))
                             {
-                                var hediff = h as Hediff_PussyShockRod;
-                                if (hediff.HasPussyRod)
+                                if (pussyShockComp.IsShocking)
                                 {
-                                    if (hediff.IsShocking)
-                                    {
-                                        hediff.ShockOff();
-                                    }
-                                    else
-                                    {
-                                        hediff.ShockOn();
-                                    }
-                                    
+                                    pussyShockComp.ShockOff();
                                 }
-
+                                else
+                                {
+                                    pussyShockComp.ShockOn();
+                                }
                             }
                         }, this.parent);
                     }
@@ -291,7 +237,7 @@ namespace Subjugate
 
             }
 
-            if ( pawn.GetComp<CompSubjugate>().ShouldHaveShockrod)
+            if ( Pawn.TryGet_Subjugate_Comp(out var comp) && comp.ShouldHaveShockrod)
             {
                 yield return new Command_Action
                 {

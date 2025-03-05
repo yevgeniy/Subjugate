@@ -21,25 +21,47 @@ namespace Subjugate
         public override void MapComponentTick()
         {
 
-            if (Find.TickManager.TicksGame % 2000==0)
+            if (Find.TickManager.TicksGame % GenDate.TicksPerHour ==0)
             {
-                var ladies=Find.Maps.SelectMany(v=>v.mapPawns.AllPawns).Where(v => v.gender == Gender.Female && !v.Dead);
+                var girls=Find.Maps.SelectMany(v=>v.mapPawns.AllPawns).Where(v => v.gender == Gender.Female && !v.Dead
+                    && v.ageTracker.Adult
+                    && (v.IsColonist || v.IsSlaveOfColony || v.IsPrisoner) );
+                NumberOfSlaveLadies = 0;
+                NumberOfFreeLadies = 0;
 
-                NumberOfSlaveLadies = ladies.Where(v =>
+                foreach(var girl in girls)
                 {
-                    return v.IsSlave || v.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet");
-                }).Count();
-                NumberOfFreeLadies = ladies.Where(v =>
-                {
-                    return v.IsColonist && !v.IsSlave && !v.IsPrisoner
-                        && v.ageTracker.Adult
-                        && !v.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet");
-                }).Count();
+                    if (girl.IsSlaveOfColony || girl.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet"))
+                    {
+                        if (girl.apparel.WornApparel.All(apparel => Subjugation(apparel.def) || !OnLegsOrTorso(apparel.def)))
+                        {
+                            NumberOfSlaveLadies++;
+                            continue;
+                        }
+                    } 
+                    else if (girl.IsPrisoner)
+                    {
+                        NumberOfSlaveLadies++;
+                        continue;
+                    }
+                    NumberOfFreeLadies++;
+                }
+
+                Log.Message($"free: {NumberOfFreeLadies} slave: {NumberOfSlaveLadies}");
 
             }
             
         }
 
+        private bool OnLegsOrTorso(ThingDef def)
+        {
+            return def.apparel.bodyPartGroups.Any(v => v == BodyPartGroupDefOf.Torso || v == BodyPartGroupDefOf.Legs);
+        }
+
+        private bool Subjugation(ThingDef def)
+        {
+            return def.thingCategories.Any(v => v == Defs.Subj_Subjugation_ThingCategory);
+        }
     }
 
     public class ThoughtWorker_AllWomenSlaves:ThoughtWorker_Precept
@@ -49,9 +71,11 @@ namespace Subjugate
         {
             
             var ret= Mathf.Min(30f, colonist_buffer.NumberOfSlaveLadies);
-            var comp = CompSubjugate.GetComp(p);
-            if (comp!=null)
+            if (p.TryGet_Subjugate_Comp(out var comp))
+            {
                 comp.ForTheLadiesMult = ret;
+            }
+    
             return ret;
         }
 
@@ -60,12 +84,14 @@ namespace Subjugate
             if (p.gender != Gender.Male)
                 return false;
 
-            var ret= colonist_buffer.NumberOfFreeLadies == 0 && colonist_buffer.NumberOfSlaveLadies > 0;
-            var comp = CompSubjugate.GetComp(p);
-            if (comp != null)
+            var ret = colonist_buffer.NumberOfFreeLadies == 0 && colonist_buffer.NumberOfSlaveLadies > 0;
+
+            if (p.TryGet_Subjugate_Comp(out var comp))
+            {
                 comp.ForTheLadies = ret;
-            return ret;
+            }
                 
+            return ret;       
         }
     }
 
@@ -84,10 +110,5 @@ namespace Subjugate
             return colonist_buffer.NumberOfFreeLadies > 0;
         }
     }
-
-    /* Register a thing with ticker which will keep a buffer of colonists so that workers don't have to do
-     * the heavy lifting for every colonist */
-
-
     
 }

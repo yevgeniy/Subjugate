@@ -39,6 +39,9 @@ namespace Subjugate
 
         public CompProperties Props => (CompProperties)props;
 
+        private bool isShocking = false;
+        public bool IsShocking => this.isShocking;
+
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
 
@@ -98,24 +101,69 @@ namespace Subjugate
             return s;
         }
 
+        public Pawn Wearer=>this.parent is Apparel apparel ? apparel.Wearer : null;
         
 
         public override void CompTick()
         {
             base.CompTick();
 
+            if (Find.TickManager.TicksGame % (GenDate.TicksPerHour / 5) == 0 && IsShocking && Wearer!=null)
+            {
+                if (!TryShock())
+                {
+                    ShockOff();
+                }
+                
+            }
+
             this.proxy.Tick(this.parent);
         }
+
+        public bool TryShock()
+        {
+            
+            if (this.proxy.TryShock()) {
+                var torso = Wearer.health.hediffSet.GetBodyPartRecord(BodyPartDefOf.Torso);
+                Wearer.health.AddHediff(Defs.Subj_ShockTheGirl_Hediff, torso);
+
+                PussyRodUtils.ThrowMetaIconF(Wearer.Position, Wearer.Map, Defs.Subj_NoHeart_Fleck);
+
+                if (Wearer.TryGet_PussyShockRod_Hediff(out var shockRodHediff))
+                {
+                    shockRodHediff.Shock();
+                }
+
+                if (Wearer.TryGet_Subjugate_Comp(out var subjComp) && subjComp.NeedsPunishment)
+                {
+                    Wearer.Subjugate_Hediff().AddSeverity(.01f);
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        public void ShockOff()
+        {
+            this.isShocking = false;
+        }
+
+        public void ShockOn()
+        {
+            this.isShocking = true;
+        }
+
 
         public override void PostExposeData()
         {
             base.PostExposeData();
 
             Scribe_Deep.Look(ref this.proxy, "comp-ins-puss-shock-rod-proxy", new object[] { });
+            Scribe_Values.Look(ref isShocking, "comp-ins-puss-shock-rod-isshocking");
 
         }
 
-        
     }
 
     public class ShockRodProxy : IExposable

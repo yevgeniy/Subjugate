@@ -13,25 +13,20 @@ namespace Subjugate
         private float moodoffset;
 
 
-        public override bool ShouldDiscard
-        {
-            get
-            {
-                if (pawn.health.hediffSet.TryGetHediff(Defs.Subj_PussyShockRod_Hediff, out var h))
-                {
-                    var hediff = h as Hediff_PussyShockRod;
-                    return !hediff.HasPussyRod;
-                }
-                return true;           
-            }
-        }
-
+        public override bool ShouldDiscard => !pawn.TryGet_PussyShockRod(out var _);
+        
         public override float MoodOffset()
         {
-            var hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Defs.Subj_PussyShockRod_Hediff) as Hediff_PussyShockRod;
-            float days = hediff.TicksInserted / GenDate.TicksPerHour;
-            this.moodoffset = Mathf.Min(-30f + days, -5f);
-            return this.moodoffset;
+            if (pawn.TryGet_Subjugate_Comp(out var comp))
+            {
+                float days = comp.TotalPussyRodTicksInserted / GenDate.TicksPerDay;
+                this.moodoffset = Mathf.Min(-30f + days, -5f);
+                return this.moodoffset;
+            }
+
+            return 0f;
+
+            
         }
     }
 }

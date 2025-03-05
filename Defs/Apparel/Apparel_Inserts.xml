@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef Name="Subj_PussyShockRod_Item" ParentName="Subj_InsertBase">
+    <defName>Subj_PussyShockRod_Item</defName>
+    <label>Pussy shock rod</label>
+    <description>Insert in girl's pussy.  When remotely activated will cause shock damage.</description>
+    <graphicData>
+      <texPath>Things/Apparel/Vibrators/Simple/S16Vibrator1</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <tradeability>All</tradeability>
+    <statBases>
+      <WorkToMake>2500</WorkToMake>
+      <Mass>0.15</Mass>
+      <EquipDelay>5.0</EquipDelay>
+    </statBases>
+    <!-- <equippedStatOffsets>
+      <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.05</SlaveSuppressionOffset>
+    </equippedStatOffsets> -->
+    <costList>
+      <ComponentIndustrial>1</ComponentIndustrial>
+      <Steel>35</Steel>
+    </costList>
+    <thingCategories>
+      <li>Subj_Subjugation_ThingCategory</li>
+    </thingCategories>
+    <apparel>
+      <countsAsClothingForNudity>false</countsAsClothingForNudity>
+      <bodyPartGroups>
+        <li>Torso</li>
+      </bodyPartGroups>
+      <wornGraphicPath>Things/Apparel/Vibrators/Simple/S16Vibrator1</wornGraphicPath>
+      <layers>
+        <li>Subj_PussyInsert</li>
+      </layers>
+      <tags>
+        <li>Subj_PussyInsert</li>
+        <li>Subj_Tier2</li>
+      </tags>
+      <gender>Female</gender>
+    </apparel>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>Subj_PussyShockRod_Hediff</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+    </comps>
+  </ThingDef>
+
+
+</Defs>

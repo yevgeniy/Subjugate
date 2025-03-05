@@ -1,10 +1,5 @@
--ladies can only be slaves or pawns
-
--slave and prisoner ladies can be spanked.
-	- enslave
-		- Less likely to participate in prison breaks.
-		- For every 10pts of consc. will add add .1 effectiveness in enslaving.
-
-	- acts as suppression
-	- spanked ladies take 1 day to recover consc.
+-insert, take out, and replace
+-shocks
+-subjugate hediff
+-girl should not have anything on torso and legs to be valid (except subjugate items)
 

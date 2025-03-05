@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <ThingCategoryDef>
+      <defName>Subj_Subjugation_ThingCategory</defName>
+      <label>Subjugation</label>
+      <parent>Apparel</parent>
+    </ThingCategoryDef>
+
+
+
+    <ThingCategoryDef>
+      <defName>S16_Apparel</defName>
+      <label>Lewd apparel</label>
+      <parent>Apparel</parent>
+    </ThingCategoryDef>
+	    
+   <ThingCategoryDef>
+      <defName>S16_Armor</defName>
+      <label>Lewd armor</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+   <ThingCategoryDef>
+      <defName>Subj_Bondage</defName>
+      <label>Bondage gear</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>Subj_Inserts</defName>
+      <label>Vibrators</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>S16_Underwear</defName>
+      <label>Underwear</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>S16_Piercing</defName>
+      <label>Piercing</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>S16_Dress</defName>
+      <label>Dresses</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>S16_Skirt</defName>
+      <label>Skirts</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>S16_Top</defName>
+      <label>Tops</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>S16_Stickers</defName>
+      <label>Stickers</label>
+      <parent>S16_Apparel</parent>
+    </ThingCategoryDef>
+	
+	<ThingCategoryDef>
+	<defName>S16Food</defName>
+      <label>Human products</label>
+      <parent>Foods</parent>
+    </ThingCategoryDef>
+</Defs>

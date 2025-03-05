@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+   <HediffDef ParentName="Subj_ApparelBase_Hediff">
+    <defName>S16TskirtHed</defName>
+    <label>lewd skirt</label>
+    <description>Lewd skirt on</description>
+    <isBad>false</isBad>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1</maxSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0.10</severityPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+	    <minSeverity>0.01</minSeverity>
+        <label>just put on</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+    <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.01</SlaveSuppressionOffset>
+	     <!-- <Vulnerability>0.05</Vulnerability> -->
+		</statOffsets>
+      </li>
+	   <li>
+	    <minSeverity>0.40</minSeverity>
+        <label>acceptance</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+           <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.05</SlaveSuppressionOffset>
+
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.1</Vulnerability> -->
+		</statOffsets>
+      </li>
+	  <li>
+	    <minSeverity>0.80</minSeverity>
+        <label>humility</label>
+		<becomeVisible>false</becomeVisible>
+		<statOffsets>
+           <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.10</SlaveSuppressionOffset>
+
+	     <!-- <SexFrequency>0.1</SexFrequency> -->
+	     <!--SexAbility>.+</SexAbility-->
+	     <!-- <Vulnerability>0.30</Vulnerability> -->
+		</statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+</Defs>

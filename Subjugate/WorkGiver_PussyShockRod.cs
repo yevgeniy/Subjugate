@@ -16,13 +16,15 @@ namespace Subjugate
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
-            Log.Message($"potential: {Subjugate.ReadyPussyShockRods.Count} {Subjugate.GirlsNeedingInsert.Count} {Subjugate.GirlsNeedingRemoval.Count}");
+            var needInsert = Subjugate.GirlsNeedingInsert;
+            var needRemoval = Subjugate.GirlsNeedingRemoval;
+            Log.Message($"potential: {Subjugate.ReadyPussyShockRods.Count} {needInsert.Count} {needRemoval.Count}");
             if (Subjugate.ReadyPussyShockRods.Count > 0)
             {
-                foreach (var i in Subjugate.GirlsNeedingInsert) yield return i;
+                foreach (var i in needInsert) yield return i;
             }
 
-            foreach(var i in Subjugate.GirlsNeedingRemoval) yield return i;
+            foreach(var i in needRemoval) yield return i;
         }
 
         public bool PreCheck(Pawn pawn, Thing t, out bool needInsert, out bool needRemoval, out Thing goodPussyRod)
@@ -30,12 +32,13 @@ namespace Subjugate
             needInsert = false;
             needRemoval = false;
             goodPussyRod = null;
+
             if (!(t is Pawn girl))
             {
                 return false;
             }
 
-            if (!PussyRodUtils.GirlNeedsAttention(girl, out  needInsert, out  needRemoval))
+            if (!PussyRodUtils.TryGet_GirlNeeds(girl, out  needInsert, out  needRemoval))
             {
                 Log.Message($"does not need attention {girl}");
                 return false;
@@ -64,6 +67,9 @@ namespace Subjugate
         }
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
+            if (pawn == t)
+                return false;
+
             return PreCheck(pawn, t, out var _, out var __, out var ___);
         }
 

@@ -12,123 +12,53 @@ namespace Subjugate
     public class Hediff_PussyShockRod : HediffWithComps
     {
 
-        public ShockRodProxy pussyRodProxy;
+        public Thing PussyShockRod => this.pawn.TryGet_PussyShockRod(out var item)
+            ? item
+            : null;
+        public bool IsShocking => PussyShockRod != null && PussyShockRod.TryGet_PussyShockRod_Comp(out var c) 
+            ? c.IsShocking 
+            : false;
+        public float Charge => PussyShockRod != null && PussyShockRod.TryGet_PussyShockRod_Comp(out var c) ? c.Charge : 0f;
 
-
-
-        public bool HasPussyRod { get { return pussyRodProxy != null; } }
-
-        public override bool ShouldRemove => false;
-        public override bool Visible => HasPussyRod;
-
-        public override string Label => $"Pussy shock rod {(this.isShocking ? "ACTIVE!" : "")} ({Convert.ToInt32(pussyRodProxy.charge * 100f)})";
-
-        public void InsertPussyShockRod(ThingWithComps pussyShockRod)
-        {
-            this.pussyRodProxy = pussyShockRod.GetComp<CompInsertPussyShockRod>().proxy;
-
-            Thought_Memory thought = (Thought_Memory)ThoughtMaker.MakeThought(Defs.Subj_PussyShockRodInMyPussy_Thought);
-            pawn.needs.mood.thoughts.memories.TryGainMemory(thought);
-        }
-        public ThingWithComps ExtractPussyShockRod()
-        {
-            var pussyShockRod = ThingMaker.MakeThing(Defs.Subj_PussyShockRod_Item) as ThingWithComps;
-            pussyShockRod.GetComp<CompInsertPussyShockRod>().proxy = this.pussyRodProxy;
-            this.pussyRodProxy = null;
-            return pussyShockRod;
-        }
+        public override string Label => $"Pussy shock rod {(this.IsShocking ? "ACTIVE!" : "")} ({Convert.ToInt32(Charge * 100f)})";
 
         public override void PostAdd(DamageInfo? dinfo)
         {
             base.PostAdd(dinfo);
-
-
+            
+            Thought_Memory thought = (Thought_Memory)ThoughtMaker.MakeThought(Defs.Subj_PussyShockRodInMyPussy_Thought);
+            pawn.needs.mood.thoughts.memories.TryGainMemory(thought);
         }
-        private int ticksInserted = 0;
-        private bool isShocking = false;
-        public bool IsShocking => this.isShocking;
 
-        public int TicksInserted { get { return ticksInserted; } }
 
-        /*Every 20 punishTicks doubles the MTBEvent days result with diminishing results*/
-        private int punishCounter = 0;
-        public float MTBEventDaysMultiplyer()
+        private int shocked = 0;
+        public void Shock()
         {
-            var ticks = punishCounter;
-            float res = 0f;
-            float curMult = 1f;
-            do
-            {
-                curMult += .6f;
-                var punishPart = Math.Min(20, ticks);
-                ticks -= punishPart;
-                res += 1 / (10 * curMult) * punishPart;
-
-            } while (ticks > 0);
-
-            return 1f + res;
+            this.shocked = 200;
         }
 
-
-
-        
         public override void Tick()
         {
             base.Tick();
 
-            if (HasPussyRod)
+            shocked--;
+            if (shocked > 0)
             {
-                ticksInserted++;
-                pussyRodProxy.Tick();
-
-                if (Find.TickManager.TicksGame % (GenDate.TicksPerHour / 5) == 0 && isShocking)
-                {
-                    var girl = this.pawn;
-
-                    if (pussyRodProxy.TryShock())
-                    {
-                        var torso = girl.health.hediffSet.GetBodyPartRecord(BodyPartDefOf.Torso);
-                        girl.health.AddHediff(Defs.Subj_ShockTheGirl_Hediff, torso);
-
-                        PussyRodUtils.ThrowMetaIconF(pawn.Position, pawn.Map, Defs.Subj_NoHeart_Fleck);
-
-                        if (girl.GetComp<CompSubjugate>().NeedsPunishment)
-                        {
-                            punishCounter++;
-                        }
-
-                    }
-                    else
-                    {
-                        ShockOff();
-                    }
-                }
+                this.Severity = 1f;
+            }
+            else
+            {
+                this.Severity = .01f;
             }
 
         }
-
-        public void ShockOff()
-        {
-            this.isShocking = false;
-        }
-
-        public void ShockOn()
-        {
-            this.isShocking = true;
-        }
-
-
 
         public override void ExposeData()
         {
             base.ExposeData();
 
-            Scribe_Deep.Look(ref pussyRodProxy, "hed-pussyrod-rod", new object[] { });
-            Scribe_Values.Look(ref ticksInserted, "hed-pussyrod-ticksins");
-            Scribe_Values.Look(ref isShocking, "hed-pussyrod-isshocking");
-            Scribe_Values.Look(ref punishCounter, "hed-pussyrod-punish");
-            
-            
+            Scribe_Values.Look(ref shocked, "hed-pussyrod-shocked");
+
         }
 
 
