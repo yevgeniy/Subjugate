@@ -237,17 +237,25 @@
     <Compile Include="Comp\FilterMode.cs" />
     <Compile Include="Comp\SeverityMode.cs" />
     <Compile Include="Hediff_PussyShockRod.cs" />
+    <Compile Include="Hediff_Binders.cs" />
     <Compile Include="Hediff_Subjugation.cs" />
+    <Compile Include="JobDriver_AttendToGirl.cs" />
+    <Compile Include="JobDriver_EmptyWear.cs" />
+    <Compile Include="JobDriver_GirlBendOver.cs" />
+    <Compile Include="JobDriver_GirlStop.cs" />
+    <Compile Include="JobDriver_PunishGirl.cs" />
     <Compile Include="PatchDamageWorker_Blunt.cs" />
     <Compile Include="CompSubjugate.cs" />
     <Compile Include="Defs.cs" />
     <Compile Include="Patches.cs" />
     <Compile Include="InMapTargeter.cs" />
-    <Compile Include="PussyRodUtils.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="ThoughtWorkers.cs" />
     <Compile Include="Subjugate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Thought_GotPunished.cs" />
     <Compile Include="Thought_PussyShockRodInMyPussy.cs" />
+    <Compile Include="WorkGiver_Punish.cs" />
     <Compile Include="WorkGiver_PussyShockRod.cs" />
   </ItemGroup>
   <ItemGroup>

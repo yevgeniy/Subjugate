@@ -127,7 +127,7 @@ namespace Subjugate
                 var torso = Wearer.health.hediffSet.GetBodyPartRecord(BodyPartDefOf.Torso);
                 Wearer.health.AddHediff(Defs.Subj_ShockTheGirl_Hediff, torso);
 
-                PussyRodUtils.ThrowMetaIconF(Wearer.Position, Wearer.Map, Defs.Subj_NoHeart_Fleck);
+                Utils.ThrowMetaIconF(Wearer.Position, Wearer.Map, Defs.Subj_NoHeart_Fleck);
 
                 if (Wearer.TryGet_PussyShockRod_Hediff(out var shockRodHediff))
                 {

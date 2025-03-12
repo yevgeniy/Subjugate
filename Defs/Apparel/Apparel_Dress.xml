@@ -9,11 +9,11 @@
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <tradeability>All</tradeability>
-	<costStuffCount>100</costStuffCount>
+    <costStuffCount>100</costStuffCount>
     <stuffCategories>
       <li>Fabric</li>
     </stuffCategories>
-    <statBases>                                                   
+    <statBases>
       <WorkToMake>10000</WorkToMake>
       <Mass>0.5</Mass>
       <EquipDelay>3</EquipDelay>
@@ -28,38 +28,38 @@
     <apparel>
       <bodyPartGroups>
         <li>Legs</li>
-		<li>Torso</li>
+        <li>Torso</li>
       </bodyPartGroups>
       <wornGraphicPath>Things/Apparel/Dress/ServantA/S16Dress1</wornGraphicPath>
       <layers>
         <li>OnSkin</li>
-	    <li>Middle</li>
+        <li>Middle</li>
         <li>Shell</li>
       </layers>
       <tags>
         <li>S16_Dress</li>
-		<li>Subj_Tier1</li>
+        <li>Subj_Tier1</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-	<comps>	
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16DressIHed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    <li>
-    <compClass>CompColorable</compClass>
-    </li>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16DressIHed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+      <li>
+        <compClass>CompColorable</compClass>
+      </li>
     </comps>
-	<recipeMaker>
-	<researchPrerequisites>
-      <li>S16_Apparel</li>
-    </researchPrerequisites>
+    <recipeMaker>
+      <researchPrerequisites>
+        <li>S16_Apparel</li>
+      </researchPrerequisites>
     </recipeMaker>
   </ThingDef>
-  
+
   <ThingDef Name="S16_ZDress" ParentName="S16_Base">
     <defName>S16_ZDress</defName>
     <label>Z dress</label>
@@ -69,12 +69,12 @@
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <tradeability>All</tradeability>
-	<costStuffCount>100</costStuffCount>
+    <costStuffCount>100</costStuffCount>
     <stuffCategories>
       <li>Fabric</li>
     </stuffCategories>
     <statBases>
-	  <WorkToMake>10000</WorkToMake>
+      <WorkToMake>10000</WorkToMake>
       <Mass>0.3</Mass>
       <EquipDelay>4</EquipDelay>
     </statBases>
@@ -87,7 +87,7 @@
     </thingCategories>
     <apparel>
       <bodyPartGroups>
-		<li>Torso</li>
+        <li>Torso</li>
         <li>Legs</li>
       </bodyPartGroups>
       <wornGraphicPath>Things/Apparel/Dress/Z/S16DressZ</wornGraphicPath>
@@ -96,29 +96,29 @@
       </layers>
       <tags>
         <li>S16_Dress</li>
-		<li>Subj_Tier2</li>
+        <li>Subj_Tier2</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16DressZHed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    <li>
-    <compClass>CompColorable</compClass>
-    </li>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16DressZHed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+      <li>
+        <compClass>CompColorable</compClass>
+      </li>
     </comps>
-	<recipeMaker>
-	<researchPrerequisites>
-      <li>S16_ComplexApparel</li>
-    </researchPrerequisites>
+    <recipeMaker>
+      <researchPrerequisites>
+        <li>S16_ComplexApparel</li>
+      </researchPrerequisites>
     </recipeMaker>
   </ThingDef>
-  
- <ThingDef Name="S16_MaidA" ParentName="S16_Base">
+
+  <ThingDef Name="S16_MaidA" ParentName="S16_Base">
     <defName>S16_MaidA</defName>
     <label>maid dress</label>
     <description>A skimpy maid dress</description>
@@ -127,12 +127,12 @@
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <tradeability>All</tradeability>
-	<costStuffCount>100</costStuffCount>
+    <costStuffCount>100</costStuffCount>
     <stuffCategories>
       <li>Fabric</li>
     </stuffCategories>
     <statBases>
-	  <WorkToMake>8000</WorkToMake>
+      <WorkToMake>8000</WorkToMake>
       <Mass>0.2</Mass>
       <EquipDelay>5</EquipDelay>
     </statBases>
@@ -145,8 +145,8 @@
     </thingCategories>
     <apparel>
       <bodyPartGroups>
-		<li>Torso</li>
-		<li>Legs</li>
+        <li>Torso</li>
+        <li>Legs</li>
       </bodyPartGroups>
       <wornGraphicPath>Things/Apparel/Dress/MaidA/S16_MaidA</wornGraphicPath>
       <layers>
@@ -154,22 +154,22 @@
       </layers>
       <tags>
         <li>S16_Dress</li>
-		<li>Subj_Tier2</li>
+        <li>Subj_Tier2</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16_MaidA_Hed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16_MaidA_Hed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
     </comps>
-	<recipeMaker>
-	<researchPrerequisites>
-      <li>S16_ComplexApparel</li>
-    </researchPrerequisites>
+    <recipeMaker>
+      <researchPrerequisites>
+        <li>S16_ComplexApparel</li>
+      </researchPrerequisites>
     </recipeMaker>
   </ThingDef>
 </Defs>

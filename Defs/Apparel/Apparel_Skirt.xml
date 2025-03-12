@@ -9,7 +9,7 @@
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <tradeability>All</tradeability>
-	<costStuffCount>50</costStuffCount>
+    <costStuffCount>50</costStuffCount>
     <stuffCategories>
       <li>Fabric</li>
     </stuffCategories>
@@ -36,23 +36,25 @@
       </layers>
       <tags>
         <li>S16_Skirt</li>
-		<li>Subj_Tier2</li>
+        <li>Subj_Tier2</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16TskirtHed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    <li><compClass>CompColorable</compClass></li>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16TskirtHed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+      <li>
+        <compClass>CompColorable</compClass>
+      </li>
     </comps>
-	<recipeMaker>
-	<researchPrerequisites>
-      <li>S16_ComplexApparel</li>
-    </researchPrerequisites>
+    <recipeMaker>
+      <researchPrerequisites>
+        <li>S16_ComplexApparel</li>
+      </researchPrerequisites>
     </recipeMaker>
   </ThingDef>
 </Defs>

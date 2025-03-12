@@ -2,4 +2,31 @@
 -shocks
 -subjugate hediff
 -girl should not have anything on torso and legs to be valid (except subjugate items)
+-binders apparel
+-getting hit with binders makes to drop for a few secs
 
+
+-beat a girl
+
+
+-when girls go to sleep they take off all their clothing.
+-when girls wake up they try to put on new subjugated set
+-guys will look for a girl to use
+    - guys will 'pick' the best girl on map
+    - use time is 1_HOUR/4
+    - if a guy or girl are drafted will not work and will only test 1hr after either come off of a draft.
+    - when a girl is picked, a guy will not engage her untill she is:
+        - w/ in 10 tiles when awake or
+        - w/ in 40 tiles when a girl is asleep or about to go to sleep.
+    - girl cannot be used again for 24 hrs
+    - under .8 subj girl does not like to be used (feels violated)
+        - -20 max thought at .01 
+        - .8 subj girl does not care
+        - upto +5 thought for .9subj and +10 thought for 1 subj
+        - under .8 girl will spent some time confused upto 1hr at .01sub
+    - prisoners girls who satisfly 'naked' part will be picked.
+-when a guys uses a girl, his needs will deteriorate slower
+    - list of needs are sleep, food, recreation
+    - default hour is 4hrs (girl just naked legs/torso)
+        - upto 20 more hours based on total wear compinations (so max 24hrs)
+            - +1 time unit for 20/[TOTAL COMBINATIONS] where total combinations is combinatiosn the girl has to chose from when she got dressed

@@ -76,45 +76,19 @@
 		</requiredCapacities>
 	</WorkGiverDef>
 
-	<!--
-	<ThingDef>
-        <defName>Subj_PussyShockRod_Item</defName>
-        <label>Pussy shock rod</label>
-        <description>Insert in girl's pussy.  When remotely activated will cause shock damage.</description>
-        <graphicData>
-            <texPath>CavityShocker</texPath>
-            <graphicClass>Graphic_Single</graphicClass>
-        </graphicData>
-        <stackLimit>1</stackLimit> 
-		<tickerType>Normal</tickerType>
-        <category>Item</category>
-		<thingCategories>
-			<li>Manufactured</li>
-		</thingCategories>
-        <thingClass>ThingWithComps</thingClass>
-        <comps>
-			<li Class="CompProperties_Forbiddable" />
-        </comps>
-		<useHitPoints>true</useHitPoints>
-		<selectable>true</selectable>
-		<generateCommonality>0.0</generateCommonality>
-		<statBases>
-			<MaxHitPoints>500</MaxHitPoints>
-			<Flammability>0.0</Flammability>
-			<DeteriorationRate>0.1</DeteriorationRate>
-			<Beauty>-6</Beauty>
-			<MarketValue>100</MarketValue>
-			<Mass>0.5</Mass>
-		</statBases>
-		<altitudeLayer>Item</altitudeLayer>
-		<alwaysHaulable>true</alwaysHaulable>
-		<tradeTags>
-			<li>RJW_NoBuy</li>
-			<li>Exotic</li>
-		</tradeTags>
-		<pathCost>1</pathCost>
-    </ThingDef>
-	-->
+	<WorkGiverDef>
+		<defName>Subj_Punish_WorkGiver</defName>
+		<label>punish the girl</label>
+		<giverClass>Subjugate.WorkGiver_Punish</giverClass>
+		<priorityInType>99</priorityInType>
+		<workType>Warden</workType>
+		<verb>punish the girl</verb>
+		<gerund>punishing the girl</gerund>
+		<requiredCapacities>
+			<li>Manipulation</li>
+		</requiredCapacities>
+	</WorkGiverDef>
+
 
 	<ThingDef ParentName="Subj_InsertBase">
 		<defName>Subj_PussyShockRodRemote_Item</defName>
@@ -284,13 +258,39 @@
 		<thoughtClass>Subjugate.Thought_PussyShockRodInMyPussy</thoughtClass>
 		<stages>
 			<li>
-				<label>Pussy shock rod.</label>
+				<label>Pussy shock rod</label>
 				<description>Pussy shock rod is jammed up my pussy.</description>
 				<baseMoodEffect>-1</baseMoodEffect>
 			</li>
 		</stages>
 		<stackLimit>1</stackLimit>
 	</ThoughtDef>
+
+	<ThoughtDef>
+		<defName>Subj_GotPunished_Thought</defName>
+		<thoughtClass>Subjugate.Thought_GotPunished</thoughtClass>
+		<stages>
+			<li>
+				<label>Got punished</label>
+				<description>Got punished!</description>
+				<baseMoodEffect>-1</baseMoodEffect>
+			</li>
+		</stages>
+		<stackLimit>1</stackLimit>
+	</ThoughtDef>
+
+	<!-- <ThoughtDef>
+		<defName>Subj_HumiliatingWear_Thought</defName>
+		<thoughtClass>Subjugate.Thought_HulimiatingWear</thoughtClass>
+		<stages>
+			<li>
+				<label>Humiliating Apparel.</label>
+				<description>This clothing is humiliating!</description>
+				<baseMoodEffect>-1</baseMoodEffect>
+			</li>
+		</stages>
+		<stackLimit>1</stackLimit>
+	</ThoughtDef> -->
 
 	<ThingDef ParentName="StorageShelfBase">
 		<defName>Subj_PussyShockRodCharger_Furniture</defName>
@@ -338,6 +338,19 @@
 		<comps>
 			<li Class="CombatExtended.HediffCompProperties_Beanbag" />
 		</comps>
+		<injuryProps>
+			<canMerge>false</canMerge>
+		</injuryProps>
+	</HediffDef>
+
+	<HediffDef ParentName="Bruise">
+		<defName>Subj_PunishTheGirl_Hediff</defName>
+		<label>punish</label>
+		<labelNoun>smack</labelNoun>
+		<initialSeverity>1</initialSeverity>
+		<!-- <comps>
+			<li Class="CombatExtended.HediffCompProperties_Beanbag" />
+		</comps> -->
 		<injuryProps>
 			<canMerge>false</canMerge>
 		</injuryProps>

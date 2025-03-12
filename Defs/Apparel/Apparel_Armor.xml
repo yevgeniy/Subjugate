@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef Name="S16_CarbonA" ParentName="S16_Custom">
-    <defName>S16_CarbonA</defName>
+
+  <ThingDef Name="Subj_ArmorVest_Item" ParentName="Subj_FormArmorBase">
+    <defName>Subj_ArmorVest_Item</defName>
     <label>carbon armor suit</label>
-    <description>Armor made in the shape of a seductive suit.</description>
+    <description>Form fitting armor strong yet seethought.</description>
     <graphicData>
       <texPath>Things/Apparel/Armor/Carbon/CarbonA/S16_CarbonA</texPath>
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
     <tradeability>All</tradeability>
     <statBases>
-	  <WorkToMake>80000</WorkToMake>
+      <WorkToMake>80000</WorkToMake>
       <MaxHitPoints>300</MaxHitPoints>
       <Mass>4</Mass>
       <Flammability>0.4</Flammability>
@@ -21,13 +22,11 @@
       <Insulation_Heat>20</Insulation_Heat>
       <EquipDelay>8</EquipDelay>
     </statBases>
-    <!-- <equippedStatOffsets>
-      <SexSatisfaction>0.2</SexSatisfaction>
-    </equippedStatOffsets> -->
+
     <thingCategories>
-      <li>S16_Armor</li>
+      <li>Subj_Subjugation_ThingCategory</li>
     </thingCategories>
-	<tradeTags>
+    <tradeTags>
       <li>HiTechArmor</li>
     </tradeTags>
     <apparel>
@@ -41,39 +40,26 @@
       <wornGraphicPath>Things/Apparel/Armor/Carbon/CarbonA/S16_CarbonA</wornGraphicPath>
       <layers>
         <li>OnSkin</li>
-	    <li>Middle</li>
-	    <li>Shell</li>
+        <li>Middle</li>
+        <li>Shell</li>
       </layers>
       <tags>
-        <li>S16_PowerArmor</li>
+        <li>Subj_PowerArmor</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-    <comps>
+    <!-- <comps>
       <li Class="Subjugate.Comp.CompProperties_HediffApparel">
-        <hediffDef>S16_ArmorIHed</hediffDef>
+        <hediffDef>Hediff_WearArmorVest</hediffDef>
         <partsToAffect>
           <li>Torso</li>
         </partsToAffect>
       </li>
-    </comps>
-	<recipeMaker>
-      <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
-      <researchPrerequisite>S16_Armor</researchPrerequisite>
-	  <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
-      <workSkill>Crafting</workSkill>
-      <effectWorking>Tailor</effectWorking>
-      <soundWorking>Recipe_Tailor</soundWorking>
-      <skillRequirements>
-        <Crafting>7</Crafting>
-      </skillRequirements>
-      <recipeUsers Inherit="False">
-        <li>S16_CraftingSpot</li>
-      </recipeUsers>
-    </recipeMaker>
+    </comps> -->
+
     <costList>
       <ComponentSpacer>5</ComponentSpacer>
-	  <ComponentIndustrial>5</ComponentIndustrial>
+      <ComponentIndustrial>5</ComponentIndustrial>
       <Cloth>100</Cloth>
       <Plasteel>100</Plasteel>
     </costList>

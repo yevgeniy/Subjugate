@@ -46,7 +46,7 @@
     </recipeMaker>
   </ThingDef>
 
-  <ThingDef Name="S16_Custom" Abstract="True">
+  <ThingDef Name="Subj_FormArmorBase" Abstract="True">
     <thingClass>Apparel</thingClass>
     <category>Item</category>
     <selectable>True</selectable>
@@ -74,6 +74,21 @@
         <compClass>CompQuality</compClass>
       </li>
     </comps>
+    <recipeMaker>
+      <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
+      <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+      <workSkill>Crafting</workSkill>
+      <effectWorking>Tailor</effectWorking>
+      <soundWorking>Recipe_Tailor</soundWorking>
+      <researchPrerequisite>Machining</researchPrerequisite>
+      <skillRequirements>
+        <Crafting>7</Crafting>
+      </skillRequirements>
+      <recipeUsers>
+        <li>ElectricTailoringBench</li>
+        <li>HandTailoringBench</li>
+      </recipeUsers>
+    </recipeMaker>
   </ThingDef>
 
   <ThingDef Name="S16_MetallicBase" ParentName="ApparelBase" Abstract="True">

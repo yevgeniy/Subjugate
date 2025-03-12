@@ -84,8 +84,24 @@ namespace Subjugate
             Scribe_Values.Look(ref shouldHaveShockrod, "subjugate-should-have-rod");
             Scribe_Values.Look(ref guiltyTicksLeft, "subjugate-guilty-ticks");
             Scribe_Values.Look(ref totalPussyRodTicksInserted, "subjugate-pussyrod-ticksins");
+            Scribe_Values.Look(ref beatingRating, "subjugate-beating-rate");
         }
 
+        private float beatingRating;
+        public float BeatingRating
+        {
+            get { return this.beatingRating; }
+            set { 
+                
+                this.beatingRating = value; 
+
+                if (this.beatingRating==1)
+                {
+                    Thought_Memory thought = (Thought_Memory)ThoughtMaker.MakeThought(Defs.Subj_GotPunished_Thought);
+                    Pawn.needs.mood.thoughts.memories.TryGainMemory(thought);
+                }
+            }
+        }
 
         private bool fortheladies;
         public bool ForTheLadies
@@ -163,6 +179,7 @@ namespace Subjugate
                 if (Pawn.IsSlaveOfColony && Pawn.gender==Gender.Female)
                     Pawn.Subjugate_Hediff().AddSeverity(.01f / 12f);
 
+                beatingRating = Mathf.Max(0f, beatingRating - 1f);
             }
 
         }
@@ -247,6 +264,20 @@ namespace Subjugate
                     action = delegate
                     {
                         RemovePussyRody();
+                    }
+                };
+            }
+
+            if (Pawn.gender==Gender.Female && this.NeedsPunishment)
+            {
+                yield return new Command_Action
+                {
+                    defaultLabel = "Punish",
+                    defaultDesc = "Punish this girl!",
+                    icon = ContentFinder<Texture2D>.Get("removepussyrod"),
+                    action = delegate
+                    {
+                        Pawn.NeedsPunishing(true);
                     }
                 };
             }

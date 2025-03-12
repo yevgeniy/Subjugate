@@ -147,17 +147,18 @@ namespace Subjugate
     public static class detect_wear
     {
         public static ThingDef[] restricted = new ThingDef[] {
-            Defs.S16_CarbonA
+            Defs.Subj_PussyShockRod_Item
         };
         public static bool Prefix(ref Job __result, JobDef def, LocalTargetInfo targetA)
         {
-            if (targetA.HasThing && restricted.Contains( targetA.Thing.def))
+            if (targetA.HasThing && targetA.Thing.def.thingCategories.Contains(Defs.Subj_Subjugation_ThingCategory))
             {
+                Log.Message($"SOMEONE IS ATTEMPTING OT EQUIP SUBJUGATION APPAREL.");
                 __result = new Job
                 {
                     def=new JobDef
                     {
-                        driverClass=typeof(EmptyJob)
+                        driverClass=typeof(JobDriver_EmptyWear)
                     }
                 };
                 return false;

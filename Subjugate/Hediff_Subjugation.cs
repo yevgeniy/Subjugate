@@ -11,8 +11,9 @@ namespace Subjugate
     {
         public Pawn Girl => this.Girl;
 
+        public override bool ShouldRemove => !IsValid;
 
-        public override bool ShouldRemove => false;
+        bool IsValid => this.pawn.IsSlave;
 
         public void AddSeverity(float s)
         {
@@ -22,6 +23,7 @@ namespace Subjugate
         {
             this.Severity -= s;
         }
+
 
     }
 

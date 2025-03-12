@@ -26,12 +26,14 @@ namespace Subjugate
         public static HediffDef VPEP_Puppet;
 
         public Dictionary<Pawn, NeedType> girlNeed = new Dictionary<Pawn, NeedType>();
+        public Dictionary<Pawn, bool> needsPunishing = new Dictionary<Pawn, bool>();
 
-        
+
         HashSet<Thing> readyPussyShockRods = new HashSet<Thing>();
 
         public static List<Pawn> GirlsNeedingInsert=> Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Where(v=>v.Value==NeedType.Insert).Select(v=>v.Key).ToList();
         public static List<Pawn> GirlsNeedingRemoval=> Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Where(v => v.Value == NeedType.Remove).Select(v => v.Key).ToList();
+        public static List<Pawn> GirlsNeedingPunishment=> Find.CurrentMap.GetComponent<Subjugate>().needsPunishing.Where(v => v.Value).Select(v => v.Key).ToList();
 
         public static HashSet<Thing> ReadyPussyShockRods
         {
@@ -42,6 +44,8 @@ namespace Subjugate
         }
 
         public static Assembly[] Assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        
+
         static Subjugate()
         {
             VPEP_Puppet = DefDatabase<HediffDef>.AllDefs.FirstOrDefault(v => v.defName == "VPEP_Puppet");

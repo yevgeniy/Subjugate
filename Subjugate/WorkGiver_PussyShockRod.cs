@@ -18,7 +18,6 @@ namespace Subjugate
         {
             var needInsert = Subjugate.GirlsNeedingInsert;
             var needRemoval = Subjugate.GirlsNeedingRemoval;
-            Log.Message($"potential: {Subjugate.ReadyPussyShockRods.Count} {needInsert.Count} {needRemoval.Count}");
             if (Subjugate.ReadyPussyShockRods.Count > 0)
             {
                 foreach (var i in needInsert) yield return i;
@@ -38,7 +37,7 @@ namespace Subjugate
                 return false;
             }
 
-            if (!PussyRodUtils.TryGet_GirlNeeds(girl, out  needInsert, out  needRemoval))
+            if (!Utils.TryGet_GirlNeeds(girl, out  needInsert, out  needRemoval))
             {
                 Log.Message($"does not need attention {girl}");
                 return false;
@@ -85,7 +84,7 @@ namespace Subjugate
             {
                 def = new JobDef
                 {
-                    driverClass = typeof(AttendToGirl),
+                    driverClass = typeof(JobDriver_AttendToGirl),
                     label = "Insert pussy shock rod"
                 },
                 targetA = goodPussyRod,
