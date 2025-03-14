@@ -51,6 +51,19 @@ namespace Subjugate
 
 
         }
+        public static bool HasClothingToTakeOff(this Pawn girl)
+        {
+            var hasClothingToTakeOff = girl.apparel.WornApparel.Any(apparel =>
+            {
+                if (apparel.def == Defs.Subj_PussyShockRod_Item)
+                    return false;
+                if (girl.apparel.IsLocked(apparel))
+                    return false;
+                return true;
+            });
+            return hasClothingToTakeOff;
+
+        }
         public static bool GotBeatings(this Pawn girl, out float rating)
         {
             girl.TryGet_Subjugate_Comp(out var comp);
@@ -110,21 +123,21 @@ namespace Subjugate
         {
             return pawn.TryGetComp<CompSubjugate>(out comp);
         }
+        public static bool TryGet_AnySubjugationWear(this Pawn girl, out Apparel apparel)
+        {
+            apparel = girl.apparel.WornApparel.FirstOrDefault(v => v.def.thingCategories.Contains(Defs.Subj_Subjugation_ThingCategory));
+            return apparel != null;
+        }
 
-        public static void NeedPussyRodInsert(this Pawn girl, bool f = true)
+        public static void GirlHasNeeds(this Pawn girl, bool f = true)
         {
             if (f)
-                Find.CurrentMap.GetComponent<Subjugate>().girlNeed[girl] = NeedType.Insert;
+                Find.CurrentMap.GetComponent<Subjugate>().girlNeedsAttending[girl] = true;
             else
-                Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Remove(girl);
+                Find.CurrentMap.GetComponent<Subjugate>().girlNeedsAttending.Remove(girl);
         }
-        public static void NeedPussyRodRemoval(this Pawn girl, bool f = true)
-        {
-            if (f)
-                Find.CurrentMap.GetComponent<Subjugate>().girlNeed[girl] = NeedType.Remove;
-            else
-                Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Remove(girl);
-        }
+
+
 
         public static void ThrowMetaIconF(IntVec3 pos, Map map, FleckDef icon)
         {
@@ -148,11 +161,7 @@ namespace Subjugate
                 }
             };
 
-            var checkForClothing = Toils_Jump.JumpIf(next, () => girl.apparel.WornApparel
-                .Where(v =>
-                    v.def != Defs.Subj_PussyShockRod_Item
-                    && !girl.apparel.IsLocked(v)
-                 ).Count() == 0);
+            var checkForClothing = Toils_Jump.JumpIf(next, () => girl.apparel.WornApparel.Where(v => !girl.apparel.IsLocked(v)).Count() == 0);
 
             var takeIfOffWait = Toils_General.Wait(50, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
             var takeItOff = new Toil
@@ -160,7 +169,7 @@ namespace Subjugate
                 initAction = () =>
                 {
                     Apparel apparel = girl.apparel.WornApparel
-                        .FirstOrDefault(v => v.def != Defs.Subj_PussyShockRod_Item && !girl.apparel.IsLocked(v));
+                        .FirstOrDefault(v => !girl.apparel.IsLocked(v));
 
                     var isForced = girl.outfits.forcedHandler.IsForced(apparel);
 
@@ -168,7 +177,6 @@ namespace Subjugate
                     girl.apparel.TryDrop(apparel, out Apparel resultingApparel, girl.Position);
 
                     droppedclothing[resultingApparel] = isForced;
-
                 }
             };
 
@@ -250,46 +258,49 @@ namespace Subjugate
             };
         }
 
-        public static bool TryGet_GirlNeeds(this Pawn girl, out bool needInsert, out bool needRemoval)
+        public static bool TryGet_GirlNeeds(this Pawn girl, out bool needPussyShockRod, out bool needBinders, out bool needRemove)
         {
-            needInsert = false;
-            needRemoval = false;
+            needPussyShockRod = false;
+            needBinders = false;
+            needRemove = false;
 
             if (girl.IsColonistPlayerControlled || girl.IsColonyMech || girl.IsColonyMutantPlayerControlled || girl.IsPrisonerInPrisonCell())
             {
                 AcceptanceReport allowsDrafting = girl.GetLord()?.AllowsDrafting(girl) ?? ((AcceptanceReport)true);
                 if (allowsDrafting)
                 {
+
                     if (girl.Dead)
                     {
                         return false;
                     }
-                    if (false == girl.GetComp<CompSubjugate>().ShouldHaveShockrod)
+
+                    var subjComp = girl.GetComp<CompSubjugate>();
+                    var shouldHave = subjComp.GirlShouldHave;
+
+                    if (shouldHave == Defs.Subj_PussyShockRod_Item.defName && !girl.TryGet_PussyShockRod(out var j))
                     {
-                        if (girl.TryGet_PussyShockRod(out var _))
-                        {
-                            needRemoval = true;
-                            return true;
-                        }
-                        return false;
+                        needPussyShockRod = true;
+                    }
+                    else if (shouldHave == Defs.Subj_Bindings_Item.defName && !girl.TryGet_Binders(out var j2))
+                    {
+                        needBinders = true;
+                    }
+                    else if (string.IsNullOrEmpty(shouldHave) && (girl.TryGet_PussyShockRod(out var j3) || girl.TryGet_Binders(out var j4)))
+                    {
+                        needRemove = true;
                     }
 
-                    if (false == girl.TryGet_PussyShockRod(out var _))
-                    {
-                        needInsert = true;
-                        return true;
-                    }
-
-                    if (girl.TryGet_PussyShockRod(out var item) && item.TryGet_PussyShockRod_Comp(out var comp)
+                    if (shouldHave == Defs.Subj_PussyShockRod_Item.defName
+                        && girl.TryGet_PussyShockRod(out var j5, out var comp)
                         && comp.Charge < .3f)
                     {
-                        needInsert = true;
-                        return true;
+                        needPussyShockRod = true;
                     }
                 }
             }
 
-            return false;
+            return needPussyShockRod || needBinders || needRemove;
         }
         public static MentalStateDef[] NeedPunishmentStates = new MentalStateDef[] {
                 MentalStateDefOf.Manhunter,
@@ -323,7 +334,12 @@ namespace Subjugate
             item = pawn.apparel.WornApparel.FirstOrDefault(v => v.def.defName == "Subj_PussyShockRod_Item") as Apparel;
             return item != null;
         }
-        public static bool TryGet_PussyShockRod(this Pawn pawn, out Apparel item, out CompInsertPussyShockRod comp)
+        public static bool TryGet_Binders(this Pawn pawn, out Apparel item)
+        {
+            item = pawn.apparel.WornApparel.FirstOrDefault(v => v.def.defName == "Subj_Bindings_Item") as Apparel;
+            return item != null;
+        }
+        public static bool TryGet_PussyShockRod(this Pawn pawn, out Apparel item, out CompPussyShockRod comp)
         {
             comp = null;
             if (pawn.TryGet_PussyShockRod(out item))
@@ -332,9 +348,9 @@ namespace Subjugate
             }
             return false;
         }
-        public static bool TryGet_PussyShockRod_Comp(this Thing item, out CompInsertPussyShockRod comp)
+        public static bool TryGet_PussyShockRod_Comp(this Thing item, out CompPussyShockRod comp)
         {
-            if (item.TryGetComp<CompInsertPussyShockRod>(out comp))
+            if (item.TryGetComp<CompPussyShockRod>(out comp))
             {
                 return true;
             }
@@ -345,11 +361,16 @@ namespace Subjugate
     public class AttendToGirlJob : Job
     {
         public bool needRemoval;
-        public bool needInsert;
+        public bool needInstall;
     }
     public class PunishGirlJob : Job
     {
 
+    }
+    public class GetNakedToSleepJob : Job
+    {
+        internal Job sleepJob;
+        internal LocalTargetInfo bed;
     }
 
 }

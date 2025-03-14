@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,8 +47,15 @@ namespace Subjugate
         {
             base.ExposeData();
 
-            Scribe_Values.Look(ref takedown, "hed-binders-shocked");
+            Scribe_Values.Look(ref takedown, "hed-binders-td");
 
+        }
+        public override void PostAdd(DamageInfo? dinfo)
+        {
+            base.PostAdd(dinfo);
+
+            Thought_Memory thought = (Thought_Memory)ThoughtMaker.MakeThought(Defs.Subj_Binders_Thought);
+            pawn.needs.mood.thoughts.memories.TryGainMemory(thought);
         }
 
 

@@ -19,18 +19,25 @@ namespace Subjugate
              * target C - pussy rod that needs to be taken out */
             var job = this.job as AttendToGirlJob;
 
+            if (!this.pawn.Reserve(TargetB, job))
+                return false;
 
-            return this.pawn.Reserve(TargetB, job)
-                && (job.needRemoval
-                    || job.needInsert && this.pawn.Reserve(TargetA, job));
+            if (job.needInstall)
+            {
+                if (!this.pawn.Reserve(TargetA, job))
+                {
+                    return false;
+                }
+            }
 
+            return true;
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
             var job = this.job as AttendToGirlJob;
             var girlTarget = TargetIndex.B;
-            var pussyRodTarget = TargetIndex.A;
+            var itemTarget = TargetIndex.A;
 
 
             yield return Toils_General.Wait(2);
@@ -53,13 +60,13 @@ namespace Subjugate
                 }
             };
 
-            if (job.needInsert)
+            if (job.needInstall)
             {
                 /*go get the pussy rod*/
-                yield return Toils_Goto.GotoThing(pussyRodTarget, PathEndMode.Touch);
+                yield return Toils_Goto.GotoThing(itemTarget, PathEndMode.Touch);
 
                 /* start hauling pussy rod*/
-                yield return Toils_Haul.StartCarryThing(pussyRodTarget);
+                yield return Toils_Haul.StartCarryThing(itemTarget);
 
             }
 
@@ -74,12 +81,12 @@ namespace Subjugate
 
             yield return makeGirlSquirm;
 
-            /* Take out old pussy rod */
-            var checkedForOldRod = Toils_General.Wait(2);
-            yield return Toils_Jump.JumpIf(checkedForOldRod, () =>
+            /* Take out old pussy insert if need be */
+            var checkForOldInsert = Toils_General.Wait(2);
+            yield return Toils_Jump.JumpIf(checkForOldInsert, () =>
             {
                 var girl = job.GetTarget(girlTarget).Pawn;
-                if (girl.TryGet_PussyShockRod(out var _))
+                if (girl.TryGet_AnySubjugationWear(out Apparel apparel))
                 {
                     return false;
                 }
@@ -93,22 +100,24 @@ namespace Subjugate
                 initAction = () =>
                 {
                     var girl = job.GetTarget(girlTarget).Pawn;
-                    if (!girl.TryGet_PussyShockRod(out var pussyShockRod))
+
+                    if (!girl.TryGet_AnySubjugationWear( out var item))
                     {
-                        Log.Error($"COULD NOT FIND PUSSY SHOCK ROD ON GIRL {this.pawn}");
+                        Log.Error($"COULD NOT FIND INSERTED ITEM ON GIRL{this.pawn}");
                         this.pawn.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
                         return;
                     }
-                    girl.apparel.Remove(pussyShockRod);
-                    girl.NeedPussyRodRemoval(false);
+                    girl.apparel.Remove(item);
+                    if (job.needRemoval)
+                        girl.GirlHasNeeds(false);
 
-                    GenPlace.TryPlaceThing(pussyShockRod, pawn.Position, pawn.Map, ThingPlaceMode.Near);
+                    GenPlace.TryPlaceThing(item, pawn.Position, pawn.Map, ThingPlaceMode.Near);
                 }
             };
 
-            yield return checkedForOldRod;
+            yield return checkForOldInsert;
 
-            if (job.needInsert)
+            if (job.needInstall)
             {
 
                 yield return Toils_General.Wait(500, TargetIndex.None).WithProgressBarToilDelay(girlTarget);
@@ -121,9 +130,9 @@ namespace Subjugate
 
                         var girl = job.GetTarget(girlTarget).Pawn;
                         girl.apparel.Wear(newThing as Apparel, true, true);
-                        girl.NeedPussyRodInsert(false);
+                        girl.GirlHasNeeds(false);
 
-                        job.SetTarget(pussyRodTarget, newThing);
+                        job.SetTarget(itemTarget, newThing);
                     }
                 };
 

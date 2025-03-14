@@ -13,7 +13,7 @@ namespace Subjugate
 {
     public enum NeedType:byte
     {
-        Insert=0,
+        Install=0,
         Remove=1,
     }
 
@@ -25,15 +25,22 @@ namespace Subjugate
 
         public static HediffDef VPEP_Puppet;
 
-        public Dictionary<Pawn, NeedType> girlNeed = new Dictionary<Pawn, NeedType>();
+        
         public Dictionary<Pawn, bool> needsPunishing = new Dictionary<Pawn, bool>();
+
+        public Dictionary<Pawn,bool> girlNeedsAttending=new Dictionary<Pawn, bool>();
 
 
         HashSet<Thing> readyPussyShockRods = new HashSet<Thing>();
 
-        public static List<Pawn> GirlsNeedingInsert=> Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Where(v=>v.Value==NeedType.Insert).Select(v=>v.Key).ToList();
-        public static List<Pawn> GirlsNeedingRemoval=> Find.CurrentMap.GetComponent<Subjugate>().girlNeed.Where(v => v.Value == NeedType.Remove).Select(v => v.Key).ToList();
-        public static List<Pawn> GirlsNeedingPunishment=> Find.CurrentMap.GetComponent<Subjugate>().needsPunishing.Where(v => v.Value).Select(v => v.Key).ToList();
+        public static List<Pawn> GirlsNeedingPunishment(Pawn warden)
+        {
+            return warden.Map.GetComponent<Subjugate>().needsPunishing.Where(v => v.Value).Select(v => v.Key).ToList();
+        }
+        public static List<Pawn> GirlNeedsAttending(Pawn warden)
+        {
+            return warden.Map.GetComponent<Subjugate>().girlNeedsAttending.Where(v=>v.Value).Select(v => v.Key).ToList();
+        }
 
         public static HashSet<Thing> ReadyPussyShockRods
         {

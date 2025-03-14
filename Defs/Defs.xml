@@ -64,9 +64,9 @@
 	</TraitDef>
 
 	<WorkGiverDef>
-		<defName>Subj_PussyShockRod_WorkGiver</defName>
+		<defName>WorkGiver_GirlNeedsAttending</defName>
 		<label>insert pussy shock rod into girl</label>
-		<giverClass>Subjugate.WorkGiver_PussyShockRod</giverClass>
+		<giverClass>Subjugate.WorkGiver_GirlNeedsAttending</giverClass>
 		<priorityInType>99</priorityInType>
 		<workType>Warden</workType>
 		<verb>insert pussy shock rod</verb>
@@ -77,7 +77,7 @@
 	</WorkGiverDef>
 
 	<WorkGiverDef>
-		<defName>Subj_Punish_WorkGiver</defName>
+		<defName>WorkGiver_Punish</defName>
 		<label>punish the girl</label>
 		<giverClass>Subjugate.WorkGiver_Punish</giverClass>
 		<priorityInType>99</priorityInType>
@@ -260,6 +260,19 @@
 			<li>
 				<label>Pussy shock rod</label>
 				<description>Pussy shock rod is jammed up my pussy.</description>
+				<baseMoodEffect>-1</baseMoodEffect>
+			</li>
+		</stages>
+		<stackLimit>1</stackLimit>
+	</ThoughtDef>
+	
+	<ThoughtDef>
+		<defName>Subj_Binders_Thought</defName>
+		<thoughtClass>Subjugate.Thought_BindersUpMyPussy</thoughtClass>
+		<stages>
+			<li>
+				<label>Binders</label>
+				<description>Tight binders all over with a leather thong jammed up my pussy.</description>
 				<baseMoodEffect>-1</baseMoodEffect>
 			</li>
 		</stages>

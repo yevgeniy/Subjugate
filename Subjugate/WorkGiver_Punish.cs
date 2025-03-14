@@ -17,7 +17,7 @@ namespace Subjugate
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
-            var needPunishing = Subjugate.GirlsNeedingPunishment;
+            var needPunishing = Subjugate.GirlsNeedingPunishment(pawn);
             Log.Message($"potential punishment: {needPunishing.Count}");
             
 

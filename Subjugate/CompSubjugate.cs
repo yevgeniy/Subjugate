@@ -16,6 +16,7 @@ using Verse.Sound;
 
 namespace Subjugate
 {
+
     [StaticConstructorOnStartup]
     public class CompSubjugate : ThingComp
     {
@@ -55,16 +56,17 @@ namespace Subjugate
         }
 
         public long ticks;
-        private bool shouldHaveShockrod;
-        public bool ShouldHaveShockrod
+        private string girlShouldHave;
+        public string GirlShouldHave
         {
             get
             {
-                return this.shouldHaveShockrod;
+                return girlShouldHave;
             }
             set
             {
-                this.shouldHaveShockrod = value;
+
+                this.girlShouldHave = value;
             }
         }
 
@@ -81,10 +83,11 @@ namespace Subjugate
 
             Scribe_Values.Look(ref fortheladies, "subjugate-for-lad");
             Scribe_Values.Look(ref ForTheLadiesMult, "subjugate-for-lad-mult");
-            Scribe_Values.Look(ref shouldHaveShockrod, "subjugate-should-have-rod");
             Scribe_Values.Look(ref guiltyTicksLeft, "subjugate-guilty-ticks");
-            Scribe_Values.Look(ref totalPussyRodTicksInserted, "subjugate-pussyrod-ticksins");
+            Scribe_Values.Look(ref totalPussyInsertTicks, "subjugate-pussyrod-ticksins");
             Scribe_Values.Look(ref beatingRating, "subjugate-beating-rate");
+            Scribe_Values.Look(ref girlShouldHave, "subjugate-should-have");
+            
         }
 
         private float beatingRating;
@@ -142,8 +145,8 @@ namespace Subjugate
         }
 
 
-        private int totalPussyRodTicksInserted = 0;
-        public int TotalPussyRodTicksInserted { get { return totalPussyRodTicksInserted; } }
+        private int totalPussyInsertTicks = 0;
+        public int TotalPussyInsert { get { return totalPussyInsertTicks; } }
 
         public override void CompTick()
         {
@@ -152,17 +155,14 @@ namespace Subjugate
 
             if (Find.TickManager.TicksGame % GenDate.TicksPerHour == 0)
             {
-                if (Pawn.TryGet_GirlNeeds(out bool needInsert, out bool needRemoval))
+                if (Pawn.TryGet_GirlNeeds(out bool j1, out bool j2, out bool j4))
                 {
-                    if (needInsert)
-                        Pawn.NeedPussyRodInsert();
-                    else if (needRemoval)
-                        Pawn.NeedPussyRodRemoval();
+                    Pawn.GirlHasNeeds();
+                    
                 }
                 else
                 {
-                    Pawn.NeedPussyRodInsert(false);
-                    Pawn.NeedPussyRodRemoval(false);
+                    Pawn.GirlHasNeeds(false);
                 }
 
 
@@ -171,9 +171,9 @@ namespace Subjugate
                     guiltyTicksLeft = GenDate.TicksPerDay;
                 }
 
-                if (Pawn.TryGet_PussyShockRod(out var item))
+                if (Pawn.TryGet_PussyShockRod(out var item) || Pawn.TryGet_Binders(out var itme2))
                 {
-                    totalPussyRodTicksInserted += GenDate.TicksPerHour;
+                    totalPussyInsertTicks += GenDate.TicksPerHour;
                 }
 
                 if (Pawn.IsSlaveOfColony && Pawn.gender==Gender.Female)
@@ -254,7 +254,7 @@ namespace Subjugate
 
             }
 
-            if ( Pawn.TryGet_Subjugate_Comp(out var comp) && comp.ShouldHaveShockrod)
+            if ( Pawn.TryGet_Subjugate_Comp(out var comp) && comp.GirlShouldHave==Defs.Subj_PussyShockRod_Item.defName)
             {
                 yield return new Command_Action
                 {
@@ -264,6 +264,19 @@ namespace Subjugate
                     action = delegate
                     {
                         RemovePussyRody();
+                    }
+                };
+            }
+            if (Pawn.TryGet_Subjugate_Comp(out comp) && comp.GirlShouldHave==Defs.Subj_Bindings_Item.defName)
+            {
+                yield return new Command_Action
+                {
+                    defaultLabel = "No binders",
+                    defaultDesc = "Remove binders from this girl.",
+                    icon = ContentFinder<Texture2D>.Get("removepussyrod"),
+                    action = delegate
+                    {
+                        RemoveBinders();
                     }
                 };
             }
@@ -287,8 +300,13 @@ namespace Subjugate
 
         private void RemovePussyRody()
         {
-            (this.parent as Pawn).GetComp<CompSubjugate>().ShouldHaveShockrod = false;
+            (this.parent as Pawn).GetComp<CompSubjugate>().GirlShouldHave = null;
         }
+        private void RemoveBinders()
+        {
+            (this.parent as Pawn).GetComp<CompSubjugate>().GirlShouldHave = null;
+        }
+        
 
     }
 

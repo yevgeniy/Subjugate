@@ -231,7 +231,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompInsertPussyShockRod.cs" />
+    <Compile Include="CompBinders.cs" />
+    <Compile Include="CompPussyShockRod.cs" />
     <Compile Include="Comp\CompHediffApparel.cs" />
     <Compile Include="Comp\CompProperties_HediffApparel.cs" />
     <Compile Include="Comp\FilterMode.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="JobDriver_AttendToGirl.cs" />
     <Compile Include="JobDriver_EmptyWear.cs" />
     <Compile Include="JobDriver_GirlBendOver.cs" />
+    <Compile Include="JobDriver_GetNakedToSleep.cs" />
     <Compile Include="JobDriver_GirlStop.cs" />
     <Compile Include="JobDriver_PunishGirl.cs" />
     <Compile Include="PatchDamageWorker_Blunt.cs" />
@@ -249,6 +251,7 @@
     <Compile Include="Defs.cs" />
     <Compile Include="Patches.cs" />
     <Compile Include="InMapTargeter.cs" />
+    <Compile Include="Thought_BindersUpMyPussy.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="ThoughtWorkers.cs" />
     <Compile Include="Subjugate.cs" />
@@ -256,7 +259,7 @@
     <Compile Include="Thought_GotPunished.cs" />
     <Compile Include="Thought_PussyShockRodInMyPussy.cs" />
     <Compile Include="WorkGiver_Punish.cs" />
-    <Compile Include="WorkGiver_PussyShockRod.cs" />
+    <Compile Include="WorkGiver_GirlNeedsAttending.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

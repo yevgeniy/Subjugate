@@ -14,6 +14,7 @@ using Verse.Sound;
 using static UnityEngine.Random;
 using static UnityEngine.GraphicsBuffer;
 using System.Security.Cryptography;
+using Verse.AI.Group;
 
 namespace Subjugate
 {
@@ -146,24 +147,65 @@ namespace Subjugate
     [HarmonyPatch(typeof(JobMaker), "MakeJob", new Type[] {typeof( JobDef ), typeof( LocalTargetInfo )})]
     public static class detect_wear
     {
-        public static ThingDef[] restricted = new ThingDef[] {
-            Defs.Subj_PussyShockRod_Item
-        };
-        public static bool Prefix(ref Job __result, JobDef def, LocalTargetInfo targetA)
+        public static void Postfix(ref Job __result, JobDef def, LocalTargetInfo targetA)
         {
-            if (targetA.HasThing && targetA.Thing.def.thingCategories.Contains(Defs.Subj_Subjugation_ThingCategory))
+            if (def==JobDefOf.Wear)
             {
-                Log.Message($"SOMEONE IS ATTEMPTING OT EQUIP SUBJUGATION APPAREL.");
-                __result = new Job
+
+                if (targetA.HasThing && targetA.Thing.def.thingCategories.Contains(Defs.Subj_Subjugation_ThingCategory))
                 {
-                    def=new JobDef
+                    Log.Message($"SOMEONE IS ATTEMPTING OT EQUIP SUBJUGATION APPAREL.");
+                    __result = new Job
                     {
-                        driverClass=typeof(JobDriver_EmptyWear)
-                    }
-                };
-                return false;
+                        def = new JobDef
+                        {
+                            driverClass = typeof(JobDriver_EmptyWear)
+                        }
+                    };
+                }
+
             }
-            return true;
+            else if (def==JobDefOf.RemoveApparel)
+            {
+                if (targetA.HasThing && targetA.Thing.def.thingCategories.Contains(Defs.Subj_Subjugation_ThingCategory))
+                {
+                    Log.Message($"SOMEONE IS ATTEMPTING TO REMOVE SUBJUGATION APPAREL.");
+                    __result = new Job
+                    {
+                        def = new JobDef
+                        {
+                            driverClass = typeof(JobDriver_EmptyWear)
+                        }
+                    };
+                }
+            }
+        }
+    }
+    [HarmonyPatch(typeof(JobGiver_GetRest), "TryGiveJob")]
+    public static class slaves_take_off_clothing_when_sleeping
+    {
+        public static void Postfix(ref Job __result, Pawn pawn)
+        {
+            if (__result!=null)
+            {
+                AcceptanceReport allowsDrafting = pawn.GetLord()?.AllowsDrafting(pawn) ?? ((AcceptanceReport)true);
+
+                if (pawn.gender == Gender.Female && pawn.IsSlaveOfColony && allowsDrafting && pawn.HasClothingToTakeOff() )
+                {
+                    __result = new GetNakedToSleepJob
+                    {
+                        def = new JobDef
+                        {
+                            driverClass = typeof(JobDriver_GetNakedToSleep),
+                            description="Getting naked to sleep",
+                            label="Getting naked to sleep"
+                        },
+                        sleepJob = __result,
+                        bed = __result.targetA
+                    };
+                }
+            }
+
         }
     }
 

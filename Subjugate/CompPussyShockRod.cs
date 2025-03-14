@@ -14,23 +14,23 @@ namespace Subjugate
 
 
     [StaticConstructorOnStartup]
-    public class CompInsertPussyShockRod : ThingComp
+    public class CompPussyShockRod : ThingComp
     {
 
-        static CompInsertPussyShockRod()
+        static CompPussyShockRod()
         {
             var def = DefDatabase<ThingDef>.AllDefs.FirstOrDefault(v => v.defName == "Subj_PussyShockRod_Item");
             if (def != null)
             {
                 def.comps.Add(new CompProperties
                 {
-                    compClass = typeof(CompInsertPussyShockRod)
+                    compClass = typeof(CompPussyShockRod)
                 });
                 def.tickerType = TickerType.Normal;
             }
 
         }
-        public CompInsertPussyShockRod()
+        public CompPussyShockRod()
         {
             this.proxy = new ShockRodProxy();
         }
@@ -47,7 +47,7 @@ namespace Subjugate
 
             yield return new Command_Action
             {
-                defaultLabel = "Insert",
+                defaultLabel = "Insert Pussy Shock Rod",
                 defaultDesc = "Insert Pussy Shock Rod into a girl.",
                 icon = ContentFinder<Texture2D>.Get("CavityShocker"),
                 action = delegate
@@ -79,7 +79,7 @@ namespace Subjugate
                         }
                     }, delegate (LocalTargetInfo target)
                     {
-                        target.Pawn.GetComp<CompSubjugate>().ShouldHaveShockrod = true;
+                        target.Pawn.GetComp<CompSubjugate>().GirlShouldHave = Defs.Subj_PussyShockRod_Item.defName;
                         Log.Message($"target {target.Pawn}");
                     }, this.parent);
                 }

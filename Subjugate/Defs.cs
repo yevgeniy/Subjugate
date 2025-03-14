@@ -17,7 +17,9 @@ namespace Subjugate
         public static ThoughtDef Subj_AllWomenSlaves_Thought;
         public static ThoughtDef Subj_PussyShockRodInMyPussy_Thought;
         public static ThoughtDef Subj_GotPunished_Thought;
+        public static ThoughtDef Subj_Binders_Thought;
         
+
         public static PreceptDef Subj_SubjugateAllWomen_Precept;
 
         public static ThingDef Subj_PussyShockRod_Item;

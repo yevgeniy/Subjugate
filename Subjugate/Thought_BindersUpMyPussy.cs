@@ -8,11 +8,12 @@ using UnityEngine;
 
 namespace Subjugate
 {
-    public class Thought_PussyShockRodInMyPussy : Thought_Memory
+    public class Thought_BindersUpMyPussy : Thought_Memory
     {
         private float moodoffset;
 
-        public override bool ShouldDiscard => !pawn.TryGet_PussyShockRod(out var _);
+
+        public override bool ShouldDiscard => !pawn.TryGet_Binders(out var _);
         
         public override float MoodOffset()
         {
