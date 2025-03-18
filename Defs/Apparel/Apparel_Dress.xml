@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef Name="S16_ServantGirlDress" ParentName="S16_Base">
-    <defName>S16_ServantGirlDress</defName>
+  <ThingDef Name="Subj_SlaveDress_Item" ParentName="Subj_Dress_Base">
+    <defName>Subj_SlaveDress_Item</defName>
     <label>servant girl dress</label>
     <description>Revealing dress usually seen on low rank sex-slaves.</description>
     <graphicData>
@@ -19,7 +19,7 @@
       <EquipDelay>3</EquipDelay>
     </statBases>
     <thingCategories>
-      <li>S16_Dress</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <equippedStatOffsets>
       <!-- <SexSatisfaction>0.2</SexSatisfaction> -->
@@ -29,6 +29,7 @@
       <bodyPartGroups>
         <li>Legs</li>
         <li>Torso</li>
+        <li>Shoulders</li>
       </bodyPartGroups>
       <wornGraphicPath>Things/Apparel/Dress/ServantA/S16Dress1</wornGraphicPath>
       <layers>
@@ -37,31 +38,27 @@
         <li>Shell</li>
       </layers>
       <tags>
-        <li>S16_Dress</li>
+        <li>Subj_Dress</li>
         <li>Subj_Tier1</li>
       </tags>
       <gender>Female</gender>
     </apparel>
     <comps>
-      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+      <!-- <li Class="Subjugate.Comp.CompProperties_HediffApparel">
         <hediffDef>S16DressIHed</hediffDef>
         <partsToAffect>
           <li>Torso</li>
         </partsToAffect>
-      </li>
+      </li> -->
       <li>
         <compClass>CompColorable</compClass>
       </li>
     </comps>
-    <recipeMaker>
-      <researchPrerequisites>
-        <li>S16_Apparel</li>
-      </researchPrerequisites>
-    </recipeMaker>
+    
   </ThingDef>
 
-  <ThingDef Name="S16_ZDress" ParentName="S16_Base">
-    <defName>S16_ZDress</defName>
+  <ThingDef Name="Subj_ZDress_Item" ParentName="Subj_Dress_Base">
+    <defName>Subj_ZDress_Item</defName>
     <label>Z dress</label>
     <description>A skimpy black dress</description>
     <graphicData>
@@ -83,43 +80,39 @@
       <!-- <SexSatisfaction>0.2</SexSatisfaction> -->
     </equippedStatOffsets>
     <thingCategories>
-      <li>S16_Dress</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <apparel>
       <bodyPartGroups>
         <li>Torso</li>
         <li>Legs</li>
+        <li>Shoulders</li>
       </bodyPartGroups>
       <wornGraphicPath>Things/Apparel/Dress/Z/S16DressZ</wornGraphicPath>
       <layers>
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_Dress</li>
+        <li>Subj_SlaveGirl_ThingCategory</li>
         <li>Subj_Tier2</li>
       </tags>
       <gender>Female</gender>
     </apparel>
     <comps>
-      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+      <!-- <li Class="Subjugate.Comp.CompProperties_HediffApparel">
         <hediffDef>S16DressZHed</hediffDef>
         <partsToAffect>
           <li>Torso</li>
         </partsToAffect>
-      </li>
+      </li> -->
       <li>
         <compClass>CompColorable</compClass>
       </li>
     </comps>
-    <recipeMaker>
-      <researchPrerequisites>
-        <li>S16_ComplexApparel</li>
-      </researchPrerequisites>
-    </recipeMaker>
   </ThingDef>
 
-  <ThingDef Name="S16_MaidA" ParentName="S16_Base">
-    <defName>S16_MaidA</defName>
+  <ThingDef Name="Subj_MaidDress_Item" ParentName="Subj_Dress_Base">
+    <defName>Subj_MaidDress_Item</defName>
     <label>maid dress</label>
     <description>A skimpy maid dress</description>
     <graphicData>
@@ -141,7 +134,7 @@
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.2</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
-      <li>S16_Dress</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <apparel>
       <bodyPartGroups>
@@ -153,23 +146,23 @@
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_Dress</li>
+        <li>Subj_SlaveGirl_ThingCategory</li>
         <li>Subj_Tier2</li>
       </tags>
       <gender>Female</gender>
     </apparel>
-    <comps>
+    <!-- <comps>
       <li Class="Subjugate.Comp.CompProperties_HediffApparel">
         <hediffDef>S16_MaidA_Hed</hediffDef>
         <partsToAffect>
           <li>Torso</li>
         </partsToAffect>
       </li>
-    </comps>
-    <recipeMaker>
+    </comps> -->
+    <!-- <recipeMaker>
       <researchPrerequisites>
         <li>S16_ComplexApparel</li>
       </researchPrerequisites>
-    </recipeMaker>
+    </recipeMaker> -->
   </ThingDef>
 </Defs>

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef Name="S16_TransparentSkirt" ParentName="S16_Base">
-    <defName>S16_TransparentSkirt</defName>
+  <ThingDef Name="Subj_TransparentSkirt_Item" ParentName="Subj_Dress_Base">
+    <defName>Subj_TransparentSkirt_Item</defName>
     <label>transparent skirt</label>
-    <description>A skirt to reveal girls' sweet spots.</description>
+    <description>A skirt to reveal girl's beauty.</description>
     <graphicData>
       <texPath>Things/Apparel/Skirts/Tskirt/S16Tskirt</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -19,7 +19,7 @@
       <EquipDelay>3.0</EquipDelay>
     </statBases>
     <thingCategories>
-      <li>S16_Skirt</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <equippedStatOffsets>
       <!-- <SexSatisfaction>0.2</SexSatisfaction> -->
@@ -35,26 +35,26 @@
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_Skirt</li>
+        <li>Subj_SlaveGirl_ThingCategory</li>
         <li>Subj_Tier2</li>
       </tags>
       <gender>Female</gender>
     </apparel>
     <comps>
-      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+      <!-- <li Class="Subjugate.Comp.CompProperties_HediffApparel">
         <hediffDef>S16TskirtHed</hediffDef>
         <partsToAffect>
           <li>Torso</li>
         </partsToAffect>
-      </li>
+      </li> -->
       <li>
         <compClass>CompColorable</compClass>
       </li>
     </comps>
-    <recipeMaker>
+    <!-- <recipeMaker>
       <researchPrerequisites>
         <li>S16_ComplexApparel</li>
       </researchPrerequisites>
-    </recipeMaker>
+    </recipeMaker> -->
   </ThingDef>
 </Defs>

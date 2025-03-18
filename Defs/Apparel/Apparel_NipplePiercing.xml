@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Defs> 
-  <ThingDef Name="S16_NippleRings" ParentName="S16_MetallicBase">
-    <defName>S16_NippleRings</defName>
+<Defs>
+  <ThingDef Name="Subj_NippleRings_Item" ParentName="Subj_MetallicBase">
+    <defName>Subj_NippleRings_Item</defName>
     <label>nipple rings</label>
     <description>Couple of simple nipple rings.</description>
     <graphicData>
@@ -11,7 +11,7 @@
     <techLevel>Neolithic</techLevel>
     <costStuffCount>10</costStuffCount>
     <stuffCategories>
-     <li>Metallic</li>
+      <li>Metallic</li>
     </stuffCategories>
     <tradeability>All</tradeability>
     <statBases>
@@ -19,14 +19,14 @@
       <WorkToMake>2500</WorkToMake>
       <Mass>0.05</Mass>
       <EquipDelay>5</EquipDelay>
-	  <DeteriorationRate>1</DeteriorationRate>
+      <DeteriorationRate>1</DeteriorationRate>
     </statBases>
     <equippedStatOffsets>
       <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
-      <li>S16_Piercing</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <apparel>
       <countsAsClothingForNudity>false</countsAsClothingForNudity>
@@ -38,101 +38,24 @@
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_NipplePiercing</li>
-		<li>S16_Tier0</li>
+        <li>Subj_NipplePiercing</li>
+        <li>Subj_Tier0</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-    <recipeMaker>
-      <recipeUsers>
-		<li>S16_CraftingSpot</li>
-      </recipeUsers>
-	 <researchPrerequisites>
-	 <li>S16_Piercing</li>
-	 </researchPrerequisites>
-    </recipeMaker>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16NippleRingsHed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    </comps>
+    
+    <!-- <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16NippleRingsHed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+    </comps> -->
   </ThingDef>
- 
-  <ThingDef Name="S16_WoodenPins" ParentName="S16_Base">
-    <defName>S16_WoodenPins</defName>
-    <label>wooden pins</label>
-    <description>Useful for drying clothes. Some girls find them strange use.</description>
-    <graphicData>
-      <texPath>Things/Apparel/Nipple/WPins/S16WPins</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-    </graphicData>
-    <techLevel>Industrial</techLevel>
-    <tradeability>All</tradeability>
-    <statBases>
-      <MaxHitPoints>50</MaxHitPoints>
-      <WorkToMake>1500</WorkToMake>
-      <Mass>0.05</Mass>
-      <EquipDelay>5</EquipDelay>
-	  <DeteriorationRate>1</DeteriorationRate>
-    </statBases>
-    <thingCategories>
-      <li>S16_Piercing</li>
-    </thingCategories>
-    <equippedStatOffsets>
-      <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
-      <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
-    </equippedStatOffsets>
-    <apparel>
-      <countsAsClothingForNudity>false</countsAsClothingForNudity>
-      <bodyPartGroups>
-        <li>Shoulders</li>
-      </bodyPartGroups>
-      <wornGraphicPath>Things/Apparel/Nipple/WPins/S16WPins</wornGraphicPath>
-      <layers>
-        <li>OnSkin</li>
-      </layers>
-      <tags>
-        <li>S16_NipplePiercing</li>
-		<li>S16_Tier0</li>
-      </tags>
-	  <gender>Female</gender>
-    </apparel>
-	<recipeMaker>
-	  <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
-      <workSkill>Crafting</workSkill>
-      <effectWorking>Smith</effectWorking>
-      <soundWorking>Recipe_Machining</soundWorking>
-      <unfinishedThingDef>UnfinishedApparel</unfinishedThingDef>
-      <skillRequirements>
-        <Crafting>2</Crafting>
-      </skillRequirements>
-      <recipeUsers>
-        <li>S16_CraftingSpot</li>
-      </recipeUsers>
-	 <researchPrerequisites>
-	 <li>S16_Piercing</li>
-	 <li>ComplexFurniture</li>
-	 </researchPrerequisites>
-    </recipeMaker>
-     <costList>
-      <WoodLog>5</WoodLog>
-	  <Steel>5</Steel>
-    </costList>
-    <comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16WPinsHed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    </comps>
-  </ThingDef>
- 
-   <ThingDef Name="S16_NippleBarbells" ParentName="S16_MetallicBase">
-    <defName>S16_NippleBarbells</defName>
+
+  <ThingDef Name="Subj_NippleBarbells_Item" ParentName="Subj_MetallicBase">
+    <defName>Subj_NippleBarbells_Item</defName>
     <label>nipple barbells </label>
     <description>Simple and nice.</description>
     <graphicData>
@@ -142,7 +65,7 @@
     <techLevel>Neolithic</techLevel>
     <costStuffCount>10</costStuffCount>
     <stuffCategories>
-     <li>Metallic</li>
+      <li>Metallic</li>
     </stuffCategories>
     <tradeability>All</tradeability>
     <statBases>
@@ -150,14 +73,14 @@
       <WorkToMake>2500</WorkToMake>
       <Mass>0.05</Mass>
       <EquipDelay>5</EquipDelay>
-	  <DeteriorationRate>1</DeteriorationRate>
+      <DeteriorationRate>1</DeteriorationRate>
     </statBases>
     <equippedStatOffsets>
       <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
-      <li>S16_Piercing</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <apparel>
       <countsAsClothingForNudity>false</countsAsClothingForNudity>
@@ -169,31 +92,31 @@
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_NipplePiercing</li>
-		<li>S16_Tier0</li>
+        <li>Subj_NipplePiercing</li>
+        <li>Subj_Tier0</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-    <recipeMaker>
+    <!-- <recipeMaker>
       <recipeUsers>
-		<li>S16_CraftingSpot</li>
+        <li>S16_CraftingSpot</li>
       </recipeUsers>
-	 <researchPrerequisites>
-	 <li>S16_Piercing</li>
-	 </researchPrerequisites>
-    </recipeMaker>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16SimpleAHed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    </comps>
+      <researchPrerequisites>
+        <li>Subj_SlaveGirl_ThingCategory</li>
+      </researchPrerequisites>
+    </recipeMaker> -->
+    <!-- <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16SimpleAHed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+    </comps> -->
   </ThingDef>
-  
-  <ThingDef Name="S16_HeavyNippleRings" ParentName="S16_MetallicBase">
-    <defName>S16_HeavyNippleRings</defName>
+
+  <ThingDef Name="Subj_HeavyNippleRings_Item" ParentName="Subj_MetallicBase">
+    <defName>Subj_HeavyNippleRings_Item</defName>
     <label>heavy nipple rings</label>
     <description>These are not for casual wear.</description>
     <graphicData>
@@ -203,7 +126,7 @@
     <techLevel>Neolithic</techLevel>
     <costStuffCount>30</costStuffCount>
     <stuffCategories>
-     <li>Metallic</li>
+      <li>Metallic</li>
     </stuffCategories>
     <tradeability>All</tradeability>
     <statBases>
@@ -211,14 +134,14 @@
       <WorkToMake>2500</WorkToMake>
       <Mass>0.1</Mass>
       <EquipDelay>5</EquipDelay>
-	  <DeteriorationRate>1</DeteriorationRate>
+      <DeteriorationRate>1</DeteriorationRate>
     </statBases>
     <equippedStatOffsets>
       <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
-      <li>S16_Piercing</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <apparel>
       <countsAsClothingForNudity>false</countsAsClothingForNudity>
@@ -230,31 +153,31 @@
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_NipplePiercing</li>
-		<li>S16_Tier0</li>
+        <li>Subj_NipplePiercing</li>
+        <li>Subj_Tier0</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-    <recipeMaker>
+    <!-- <recipeMaker>
       <recipeUsers>
-		<li>S16_CraftingSpot</li>
+        <li>S16_CraftingSpot</li>
       </recipeUsers>
-	 <researchPrerequisites>
-	 <li>S16_Piercing</li>
-	 </researchPrerequisites>
-    </recipeMaker>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16HeavyAHed</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    </comps>
+      <researchPrerequisites>
+        <li>Subj_SlaveGirl_ThingCategory</li>
+      </researchPrerequisites>
+    </recipeMaker> -->
+    <!-- <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16HeavyAHed</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+    </comps> -->
   </ThingDef>
-  
-  <ThingDef ParentName="S16_MetallicBase">
-    <defName>S16_NCA</defName>
+
+  <ThingDef ParentName="Subj_MetallicBase">
+    <defName>Subj_NippleChain_Item</defName>
     <label>nipple clamps</label>
     <description>Nipple clamps connected with a chain. Pretty heavy.</description>
     <graphicData>
@@ -264,7 +187,7 @@
     <techLevel>Neolithic</techLevel>
     <costStuffCount>50</costStuffCount>
     <stuffCategories>
-     <li>Metallic</li>
+      <li>Metallic</li>
     </stuffCategories>
     <tradeability>All</tradeability>
     <statBases>
@@ -272,14 +195,14 @@
       <WorkToMake>5000</WorkToMake>
       <Mass>0.3</Mass>
       <EquipDelay>5</EquipDelay>
-	  <DeteriorationRate>1</DeteriorationRate>
+      <DeteriorationRate>1</DeteriorationRate>
     </statBases>
     <equippedStatOffsets>
       <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
-      <li>S16_Piercing</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <apparel>
       <countsAsClothingForNudity>false</countsAsClothingForNudity>
@@ -291,31 +214,31 @@
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_NipplePiercing</li>
-		<li>Subj_Tier1</li>
+        <li>Subj_NipplePiercing</li>
+        <li>Subj_Tier1</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-    <recipeMaker>
+    <!-- <recipeMaker>
       <recipeUsers>
-		<li>S16_CraftingSpot</li>
+        <li>S16_CraftingSpot</li>
       </recipeUsers>
-	 <researchPrerequisites>
-	 <li>S16_Piercing</li>
-	 </researchPrerequisites>
+      <researchPrerequisites>
+        <li>Subj_SlaveGirl_ThingCategory</li>
+      </researchPrerequisites>
     </recipeMaker>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16_NC_Hediff</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    </comps>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16_NC_Hediff</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+    </comps> -->
   </ThingDef>
-  
-   <ThingDef ParentName="S16_MetallicBase">
-    <defName>S16_NCB</defName>
+
+  <ThingDef ParentName="Subj_MetallicBase">
+    <defName>Subj_RingedNippleChain_Item</defName>
     <label>nipple clamps with ring</label>
     <description>Nipple clamps connected with a chain. Pretty heavy.</description>
     <graphicData>
@@ -325,7 +248,7 @@
     <techLevel>Neolithic</techLevel>
     <costStuffCount>50</costStuffCount>
     <stuffCategories>
-     <li>Metallic</li>
+      <li>Metallic</li>
     </stuffCategories>
     <tradeability>All</tradeability>
     <statBases>
@@ -333,14 +256,14 @@
       <WorkToMake>5000</WorkToMake>
       <Mass>0.4</Mass>
       <EquipDelay>5</EquipDelay>
-	  <DeteriorationRate>1</DeteriorationRate>
+      <DeteriorationRate>1</DeteriorationRate>
     </statBases>
     <equippedStatOffsets>
       <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
-      <li>S16_Piercing</li>
+      <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <apparel>
       <countsAsClothingForNudity>false</countsAsClothingForNudity>
@@ -352,26 +275,26 @@
         <li>OnSkin</li>
       </layers>
       <tags>
-        <li>S16_NipplePiercing</li>
-		<li>Subj_Tier1</li>
+        <li>Subj_NipplePiercing</li>
+        <li>Subj_Tier1</li>
       </tags>
-	  <gender>Female</gender>
+      <gender>Female</gender>
     </apparel>
-    <recipeMaker>
+    <!-- <recipeMaker>
       <recipeUsers>
-		<li>S16_CraftingSpot</li>
+        <li>S16_CraftingSpot</li>
       </recipeUsers>
-	 <researchPrerequisites>
-	 <li>S16_Piercing</li>
-	 </researchPrerequisites>
+      <researchPrerequisites>
+        <li>Subj_SlaveGirl_ThingCategory</li>
+      </researchPrerequisites>
     </recipeMaker>
-	<comps>
-		<li Class="Subjugate.Comp.CompProperties_HediffApparel">
-			<hediffDef>S16_NC_Hediff</hediffDef>
-			<partsToAffect>
-					<li>Torso</li>
-			</partsToAffect>
-		</li>
-    </comps>
+    <comps>
+      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
+        <hediffDef>S16_NC_Hediff</hediffDef>
+        <partsToAffect>
+          <li>Torso</li>
+        </partsToAffect>
+      </li>
+    </comps> -->
   </ThingDef>
 </Defs>

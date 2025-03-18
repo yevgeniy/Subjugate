@@ -26,6 +26,17 @@ namespace Subjugate
         public static ThingDef Subj_Bindings_Item;
         public static ThingDef Subj_ArmorVest_Item;
 
+        public static ThingDef Subj_SlaveDress_Item;
+        public static ThingDef Subj_ZDress_Item;
+        public static ThingDef Subj_MaidDress_Item;
+        public static ThingDef Subj_NippleRings_Item;
+        public static ThingDef Subj_NippleBarbells_Item;
+        public static ThingDef Subj_HeavyNippleRings_Item;
+        public static ThingDef Subj_NippleChain_Item;
+        public static ThingDef Subj_RingedNippleChain_Item;
+        public static ThingDef Subj_TransparentSkirt_Item;
+        
+
         public static HediffDef Subj_PussyShockRod_Hediff;
         public static HediffDef Subj_ShockTheGirl_Hediff;
         public static HediffDef Subj_PunishTheGirl_Hediff;
@@ -34,11 +45,14 @@ namespace Subjugate
 
         public static FleckDef Subj_NoHeart_Fleck;
 
-        /*imported*/
-        public static DamageDef VWE_ConditionalStun;
 
         public static ThingCategoryDef Subj_Subjugation_ThingCategory;
+        public static ThingCategoryDef Subj_SlaveGirl_ThingCategory;
+        public static ThingCategoryDef Subj_Girl_ThingCategory;
+        
 
+        /*imported*/
+        public static DamageDef VWE_ConditionalStun;
     }
 
     [StaticConstructorOnStartup]

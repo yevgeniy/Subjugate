@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef Name="S16_Base" Abstract="True">
+  <ThingDef Name="Subj_Dress_Base" Abstract="True">
     <thingClass>Apparel</thingClass>
     <category>Item</category>
     <selectable>True</selectable>
@@ -41,7 +41,8 @@
         <Crafting>5</Crafting>
       </skillRequirements>
       <recipeUsers>
-        <li>S16_CraftingSpot</li>
+        <li>ElectricTailoringBench</li>
+        <li>HandTailoringBench</li>
       </recipeUsers>
     </recipeMaker>
   </ThingDef>
@@ -91,7 +92,7 @@
     </recipeMaker>
   </ThingDef>
 
-  <ThingDef Name="S16_MetallicBase" ParentName="ApparelBase" Abstract="True">
+  <ThingDef Name="Subj_MetallicBase" ParentName="ApparelBase" Abstract="True">
     <smeltable>true</smeltable>
     <tickerType>Normal</tickerType>
     <recipeMaker>
@@ -111,6 +112,10 @@
           <li>Uranium</li>
         </disallowedThingDefs>
       </defaultIngredientFilter>
+      <recipeUsers>
+        <li>ElectricSmithy</li>
+        <li>FueledSmithy</li>
+      </recipeUsers>
     </recipeMaker>
   </ThingDef>
 

@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<!-- <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef Name="S16_DiscoTop" ParentName="S16_Base">
+  <ThingDef Name="S16_DiscoTop" ParentName="Subj_Dress_Base">
     <defName>S16_DiscoTop</defName>
     <label>disco top</label>
     <description>Skimpy top with bright provocative writing, perfect choice if you need to draw everyone's attention.</description>
@@ -41,7 +41,7 @@
     </apparel>
     <comps>
       <li Class="Subjugate.Comp.CompProperties_HediffApparel">
-        <hediffDef>S16_DressIIHed</hediffDef>
+        <hediffDef>Subj_SlaveGirl_ThingCategoryIIHed</hediffDef>
         <partsToAffect>
           <li>Torso</li>
         </partsToAffect>
@@ -56,4 +56,4 @@
       </researchPrerequisites>
     </recipeMaker>
   </ThingDef>
-</Defs>
+</Defs> -->

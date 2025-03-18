@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<!-- <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef Name="S16_MicroThong" ParentName="S16_Base">
+  <ThingDef Name="S16_MicroThong" ParentName="Subj_Dress_Base">
     <defName>S16_MicroThong</defName>
     <label>micro thong</label>
     <description>Thin strip of cloth, accentuates rather then hides.</description>
@@ -59,7 +59,7 @@
     </recipeMaker>
   </ThingDef>
   
-  <ThingDef Name="S16_Thong" ParentName="S16_Base">
+  <ThingDef Name="S16_Thong" ParentName="Subj_Dress_Base">
     <defName>S16_Thong</defName>
     <label>thong</label>
     <description>High-waisted panties, not for everyday use.</description>
@@ -117,7 +117,7 @@
     </recipeMaker>
   </ThingDef>
   
-  <ThingDef Name="S16_HighThong" ParentName="S16_Base">
+  <ThingDef Name="S16_HighThong" ParentName="Subj_Dress_Base">
     <defName>S16_HighThong</defName>
     <label>high thong</label>
     <description>VERY high-waisted panties, not for everyday use.</description>
@@ -175,7 +175,7 @@
     </recipeMaker>
   </ThingDef>
   
-  <ThingDef Name="S16_BlackTape" ParentName="S16_Base">
+  <ThingDef Name="S16_BlackTape" ParentName="Subj_Dress_Base">
     <defName>S16_BlackTape</defName>
     <label>intimate tape</label>
     <description>Small sterile tape to cover genitals</description>
@@ -233,4 +233,4 @@
     </researchPrerequisites>
     </recipeMaker>
   </ThingDef>
-</Defs>
+</Defs> -->
