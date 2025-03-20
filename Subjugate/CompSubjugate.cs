@@ -70,39 +70,13 @@ namespace Subjugate
             }
         }
 
-
-        public override void PostDeSpawn(Map map)
-        {
-            base.PostDeSpawn(map);
-        }
-
-        public override void PostExposeData()
-        {
-            base.PostExposeData();
-
-
-            Scribe_Values.Look(ref fortheladies, "subjugate-for-lad");
-            Scribe_Values.Look(ref ForTheLadiesMult, "subjugate-for-lad-mult");
-            Scribe_Values.Look(ref guiltyTicksLeft, "subjugate-guilty-ticks");
-            Scribe_Values.Look(ref totalPussyInsertTicks, "subjugate-pussyrod-ticksins");
-            Scribe_Values.Look(ref beatingRating, "subjugate-beating-rate");
-            Scribe_Values.Look(ref girlShouldHave, "subjugate-should-have");
-            
-        }
-
         private float beatingRating;
         public float BeatingRating
         {
             get { return this.beatingRating; }
-            set { 
-                
-                this.beatingRating = value; 
-
-                if (this.beatingRating==1)
-                {
-                    Thought_Memory thought = (Thought_Memory)ThoughtMaker.MakeThought(Defs.Subj_GotPunished_Thought);
-                    Pawn.needs.mood.thoughts.memories.TryGainMemory(thought);
-                }
+            set
+            {
+                this.beatingRating = value;
             }
         }
 
@@ -130,6 +104,44 @@ namespace Subjugate
 
         public float ForTheLadiesMult;
 
+        private float resistance;
+        public float Resistance
+        {
+            get {
+                if (this.resistance==default(float))
+                {
+                    this.resistance = Pawn.GenerateResistance();
+                }
+                return this.resistance;
+            }
+            
+        }
+
+
+
+        public override void PostDeSpawn(Map map)
+        {
+            base.PostDeSpawn(map);
+        }
+
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+
+
+            Scribe_Values.Look(ref fortheladies, "subjugate-for-lad");
+            Scribe_Values.Look(ref ForTheLadiesMult, "subjugate-for-lad-mult");
+            Scribe_Values.Look(ref guiltyTicksLeft, "subjugate-guilty-ticks");
+            Scribe_Values.Look(ref totalPussyInsertTicks, "subjugate-pussyrod-ticksins");
+            Scribe_Values.Look(ref beatingRating, "subjugate-beating-rate");
+            Scribe_Values.Look(ref girlShouldHave, "subjugate-should-have");
+            Scribe_Values.Look(ref punishLimit, "subjugate-pun-lim");
+            Scribe_Values.Look(ref lastTimePunished, "subjugate-last-pun");
+            Scribe_Values.Look(ref resistance, "subjugate-resist");
+            
+        }
+
+
         public float CalcForTheLadies()
         {
             if (Pawn.gender != Gender.Male)
@@ -155,40 +167,85 @@ namespace Subjugate
 
             if (Find.TickManager.TicksGame % GenDate.TicksPerHour == 0)
             {
-                if (Pawn.TryGet_GirlNeeds(out bool j1, out bool j2, out bool j4))
+                this.punishLimit = Math.Max(0, this.punishLimit - 1);
+
+                if (Pawn.gender == Gender.Female)
                 {
-                    Pawn.GirlHasNeeds();
+                    Pawn.GirlHasNeeds(Pawn.TryGet_GirlNeeds(out bool j1, out bool j2, out bool j4));
+
                     
+                    if (Pawn.TryGet_PussyShockRod(out var item) || Pawn.TryGet_Binders(out var itme2))
+                    {
+                        totalPussyInsertTicks += GenDate.TicksPerHour;
+                    }
+
+                    if (Pawn.IsSlaveOfColony)
+                    {
+                        Pawn.Subjugate_Hediff().AddSeverity(.01f / 12f);
+
+                        if (Pawn.GirlNeedsPunishing())
+                        {
+                            guiltyTicksLeft = GenDate.TicksPerDay;
+                        }
+                    }
+
+                    beatingRating = Mathf.Max(0f, beatingRating - 1f);
+
+                    if (supneed.CurLevel<1f && Find.TickManager.TicksGame - this.lastTimePunished > GenDate.TicksPerDay)
+                    {
+                        Pawn.NeedsPunishing();
+                    }
                 }
-                else
-                {
-                    Pawn.GirlHasNeeds(false);
-                }
 
-
-                if (Pawn.GirlNeedsPunishing())
-                {
-                    guiltyTicksLeft = GenDate.TicksPerDay;
-                }
-
-                if (Pawn.TryGet_PussyShockRod(out var item) || Pawn.TryGet_Binders(out var itme2))
-                {
-                    totalPussyInsertTicks += GenDate.TicksPerHour;
-                }
-
-                if (Pawn.IsSlaveOfColony && Pawn.gender==Gender.Female)
-                    Pawn.Subjugate_Hediff().AddSeverity(.01f / 12f);
-
-                beatingRating = Mathf.Max(0f, beatingRating - 1f);
+                
             }
 
         }
         public override string CompInspectStringExtra()
         {
-            return NeedsPunishment ? "NEEDS PUNISHING!" : "";
+            var needPunishing = NeedsPunishment ? "NEEDS PUNISHING!" : "";
+
+            return string.Join(" ", new string[] { $"({BeatingRating})", needPunishing });
         }
         private int guiltyTicksLeft = 0;
+        private int punishLimit;
+        private int lastTimePunished;
+
         public bool NeedsPunishment => guiltyTicksLeft > 0;
+
+        public void GetPunished(Pawn warden)
+        {
+            var girl = Pawn;
+            Find.CurrentMap.GetComponent<Subjugate>().needsPunishing.Remove(girl);
+
+            warden.Drawer.Notify_MeleeAttackOn(girl);
+
+            var randomheight = Utils.RandomElement(new BodyPartHeight[] { BodyPartHeight.Middle, BodyPartHeight.Bottom });
+            var bodyrecord = girl.health.hediffSet.GetRandomNotMissingPart(DamageDefOf.Blunt, randomheight, BodyPartDepth.Outside);
+
+            girl.health.AddHediff(Defs.Subj_PunishTheGirl_Hediff, bodyrecord);
+
+            Utils.ThrowMetaIconF(girl.Position, girl.Map, Defs.Subj_NoHeart_Fleck);
+
+            var subjHediff = girl.Subjugate_Hediff();
+
+            var gainMemory = BeatingRating == 0f;
+            BeatingRating = Mathf.Min(100f, BeatingRating + (subjHediff.Severity*10f));
+            if (gainMemory)
+            {
+                Thought_Memory thought = (Thought_Memory)ThoughtMaker.MakeThought(Defs.Subj_GotPunished_Thought);
+                girl.needs.mood.thoughts.memories.TryGainMemory(thought);
+            }
+
+            if (NeedsPunishment && this.punishLimit<10)
+            {
+                this.punishLimit++;
+                girl.Subjugate_Hediff().AddSeverity(.01f);
+                
+            }
+
+            this.lastTimePunished = Find.TickManager.TicksGame;
+        }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
@@ -212,8 +269,8 @@ namespace Subjugate
                             thingCategory = ThingCategory.Pawn,
                             validator = delegate (TargetInfo target)
                             {
-                                
-                                
+
+
                                 if (!target.HasThing)
                                 {
                                     return false;
@@ -221,7 +278,7 @@ namespace Subjugate
                                 if (target.Thing is Pawn p)
                                 {
                                     Log.Message($"distance: {Pawn.Position.DistanceTo(target.Thing.Position)}");
-                                    if (Pawn.Position.DistanceTo(target.Thing.Position)>12f)
+                                    if (Pawn.Position.DistanceTo(target.Thing.Position) > 12f)
                                     {
                                         return false;
                                     }
@@ -254,7 +311,7 @@ namespace Subjugate
 
             }
 
-            if ( Pawn.TryGet_Subjugate_Comp(out var comp) && comp.GirlShouldHave==Defs.Subj_PussyShockRod_Item.defName)
+            if (Pawn.TryGet_Subjugate_Comp(out var comp) && comp.GirlShouldHave == Defs.Subj_PussyShockRod_Item.defName)
             {
                 yield return new Command_Action
                 {
@@ -267,7 +324,7 @@ namespace Subjugate
                     }
                 };
             }
-            if (Pawn.TryGet_Subjugate_Comp(out comp) && comp.GirlShouldHave==Defs.Subj_Bindings_Item.defName)
+            if (Pawn.TryGet_Subjugate_Comp(out comp) && comp.GirlShouldHave == Defs.Subj_Bindings_Item.defName)
             {
                 yield return new Command_Action
                 {
@@ -281,7 +338,7 @@ namespace Subjugate
                 };
             }
 
-            if (Pawn.gender==Gender.Female && this.NeedsPunishment)
+            if (Pawn.gender == Gender.Female && this.NeedsPunishment)
             {
                 yield return new Command_Action
                 {
@@ -306,7 +363,7 @@ namespace Subjugate
         {
             (this.parent as Pawn).GetComp<CompSubjugate>().GirlShouldHave = null;
         }
-        
+
 
     }
 

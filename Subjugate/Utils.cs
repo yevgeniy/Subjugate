@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
@@ -24,32 +25,16 @@ namespace Subjugate
                 throw new ArgumentException("Array cannot be null or empty");
             }
 
-            Random random = new Random();
+            System.Random random = new System.Random();
             int index = random.Next(0, elements.Length);
             return elements[index];
         }
 
-        public static void Punish(this Pawn warden, Pawn girl)
+        public static void PunishTheGirl(this Pawn warden, Pawn girl)
         {
-            Find.CurrentMap.GetComponent<Subjugate>().needsPunishing.Remove(girl);
+            girl.TryGet_Subjugate_Comp(out var subjComp);
 
-            warden.Drawer.Notify_MeleeAttackOn(girl);
-
-            var randomheight = RandomElement(new BodyPartHeight[] { BodyPartHeight.Middle, BodyPartHeight.Bottom });
-            var bodyrecord = girl.health.hediffSet.GetRandomNotMissingPart(DamageDefOf.Blunt, randomheight, BodyPartDepth.Outside);
-
-            girl.health.AddHediff(Defs.Subj_PunishTheGirl_Hediff, bodyrecord);
-
-            Utils.ThrowMetaIconF(girl.Position, girl.Map, Defs.Subj_NoHeart_Fleck);
-
-
-            if (girl.TryGet_Subjugate_Comp(out var subjComp) && subjComp.NeedsPunishment)
-            {
-                girl.Subjugate_Hediff().AddSeverity(.01f);
-                subjComp.BeatingRating++;
-            }
-
-
+            subjComp.GetPunished(warden);
         }
         public static bool HasClothingToTakeOff(this Pawn girl)
         {
@@ -76,6 +61,27 @@ namespace Subjugate
                 Find.CurrentMap.GetComponent<Subjugate>().needsPunishing[girl] = true;
             else
                 Find.CurrentMap.GetComponent<Subjugate>().needsPunishing.Remove(girl);
+        }
+        public static float GenerateResistance(this Pawn girl)
+        {
+            FloatRange value = girl.kindDef.initialResistanceRange.Value;
+            float single = value.RandomInRange;
+            Pawn_RoyaltyTracker pawnRoyaltyTracker = girl.royalty;
+            RoyalTitle mostSeniorTitle;
+            if (pawnRoyaltyTracker != null)
+            {
+                mostSeniorTitle = pawnRoyaltyTracker.MostSeniorTitle;
+            }
+            else
+            {
+                mostSeniorTitle = null;
+            }
+            RoyalTitle royalTitle = mostSeniorTitle;
+            if (royalTitle != null)
+            {
+                single += royalTitle.def.recruitmentResistanceOffset;
+            }
+            return (float)GenMath.RoundRandom(single);
         }
         public static bool IsValidWear(this Pawn girl, float min, float maxMoodOffset, out float moodOffset)
         {
@@ -309,7 +315,6 @@ namespace Subjugate
                 MentalStateDefOf.PanicFlee,
                 MentalStateDefOf.Rebellion,
                 MentalStateDefOf.SocialFighting,
-                MentalStateDefOf.Wander_OwnRoom,
                 MentalStateDefOf.Wander_Psychotic,
                 MentalStateDefOf.Wander_Sad
         };

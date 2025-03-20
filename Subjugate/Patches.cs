@@ -102,30 +102,30 @@ namespace Subjugate
     //    }
 
     //}
-    [HarmonyPatch(typeof(JobGiver_OptimizeApparel), "TryGiveJob")]
-    public static class capture_pawn
-    {
-        public static Pawn CurrenPawn;
-        public static bool Prefix(Pawn pawn)
-        {
-            capture_pawn.CurrenPawn = pawn;
-            return true;
-        }
-    }
-    [HarmonyPatch(typeof(ThingFilter), "Allows", new Type[]{typeof(ThingDef) } )]
-    public static class allows_apparel
-    {
-        public static bool Prefix(ref bool __result, ThingDef def)
-        {
-            if (def.thingCategories.Contains(Defs.Subj_SlaveGirl_ThingCategory))
-            {
-                __result = false;
-                return false;
-            }
+    //[HarmonyPatch(typeof(JobGiver_OptimizeApparel), "TryGiveJob")]
+    //public static class capture_pawn
+    //{
+    //    public static Pawn CurrenPawn;
+    //    public static bool Prefix(Pawn pawn)
+    //    {
+    //        capture_pawn.CurrenPawn = pawn;
+    //        return true;
+    //    }
+    //}
+    //[HarmonyPatch(typeof(ThingFilter), "Allows", new Type[]{typeof(ThingDef) } )]
+    //public static class allows_apparel
+    //{
+    //    public static bool Prefix(ref bool __result, ThingDef def)
+    //    {
+    //        if (def.thingCategories.Contains(Defs.Subj_SlaveGirl_ThingCategory))
+    //        {
+    //            __result = false;
+    //            return false;
+    //        }
 
-            return true;
-        }
-    }
+    //        return true;
+    //    }
+    //}
 
 
     [HarmonyPatch(typeof(PawnCapacityUtility), "CalculateCapacityLevel")]

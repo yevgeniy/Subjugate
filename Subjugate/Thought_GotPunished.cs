@@ -19,7 +19,7 @@ namespace Subjugate
         {
             if (pawn.GotBeatings(out var rating))
             {
-                return -Mathf.Clamp(0f, rating, 30f);
+                return -Mathf.Clamp(rating, 0f, 30f);
             }
             return 0f;
         }

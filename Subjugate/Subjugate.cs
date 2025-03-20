@@ -81,11 +81,31 @@ namespace Subjugate
                 nameof(TargeterStop)));
 
 
-
+            harmony.Patch(original: typeof(Need).GetProperty("CurLevel", BindingFlags.Public | BindingFlags.Instance).GetGetMethod(),
+                postfix: new HarmonyMethod(typeof(Subjugate), nameof(Need_Suppression_CurLevel)));
 
             harmony.PatchAll();
 
             Log.Message("Subjugate PATCHED.");
+        }
+
+        static FieldInfo PawnField = typeof(Need).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static void Need_Suppression_CurLevel(ref float __result, Need_Suppression __instance)
+        {
+
+            if (__instance.def.defName== "Suppression" && PawnField.GetValue(__instance) is Pawn pawn && pawn.gender==Gender.Female && pawn.IsSlaveOfColony)
+            {
+                pawn.TryGet_Subjugate_Comp(out var comp);
+
+                var beatingOffset = comp.BeatingRating / 100f;
+                var subjugateLevel = pawn.Subjugate_Hediff().Severity*10f;
+                var resistance = comp.Resistance;
+                Log.Message($"{pawn} RESISTANCE: {resistance} {subjugateLevel}");
+
+
+                __result = Mathf.Min(1.0f, __result + (beatingOffset));
+                //Log.Message($"{pawn} {__instance.def.defName}: {__result} {comp.BeatingRating}");
+            }
         }
 
         public Subjugate(Map map) : base(map)

@@ -360,7 +360,7 @@
 		<defName>Subj_PunishTheGirl_Hediff</defName>
 		<label>punish</label>
 		<labelNoun>smack</labelNoun>
-		<initialSeverity>1</initialSeverity>
+		<initialSeverity>.1</initialSeverity>
 		<!-- <comps>
 			<li Class="CombatExtended.HediffCompProperties_Beanbag" />
 		</comps> -->

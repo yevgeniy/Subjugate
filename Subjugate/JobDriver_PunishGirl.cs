@@ -30,8 +30,10 @@ namespace Subjugate
             {
                 var girl = this.job.GetTarget(girlTarget).Pawn;
                 AcceptanceReport allowsDrafting = girl.GetLord()?.AllowsDrafting(girl) ?? ((AcceptanceReport)true);
+                
+                girl.TryGet_Subjugate_Comp(out var comp);
 
-                return girl.Downed || girl.Drafted || !allowsDrafting;
+                return girl.Downed || girl.Drafted || !allowsDrafting || comp.BeatingRating>=100f;
             });
             AddFinishAction(c =>
             {
@@ -127,7 +129,7 @@ namespace Subjugate
             var swat = Toils_General.Do(() =>
             {
                 var girl = this.job.GetTarget(girlTarget).Pawn;
-                this.pawn.Punish(girl);
+                this.pawn.PunishTheGirl(girl);
             });
             var wait = Toils_General.Wait(100);
 

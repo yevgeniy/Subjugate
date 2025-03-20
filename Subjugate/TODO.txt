@@ -11,15 +11,9 @@
 
 -slave wear
 
-(maid dress goes with nipples)
+-beat girl upto 100 rating
+-rating adds directy to slave suppression need.
+-rating will diminish 1 per hour regularly [to be adjusted]
+-once slave suppression is under 100% and slave is totally healed of beatings, will queue slave to be beated again.
 
--when girls try to put on (or take off) clothing, try to put on slave ware (forced)
--subj clothing contributes to subjugation max 24 units
-	- wearing an item for 24 hours will contribute a total of .1 to subjugation (.1/24 per hour)
-	- not wearing an item recharges the pool at 1 point per hour spread accross all possible choices (in dictionary)
-	[so encouragin diversity of wear]
-- at full subjugation score, a girl receiving contribution from score will get bonuses
-	- never rebel, +10% movement, .5 sleep rate reduction, .5 hunger reduction, +20% healing
-	- -8 melee, -8 ranged
-
-
++1 conc to all male colonists for each girl wearing slave girl apparel. 

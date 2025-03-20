@@ -80,19 +80,6 @@ namespace Subjugate
             return job;
         }
 
-        private Thing GetClosestPussyRod(Pawn pawn)
-        {
-            var pussyrod = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map,
-                ThingRequest.ForGroup(ThingRequestGroup.HaulableEver),
-                PathEndMode.Touch, TraverseParms.For(pawn),
-                9999f, possibleItem => possibleItem.def.defName == "Subj_PussyShockRod_Item"
-                            && pawn.CanReserve(possibleItem)
-                            && HaulAIUtility.PawnCanAutomaticallyHaulFast(pawn, possibleItem, false)
-                            && Subjugate.ReadyPussyShockRods.Contains(possibleItem)
-                            && !possibleItem.IsForbidden(pawn));
-
-            return pussyrod;
-        }
     }
 
 

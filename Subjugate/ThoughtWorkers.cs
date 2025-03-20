@@ -33,7 +33,11 @@ namespace Subjugate
                 {
                     if (girl.IsSlaveOfColony || girl.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet"))
                     {
-                        if (girl.apparel.WornApparel.All(apparel => Subjugation(apparel.def) || !OnLegsOrTorso(apparel.def)))
+                        var isSlaveApparel = girl.apparel.WornApparel.All(apparel =>
+                        {
+                            return  Subjugation(apparel.def) || !OnLegsOrTorso(apparel.def);
+                        });
+                        if (isSlaveApparel)
                         {
                             NumberOfSlaveLadies++;
                             continue;
@@ -60,7 +64,7 @@ namespace Subjugate
 
         private bool Subjugation(ThingDef def)
         {
-            return def.thingCategories.Any(v => v == Defs.Subj_Subjugation_ThingCategory);
+            return def.thingCategories.Any(v => v == Defs.Subj_Subjugation_ThingCategory || v==Defs.Subj_SlaveGirl_ThingCategory);
         }
     }
 
