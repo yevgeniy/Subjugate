@@ -11,10 +11,10 @@ using Verse.AI;
 
 namespace Subjugate
 {
-    public enum NeedType:byte
+    public enum NeedType : byte
     {
-        Install=0,
-        Remove=1,
+        Install = 0,
+        Remove = 1,
     }
 
 
@@ -25,10 +25,10 @@ namespace Subjugate
 
         public static HediffDef VPEP_Puppet;
 
-        
+
         public Dictionary<Pawn, bool> needsPunishing = new Dictionary<Pawn, bool>();
 
-        public Dictionary<Pawn,bool> girlNeedsAttending=new Dictionary<Pawn, bool>();
+        public Dictionary<Pawn, bool> girlNeedsAttending = new Dictionary<Pawn, bool>();
 
 
         HashSet<Thing> readyPussyShockRods = new HashSet<Thing>();
@@ -39,7 +39,7 @@ namespace Subjugate
         }
         public static List<Pawn> GirlNeedsAttending(Pawn warden)
         {
-            return warden.Map.GetComponent<Subjugate>().girlNeedsAttending.Where(v=>v.Value).Select(v => v.Key).ToList();
+            return warden.Map.GetComponent<Subjugate>().girlNeedsAttending.Where(v => v.Value).Select(v => v.Key).ToList();
         }
 
         public static HashSet<Thing> ReadyPussyShockRods
@@ -51,7 +51,7 @@ namespace Subjugate
         }
 
         public static Assembly[] Assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        
+
 
         static Subjugate()
         {
@@ -90,21 +90,35 @@ namespace Subjugate
         }
 
         static FieldInfo PawnField = typeof(Need).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
-        public static void Need_Suppression_CurLevel(ref float __result, Need_Suppression __instance)
-        {
 
-            if (__instance.def.defName== "Suppression" && PawnField.GetValue(__instance) is Pawn pawn && pawn.gender==Gender.Female && pawn.IsSlaveOfColony)
+        static NeedDef SuppressionDef = null;
+        public static void Need_Suppression_CurLevel(ref float __result, Need __instance)
+        {
+            if (SuppressionDef == null && __instance.def.defName == "Suppression")
+                SuppressionDef = __instance.def;
+
+            if (__instance.def == SuppressionDef && PawnField.GetValue(__instance) is Pawn pawn && pawn.gender == Gender.Female && pawn.IsSlaveOfColony)
             {
                 pawn.TryGet_Subjugate_Comp(out var comp);
-
                 var beatingOffset = comp.BeatingRating / 100f;
-                var subjugateLevel = pawn.Subjugate_Hediff().Severity*10f;
-                var resistance = comp.Resistance;
-                Log.Message($"{pawn} RESISTANCE: {resistance} {subjugateLevel}");
 
 
-                __result = Mathf.Min(1.0f, __result + (beatingOffset));
-                //Log.Message($"{pawn} {__instance.def.defName}: {__result} {comp.BeatingRating}");
+                var subjHediff = pawn.Subjugate_Hediff();
+
+                var subjugateLevel = subjHediff.Severity * 10f;
+
+                var resistance = subjHediff.Resistance;
+
+                var offset = ((10f - subjugateLevel) / 10f * resistance) * 2;
+
+                var maxeffectiveLevel = 1f - offset * 2f;
+
+                Log.Message($"{pawn} suppression calc: {resistance} {subjugateLevel} {offset} {maxeffectiveLevel}");
+
+                if (__result < maxeffectiveLevel)
+                {
+                    __result = Mathf.Min(maxeffectiveLevel, __result + (beatingOffset));
+                }
             }
         }
 

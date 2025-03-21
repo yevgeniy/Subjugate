@@ -104,20 +104,7 @@ namespace Subjugate
 
         public float ForTheLadiesMult;
 
-        private float resistance;
-        public float Resistance
-        {
-            get {
-                if (this.resistance==default(float))
-                {
-                    this.resistance = Pawn.GenerateResistance();
-                }
-                return this.resistance;
-            }
-            
-        }
-
-
+        
 
         public override void PostDeSpawn(Map map)
         {
@@ -137,8 +124,6 @@ namespace Subjugate
             Scribe_Values.Look(ref girlShouldHave, "subjugate-should-have");
             Scribe_Values.Look(ref punishLimit, "subjugate-pun-lim");
             Scribe_Values.Look(ref lastTimePunished, "subjugate-last-pun");
-            Scribe_Values.Look(ref resistance, "subjugate-resist");
-            
         }
 
 
@@ -169,32 +154,40 @@ namespace Subjugate
             {
                 this.punishLimit = Math.Max(0, this.punishLimit - 1);
 
+                
                 if (Pawn.gender == Gender.Female)
                 {
-                    Pawn.GirlHasNeeds(Pawn.TryGet_GirlNeeds(out bool j1, out bool j2, out bool j4));
+                    
+                    beatingRating = Mathf.Max(0f, beatingRating - 1f);
 
                     
+                    Pawn.GirlHasNeeds(Pawn.TryGet_GirlNeeds(out bool j1, out bool j2, out bool j4));
+                    
+
                     if (Pawn.TryGet_PussyShockRod(out var item) || Pawn.TryGet_Binders(out var itme2))
                     {
+                    
                         totalPussyInsertTicks += GenDate.TicksPerHour;
                     }
 
+                    
                     if (Pawn.IsSlaveOfColony)
                     {
-                        Pawn.Subjugate_Hediff().AddSeverity(.01f / 12f);
+                        
+                        if (SupNeed.CurLevel < 1f && Find.TickManager.TicksGame - this.lastTimePunished > GenDate.TicksPerDay)
+                        {
+                        
+                            Pawn.NeedsPunishing();
+                        }
+                        
 
+                        Pawn.Subjugate_Hediff().AddSeverity(.01f / 12f);
                         if (Pawn.GirlNeedsPunishing())
                         {
                             guiltyTicksLeft = GenDate.TicksPerDay;
                         }
                     }
 
-                    beatingRating = Mathf.Max(0f, beatingRating - 1f);
-
-                    if (supneed.CurLevel<1f && Find.TickManager.TicksGame - this.lastTimePunished > GenDate.TicksPerDay)
-                    {
-                        Pawn.NeedsPunishing();
-                    }
                 }
 
                 
