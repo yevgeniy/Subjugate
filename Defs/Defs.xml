@@ -3,17 +3,20 @@
 	<PreceptDef>
 		<defName>Subj_SubjugateAllWomen_Precept</defName>
 		<issue>Slavery</issue>
-		<category>Issue_Slavery</category>
-		<label>Female Submission</label>
+		<label>Female Subjugation</label>
 		<description>All ladies must submit.</description>
-		<impact>Low</impact>
-		<displayOrderInIssue>11</displayOrderInIssue>
-		<defaultSelectionWeight>2</defaultSelectionWeight>
-		<approvesOfSlavery>true</approvesOfSlavery>
+		<impact>High</impact>
+		<displayOrderInIssue>1</displayOrderInIssue>
+		<displayOrderInImpact>1000</displayOrderInImpact>
 		<associatedMemes>
-			<li>MaleSupremacy</li>
 			<li>Supremacist</li>
+			<li>Collectivist</li>
+			<li>PainIsVirtue</li>
 		</associatedMemes>
+		<conflictingMemes>
+			<li>Guilty</li>
+			<li>Individualist</li>
+		</conflictingMemes>
 		<comps>
 			<li Class="PreceptComp_SituationalThought">
 				<thought>Subj_UnsubjugatedWomen_Thought</thought>
@@ -265,7 +268,7 @@
 		</stages>
 		<stackLimit>1</stackLimit>
 	</ThoughtDef>
-	
+
 	<ThoughtDef>
 		<defName>Subj_Binders_Thought</defName>
 		<thoughtClass>Subjugate.Thought_BindersUpMyPussy</thoughtClass>
@@ -292,18 +295,6 @@
 		<stackLimit>1</stackLimit>
 	</ThoughtDef>
 
-	<!-- <ThoughtDef>
-		<defName>Subj_HumiliatingWear_Thought</defName>
-		<thoughtClass>Subjugate.Thought_HulimiatingWear</thoughtClass>
-		<stages>
-			<li>
-				<label>Humiliating Apparel.</label>
-				<description>This clothing is humiliating!</description>
-				<baseMoodEffect>-1</baseMoodEffect>
-			</li>
-		</stages>
-		<stackLimit>1</stackLimit>
-	</ThoughtDef> -->
 
 	<ThingDef ParentName="StorageShelfBase">
 		<defName>Subj_PussyShockRodCharger_Furniture</defName>
@@ -361,15 +352,11 @@
 		<label>punish</label>
 		<labelNoun>smack</labelNoun>
 		<initialSeverity>.1</initialSeverity>
-		<!-- <comps>
-			<li Class="CombatExtended.HediffCompProperties_Beanbag" />
-		</comps> -->
 		<injuryProps>
 			<canMerge>false</canMerge>
 		</injuryProps>
 	</HediffDef>
 
-	<!-- apparel items -->
 
 
 </Defs>

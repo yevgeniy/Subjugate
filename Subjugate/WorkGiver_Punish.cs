@@ -36,6 +36,9 @@ namespace Subjugate
                 return false;
             }
 
+            if (girl.Position.DistanceTo(warden.Position) > 50f)
+                return true;
+
             if (girl.IsSlaveOfColony)
             {
                 if (!warden.CanReserve(girl))

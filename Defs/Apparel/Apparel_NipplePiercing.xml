@@ -198,7 +198,6 @@
       <DeteriorationRate>1</DeteriorationRate>
     </statBases>
     <equippedStatOffsets>
-      <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
@@ -219,22 +218,6 @@
       </tags>
       <gender>Female</gender>
     </apparel>
-    <!-- <recipeMaker>
-      <recipeUsers>
-        <li>S16_CraftingSpot</li>
-      </recipeUsers>
-      <researchPrerequisites>
-        <li>Subj_SlaveGirl_ThingCategory</li>
-      </researchPrerequisites>
-    </recipeMaker>
-    <comps>
-      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
-        <hediffDef>S16_NC_Hediff</hediffDef>
-        <partsToAffect>
-          <li>Torso</li>
-        </partsToAffect>
-      </li>
-    </comps> -->
   </ThingDef>
 
   <ThingDef ParentName="Subj_MetallicBase">
@@ -259,7 +242,6 @@
       <DeteriorationRate>1</DeteriorationRate>
     </statBases>
     <equippedStatOffsets>
-      <!-- <SexSatisfaction>0.1</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.02</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <thingCategories>
@@ -280,21 +262,5 @@
       </tags>
       <gender>Female</gender>
     </apparel>
-    <!-- <recipeMaker>
-      <recipeUsers>
-        <li>S16_CraftingSpot</li>
-      </recipeUsers>
-      <researchPrerequisites>
-        <li>Subj_SlaveGirl_ThingCategory</li>
-      </researchPrerequisites>
-    </recipeMaker>
-    <comps>
-      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
-        <hediffDef>S16_NC_Hediff</hediffDef>
-        <partsToAffect>
-          <li>Torso</li>
-        </partsToAffect>
-      </li>
-    </comps> -->
   </ThingDef>
 </Defs>

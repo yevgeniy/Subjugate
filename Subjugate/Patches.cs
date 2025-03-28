@@ -131,7 +131,7 @@ namespace Subjugate
     [HarmonyPatch(typeof(PawnCapacityUtility), "CalculateCapacityLevel")]
     public class cal_capability
     {
-        static string[] caps = new string[] { "Consciousness", "Moving" };
+        static string[] caps = new string[] { "Consciousness", "Moving", "Talking" };
         [HarmonyPostfix]
         public static void postfix(ref float __result, HediffSet diffSet, PawnCapacityDef capacity, List<PawnCapacityUtility.CapacityImpactor> impactors, bool forTradePrice)
         {

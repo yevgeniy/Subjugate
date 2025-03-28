@@ -23,32 +23,20 @@ namespace Subjugate
 
             if (Find.TickManager.TicksGame % GenDate.TicksPerHour ==0)
             {
-                var girls=Find.Maps.SelectMany(v=>v.mapPawns.AllPawns).Where(v => v.gender == Gender.Female && !v.Dead
-                    && v.ageTracker.Adult
-                    && (v.IsColonist || v.IsSlaveOfColony || v.IsPrisoner) );
+                var girls = Find.Maps.SelectMany(v => v.mapPawns.AllPawns).Where(v => v.gender == Gender.Female && !v.Dead && !v.IsQuestLodger());
                 NumberOfSlaveLadies = 0;
                 NumberOfFreeLadies = 0;
 
                 foreach(var girl in girls)
                 {
-                    if (girl.IsSlaveOfColony || girl.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet"))
-                    {
-                        var isSlaveApparel = girl.apparel.WornApparel.All(apparel =>
-                        {
-                            return  Subjugation(apparel.def) || !OnLegsOrTorso(apparel.def);
-                        });
-                        if (isSlaveApparel)
-                        {
-                            NumberOfSlaveLadies++;
-                            continue;
-                        }
-                    } 
-                    else if (girl.IsPrisoner)
+                    if (girl.TryGet_Subjugate_Comp(out var comp) && comp.IsGoodColonyGirl)
                     {
                         NumberOfSlaveLadies++;
-                        continue;
+                    } 
+                    else
+                    {
+                        NumberOfFreeLadies++;
                     }
-                    NumberOfFreeLadies++;
                 }
 
                 Log.Message($"free: {NumberOfFreeLadies} slave: {NumberOfSlaveLadies}");
@@ -57,15 +45,7 @@ namespace Subjugate
             
         }
 
-        private bool OnLegsOrTorso(ThingDef def)
-        {
-            return def.apparel.bodyPartGroups.Any(v => v == BodyPartGroupDefOf.Torso || v == BodyPartGroupDefOf.Legs);
-        }
 
-        private bool Subjugation(ThingDef def)
-        {
-            return def.thingCategories.Any(v => v == Defs.Subj_Subjugation_ThingCategory || v==Defs.Subj_SlaveGirl_ThingCategory);
-        }
     }
 
     public class ThoughtWorker_AllWomenSlaves:ThoughtWorker_Precept

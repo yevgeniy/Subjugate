@@ -104,7 +104,7 @@ namespace Subjugate
 
         public float ForTheLadiesMult;
 
-        
+
 
         public override void PostDeSpawn(Map map)
         {
@@ -124,6 +124,10 @@ namespace Subjugate
             Scribe_Values.Look(ref girlShouldHave, "subjugate-should-have");
             Scribe_Values.Look(ref punishLimit, "subjugate-pun-lim");
             Scribe_Values.Look(ref lastTimePunished, "subjugate-last-pun");
+            Scribe_Values.Look(ref totalTicks, "subjugate-total-ti");
+            Scribe_Values.Look(ref isGoodColonyGirl, "subjugate-good-girl");
+            
+
         }
 
 
@@ -144,42 +148,43 @@ namespace Subjugate
 
         private int totalPussyInsertTicks = 0;
         public int TotalPussyInsert { get { return totalPussyInsertTicks; } }
+        private int totalTicks;
 
         public override void CompTick()
         {
             base.CompTick();
             guiltyTicksLeft--;
+            totalTicks++;
 
-            if (Find.TickManager.TicksGame % GenDate.TicksPerHour == 0)
+            if (totalTicks % GenDate.TicksPerHour == 0)
             {
+                IsGoodColonyGirl = CalcForGoodColonyGirl();
                 this.punishLimit = Math.Max(0, this.punishLimit - 1);
 
-                
+
                 if (Pawn.gender == Gender.Female)
                 {
-                    
+
+
                     beatingRating = Mathf.Max(0f, beatingRating - 1f);
 
-                    
                     Pawn.GirlHasNeeds(Pawn.TryGet_GirlNeeds(out bool j1, out bool j2, out bool j4));
-                    
 
                     if (Pawn.TryGet_PussyShockRod(out var item) || Pawn.TryGet_Binders(out var itme2))
                     {
-                    
                         totalPussyInsertTicks += GenDate.TicksPerHour;
                     }
 
-                    
+
+
                     if (Pawn.IsSlaveOfColony)
                     {
-                        
-                        if (SupNeed.CurLevel < 1f && Find.TickManager.TicksGame - this.lastTimePunished > GenDate.TicksPerDay)
+
+                        if (SupNeed.CurLevel < MaxSupNeedSuppress && Find.TickManager.TicksGame - this.lastTimePunished > GenDate.TicksPerDay)
                         {
-                        
                             Pawn.NeedsPunishing();
                         }
-                        
+
 
                         Pawn.Subjugate_Hediff().AddSeverity(.01f / 12f);
                         if (Pawn.GirlNeedsPunishing())
@@ -190,21 +195,69 @@ namespace Subjugate
 
                 }
 
-                
+
             }
 
         }
+
+        private bool CalcForGoodColonyGirl()
+        {
+            var pawn = Pawn;
+            if (pawn.gender == Gender.Female && !pawn.Dead && pawn.ageTracker.Adult
+                    && (pawn.IsSlaveOfColony || pawn.IsPrisoner || pawn.health.hediffSet.hediffs.Any(vv => vv.def.defName == "VPEP_Puppet")))
+            {
+                var isSlaveApparel = pawn.apparel.WornApparel.All(apparel =>
+                {
+                    return Subjugation(apparel.def) || !OnLegsOrTorso(apparel.def);
+                });
+                return isSlaveApparel;
+            }
+
+            return false;
+        }
+        private bool OnLegsOrTorso(ThingDef def)
+        {
+            return def.apparel.bodyPartGroups.Any(v => v == BodyPartGroupDefOf.Torso || v == BodyPartGroupDefOf.Legs);
+        }
+
+        private bool Subjugation(ThingDef def)
+        {
+            return def.thingCategories.Any(v => v == Defs.Subj_Subjugation_ThingCategory || v == Defs.Subj_SlaveGirl_ThingCategory);
+        }
+
         public override string CompInspectStringExtra()
         {
             var needPunishing = NeedsPunishment ? "NEEDS PUNISHING!" : "";
 
-            return string.Join(" ", new string[] { $"({BeatingRating})", needPunishing });
+            return string.Join(" ", new string[] { $"({BeatingRating})", needPunishing }).Trim();
         }
         private int guiltyTicksLeft = 0;
+
+        public bool isGoodColonyGirl;
+        public bool IsGoodColonyGirl
+        {
+            get { return this.isGoodColonyGirl; }
+            set { this.isGoodColonyGirl = value; }
+        }
+
         private int punishLimit;
         private int lastTimePunished;
 
         public bool NeedsPunishment => guiltyTicksLeft > 0;
+
+        public float MaxSupNeedSuppress
+        {
+            get
+            {
+                var subjHediff = Pawn.Subjugate_Hediff();
+                var subjugateLevel = subjHediff.Severity * 10f;
+                var resistance = subjHediff.Resistance;
+                var offset = ((10f - subjugateLevel) / 10f * resistance) * 2;
+                var maxeffectiveLevel = 1f - offset * 2f;
+                return maxeffectiveLevel;
+            }
+        }
+
 
         public void GetPunished(Pawn warden)
         {
@@ -223,18 +276,18 @@ namespace Subjugate
             var subjHediff = girl.Subjugate_Hediff();
 
             var gainMemory = BeatingRating == 0f;
-            BeatingRating = Mathf.Min(100f, BeatingRating + (subjHediff.Severity*10f));
+            BeatingRating = Mathf.Min(100f, BeatingRating + (subjHediff.Severity * 10f));
             if (gainMemory)
             {
                 Thought_Memory thought = (Thought_Memory)ThoughtMaker.MakeThought(Defs.Subj_GotPunished_Thought);
                 girl.needs.mood.thoughts.memories.TryGainMemory(thought);
             }
 
-            if (NeedsPunishment && this.punishLimit<10)
+            if (NeedsPunishment && this.punishLimit < 10)
             {
                 this.punishLimit++;
                 girl.Subjugate_Hediff().AddSeverity(.01f);
-                
+
             }
 
             this.lastTimePunished = Find.TickManager.TicksGame;

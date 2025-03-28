@@ -24,7 +24,6 @@ namespace Subjugate
 
         public static ThingDef Subj_PussyShockRod_Item;
         public static ThingDef Subj_Bindings_Item;
-        public static ThingDef Subj_ArmorVest_Item;
 
         public static ThingDef Subj_SlaveDress_Item;
         public static ThingDef Subj_ZDress_Item;

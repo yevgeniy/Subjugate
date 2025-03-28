@@ -22,7 +22,6 @@
       <li>Subj_SlaveGirl_ThingCategory</li>
     </thingCategories>
     <equippedStatOffsets>
-      <!-- <SexSatisfaction>0.2</SexSatisfaction> -->
       <SlaveSuppressionOffset MayRequire="Ludeon.RimWorld.Ideology">0.2</SlaveSuppressionOffset>
     </equippedStatOffsets>
     <apparel>
@@ -44,12 +43,6 @@
       <gender>Female</gender>
     </apparel>
     <comps>
-      <!-- <li Class="Subjugate.Comp.CompProperties_HediffApparel">
-        <hediffDef>S16DressIHed</hediffDef>
-        <partsToAffect>
-          <li>Torso</li>
-        </partsToAffect>
-      </li> -->
       <li>
         <compClass>CompColorable</compClass>
       </li>
@@ -151,18 +144,5 @@
       </tags>
       <gender>Female</gender>
     </apparel>
-    <!-- <comps>
-      <li Class="Subjugate.Comp.CompProperties_HediffApparel">
-        <hediffDef>S16_MaidA_Hed</hediffDef>
-        <partsToAffect>
-          <li>Torso</li>
-        </partsToAffect>
-      </li>
-    </comps> -->
-    <!-- <recipeMaker>
-      <researchPrerequisites>
-        <li>S16_ComplexApparel</li>
-      </researchPrerequisites>
-    </recipeMaker> -->
   </ThingDef>
 </Defs>

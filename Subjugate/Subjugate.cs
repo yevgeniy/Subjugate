@@ -91,30 +91,22 @@ namespace Subjugate
 
         static FieldInfo PawnField = typeof(Need).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        static NeedDef SuppressionDef = null;
+        //static NeedDef SuppressionDef = null;
         public static void Need_Suppression_CurLevel(ref float __result, Need __instance)
         {
-            if (SuppressionDef == null && __instance.def.defName == "Suppression")
-                SuppressionDef = __instance.def;
+            //if (SuppressionDef == null && __instance.def!=null && __instance.def.defName == "Suppression")
+            //    SuppressionDef = __instance.def;
 
-            if (__instance.def == SuppressionDef && PawnField.GetValue(__instance) is Pawn pawn && pawn.gender == Gender.Female && pawn.IsSlaveOfColony)
+            if (!(__instance is Need_Suppression))
+            {
+                return;
+            }
+
+            if (PawnField.GetValue(__instance) is Pawn pawn && pawn.gender == Gender.Female && pawn.IsSlaveOfColony)
             {
                 pawn.TryGet_Subjugate_Comp(out var comp);
                 var beatingOffset = comp.BeatingRating / 100f;
-
-
-                var subjHediff = pawn.Subjugate_Hediff();
-
-                var subjugateLevel = subjHediff.Severity * 10f;
-
-                var resistance = subjHediff.Resistance;
-
-                var offset = ((10f - subjugateLevel) / 10f * resistance) * 2;
-
-                var maxeffectiveLevel = 1f - offset * 2f;
-
-                Log.Message($"{pawn} suppression calc: {resistance} {subjugateLevel} {offset} {maxeffectiveLevel}");
-
+                var maxeffectiveLevel = comp.MaxSupNeedSuppress;
                 if (__result < maxeffectiveLevel)
                 {
                     __result = Mathf.Min(maxeffectiveLevel, __result + (beatingOffset));
